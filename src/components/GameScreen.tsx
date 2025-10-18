@@ -22,7 +22,7 @@ export const GameScreen = ({
     return (
         <Stack spacing={3}>
             <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card sx={{border: activePlayer === 1 ? 2 : 0, borderColor: 'primary.main'}}>
                         <CardContent>
                             <Typography variant="h6">Player 1</Typography>
@@ -30,7 +30,7 @@ export const GameScreen = ({
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <Card sx={{border: activePlayer === 2 ? 2 : 0, borderColor: 'primary.main'}}>
                         <CardContent>
                             <Typography variant="h6">Player 2</Typography>
@@ -40,7 +40,7 @@ export const GameScreen = ({
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Button
                         variant="contained"
                         fullWidth
@@ -50,7 +50,7 @@ export const GameScreen = ({
                         {isPassPenaltyActive ? `Wait... (${passTimer}s)` : 'Correct answer!'}
                     </Button>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Button
                         variant="outlined"
                         fullWidth
