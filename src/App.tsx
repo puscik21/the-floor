@@ -1,74 +1,77 @@
 import {useEffect, useState} from 'react'
 import './App.css'
 
-
 function App() {
-    const TIME_SECONDS = 5;
+    const INIT_TIME_SECONDS = 5;
+    const PASS_PENALTY_SECONDS = 2;
+    type GameState = 'idle' | 'running' | 'finished'
 
-    const [isRunning, setIsRunning] = useState(false)
-    const [isGameFinished, setIsGameFinished] = useState(false)
-    const [activePlayer, setActivePlayer] = useState(1)
-    const [playerTimer1, setPlayerTimer1] = useState(TIME_SECONDS)
-    const [playerTimer2, setPlayerTimer2] = useState(TIME_SECONDS)
-
-    function checkAndFinishGame(previousTime: number): number {
-        if (previousTime <= 1) {
-            setIsRunning(false)
-            setIsGameFinished(true)
-            setPlayerTimer1(TIME_SECONDS)
-            setPlayerTimer2(TIME_SECONDS)
-            return 0
-        }
-        return previousTime - 1
-    }
+    const [playerTimer1, setPlayerTimer1] = useState(INIT_TIME_SECONDS)
+    const [playerTimer2, setPlayerTimer2] = useState(INIT_TIME_SECONDS)
+    const [activePlayer, setActivePlayer] = useState<1 | 2>(1)
+    const [winner, setWinner] = useState<1 | 2 | null>(null)
+    const [gameState, setGameState] = useState<GameState>('idle')
 
     useEffect(() => {
-        if (isRunning) {
-            const intervalId: NodeJS.Timeout = setInterval(() => {
-                if (activePlayer === 1) {
-                    setPlayerTimer1(previousTime => checkAndFinishGame(previousTime))
-                } else {
-                    setPlayerTimer2(previousTime => checkAndFinishGame(previousTime))
-                }
-            }, 1000)
-
-            return () => {
-                if (intervalId) {
-                    clearInterval(intervalId)
-                }
-            }
+        if (gameState !== 'running') {
+            return
         }
-    }, [activePlayer, isRunning]);
 
-    const setNextActivePlayer = () => {
-        const currentPlayer = getNextActivePlayer()
-        console.log(currentPlayer)
-        setActivePlayer(currentPlayer);
+        const intervalId = setInterval(() => {
+            if (activePlayer === 1) {
+                setPlayerTimer1(prev => prev - 1)
+            } else {
+                setPlayerTimer2(prev => prev - 1)
+            }
+        }, 1000)
+
+        return () => clearInterval(intervalId)
+    }, [activePlayer, gameState]);
+
+    useEffect(() => {
+        if (playerTimer1 <= 0) {
+            setWinner(2)
+            setGameState('finished')
+        }
+        if (playerTimer2 <= 0) {
+            setWinner(1)
+            setGameState('finished')
+        }
+    }, [playerTimer1, playerTimer2]);
+
+    const handleCorrectAnswer = () => {
+        setActivePlayer(activePlayer === 1 ? 2 : 1)
     }
 
-    const getNextActivePlayer = (): number => 1 + (activePlayer % 2)
-
-    const startGame = () => {
-        setIsGameFinished(false)
-        setIsRunning(true)
+    const handleStartGame = () => {
+        setPlayerTimer1(INIT_TIME_SECONDS)
+        setPlayerTimer2(INIT_TIME_SECONDS)
+        setActivePlayer(1)
+        setWinner(null)
+        setGameState('running')
     }
 
     return (
         <>
-            {isGameFinished ?
-                <h1>Player {getNextActivePlayer()} won!</h1>
-                :
+            {gameState === 'idle' && (
+                <>
+                    <h1>Welcome to The Floor!</h1>
+                    <button onClick={handleStartGame}>Start Game</button>
+                </>
+            )}
+            {gameState === 'running' && (
                 <>
                     <h1>{playerTimer1}</h1>
                     <h1>{playerTimer2}</h1>
+                    <button onClick={handleCorrectAnswer}>Correct answer!</button>
                 </>
-            }
-            {!isRunning ?
-                <button onClick={startGame}>Start game =)</button>
-                :
-                <button onClick={setNextActivePlayer}>Correct answer!</button>
-            }
-
+            )}
+                {gameState === 'finished' && (
+                    <div>
+                        <h1>Player {winner} won!</h1>
+                        <button onClick={handleStartGame}>Next rund?</button>
+                    </div>
+                )}
         </>
     )
 }
