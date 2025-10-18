@@ -1,18 +1,10 @@
 import {useEffect, useState} from 'react';
+import {Container, CssBaseline, ThemeProvider} from '@mui/material';
+import {darkTheme} from './theme/theme';
 
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Container,
-    CssBaseline,
-    Grid,
-    Stack,
-    ThemeProvider,
-    Typography,
-} from '@mui/material';
-import {darkTheme} from './theme/theme.ts';
+import {WelcomeScreen} from './components/WelcomeScreen';
+import {GameScreen} from './components/GameScreen';
+import {FinishedScreen} from './components/FinishedScreen';
 
 function App() {
     const INIT_TIME_SECONDS = 15;
@@ -32,14 +24,9 @@ function App() {
             return;
         }
         const intervalId = setInterval(() => {
-            if (activePlayer === 1) {
-                setPlayerTimer1(prev => prev - 1);
-            } else {
-                setPlayerTimer2(prev => prev - 1);
-            }
-            if (isPassPenaltyActive) {
-                setPassTimer(prev => prev - 1);
-            }
+            if (activePlayer === 1) setPlayerTimer1(prev => prev - 1);
+            else setPlayerTimer2(prev => prev - 1);
+            if (isPassPenaltyActive) setPassTimer(prev => prev - 1);
         }, 1000);
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
@@ -59,12 +46,10 @@ function App() {
         }
     }, [passTimer, playerTimer1, playerTimer2, isPassPenaltyActive]);
 
-    const handleCorrectAnswer = () => {
-        setActivePlayer(activePlayer === 1 ? 2 : 1);
-    };
-    const handlePass = () => {
-        setIsPassPenaltyActive(true);
-    };
+    const handleCorrectAnswer = () => setActivePlayer(activePlayer === 1 ? 2 : 1);
+
+    const handlePass = () => setIsPassPenaltyActive(true);
+
     const handleStartGame = () => {
         setPlayerTimer1(INIT_TIME_SECONDS);
         setPlayerTimer2(INIT_TIME_SECONDS);
@@ -75,85 +60,37 @@ function App() {
         setGameState('running');
     };
 
+    const renderContent = () => {
+        switch (gameState) {
+            case 'running':
+                return (
+                    <GameScreen
+                        playerTimer1={playerTimer1}
+                        playerTimer2={playerTimer2}
+                        activePlayer={activePlayer}
+                        passTimer={passTimer}
+                        isPassPenaltyActive={isPassPenaltyActive}
+                        onCorrectAnswer={handleCorrectAnswer}
+                        onPass={handlePass}
+                    />
+                );
+            case 'finished':
+                return <FinishedScreen winner={winner} onPlayAgain={handleStartGame}/>;
+            case 'idle':
+            default:
+                return <WelcomeScreen onStartGame={handleStartGame}/>;
+        }
+    };
+
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
             <Container maxWidth="sm" sx={{textAlign: 'center', mt: 4}}>
-                {gameState === 'idle' && (
-                    <Box>
-                        <Typography variant="h2" component="h1" gutterBottom>
-                            Welcome to The Floor!
-                        </Typography>
-                        <Typography variant="h5" color="textSecondary" gutterBottom>
-                            Press Start to begin
-                        </Typography>
-                        <Button variant="contained" size="large" onClick={handleStartGame} sx={{mt: 2}}>
-                            Start Game
-                        </Button>
-                    </Box>
-                )}
-
-                {gameState === 'running' && (
-                    <Stack spacing={3}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <Card sx={{border: activePlayer === 1 ? 2 : 0, borderColor: 'primary.main'}}>
-                                    <CardContent>
-                                        <Typography variant="h6">Player 1</Typography>
-                                        <Typography variant="h2" component="div">{playerTimer1}</Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Card sx={{border: activePlayer === 2 ? 2 : 0, borderColor: 'primary.main'}}>
-                                    <CardContent>
-                                        <Typography variant="h6">Player 2</Typography>
-                                        <Typography variant="h2" component="div">{playerTimer2}</Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    onClick={handleCorrectAnswer}
-                                    disabled={isPassPenaltyActive}
-                                >
-                                    {isPassPenaltyActive ? `Wait... (${passTimer}s)` : 'Correct answer!'}
-                                </Button>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Button
-                                    variant="outlined"
-                                    fullWidth
-                                    onClick={handlePass}
-                                    disabled={isPassPenaltyActive}
-                                >
-                                    Pass
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Stack>
-                )}
-
-                {gameState === 'finished' && (
-                    <Box>
-                        <Typography variant="h3" color="primary" gutterBottom>
-                            Player {winner} won!
-                        </Typography>
-                        <Typography variant="h5" color="textSecondary" gutterBottom>
-                            Congratulations!
-                        </Typography>
-                        <Button variant="contained" size="large" onClick={handleStartGame} sx={{mt: 2}}>
-                            Play Again?
-                        </Button>
-                    </Box>
-                )}
+                {renderContent()}
             </Container>
         </ThemeProvider>
     );
 }
 
 export default App;
+
