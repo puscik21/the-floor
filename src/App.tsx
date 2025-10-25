@@ -72,6 +72,7 @@ function App() {
                         isPassPenaltyActive={isPassPenaltyActive}
                         onCorrectAnswer={handleCorrectAnswer}
                         onPass={handlePass}
+                        questionImageUrl="https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg"
                     />
                 );
             case 'finished':
@@ -85,7 +86,7 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
-            <Container maxWidth="sm" sx={{textAlign: 'center', mt: 4}}>
+            <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
                 {renderContent()}
             </Container>
         </ThemeProvider>
