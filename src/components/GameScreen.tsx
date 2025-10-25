@@ -1,4 +1,5 @@
 import {Button, Card, CardContent, Grid, Stack, Typography} from '@mui/material';
+import {styled} from '@mui/material/styles';
 
 type GameScreenProps = {
     playerTimer1: number;
@@ -20,42 +21,27 @@ export const GameScreen = ({
                                onPass,
                            }: GameScreenProps) => {
     return (
-        <Stack
-            spacing={3}
-            sx={{
-                maxWidth: 900,
-                margin: 'auto',
-                marginTop: 4,
-                padding: {xs: 2, sm: 4},
-                backgroundColor: '#1a1a1a',
-                borderRadius: 3,
-                boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
-            }}
-        >
+        <MainStack spacing={3}>
             <Grid container spacing={3}>
                 <Grid size={6}>
-                    <Card sx={{border: activePlayer === 1 ? 2 : 0, borderColor: 'primary.main'}}>
+                    <PlayerCard isActive={activePlayer === 1}>
                         <CardContent>
-                            <Typography variant="h6" sx={{textTransform: 'uppercase', fontWeight: 'bold'}}>
-                                Player 1
-                            </Typography>
-                            <Typography variant="h2" component="div" sx={{fontWeight: 'bold'}}>
+                            <PlayerName variant="h6">Player 1</PlayerName>
+                            <PlayerTimer variant="h2">
                                 {playerTimer1}
-                            </Typography>
+                            </PlayerTimer>
                         </CardContent>
-                    </Card>
+                    </PlayerCard>
                 </Grid>
                 <Grid size={6}>
-                    <Card sx={{border: activePlayer === 2 ? 2 : 0, borderColor: 'primary.main'}}>
+                    <PlayerCard isActive={activePlayer === 2}>
                         <CardContent>
-                            <Typography variant="h6" sx={{textTransform: 'uppercase', fontWeight: 'bold'}}>
-                                Player 2
-                            </Typography>
-                            <Typography variant="h2" component="div" sx={{fontWeight: 'bold'}}>
+                            <PlayerName variant="h6">Player 2</PlayerName>
+                            <PlayerTimer variant="h2">
                                 {playerTimer2}
-                            </Typography>
+                            </PlayerTimer>
                         </CardContent>
-                    </Card>
+                    </PlayerCard>
                 </Grid>
             </Grid>
 
@@ -82,6 +68,35 @@ export const GameScreen = ({
                     </Button>
                 </Grid>
             </Grid>
-        </Stack>
+        </MainStack>
     );
 };
+
+const MainStack = styled(Stack)(({theme}) => ({
+    maxWidth: 900,
+    margin: 'auto',
+    marginTop: theme.spacing(4),
+    padding: theme.spacing(4),
+    backgroundColor: '#1a1a1a',
+    borderRadius: (theme.shape.borderRadius as number) * 3,
+    boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
+}))
+
+const PlayerCard = styled(Card, {
+    shouldForwardProp: (prop) => prop !== 'isActive',
+})<{ isActive: boolean }>
+(({theme, isActive}) => ({
+    borderWidth: isActive ? 2 : 0,
+    borderStyle: 'solid',
+    borderColor: theme.palette.primary.main,
+    transition: 'border-width 0.2s ease-in-out',
+}));
+
+const PlayerName = styled(Typography)(() => ({
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+}))
+
+const PlayerTimer = styled(Typography)(() => ({
+    fontWeight: 'bold',
+}))
