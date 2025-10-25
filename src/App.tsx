@@ -7,7 +7,7 @@ import {GameScreen} from './components/GameScreen';
 import {FinishedScreen} from './components/FinishedScreen';
 
 function App() {
-    const INIT_TIME_SECONDS = 15;
+    const INIT_TIME_SECONDS = 150;
     const PASS_PENALTY_SECONDS = 3;
     type GameState = 'idle' | 'running' | 'finished';
 
