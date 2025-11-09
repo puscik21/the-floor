@@ -26,20 +26,14 @@ export const GameScreen = ({
                            }: GameScreenProps) => {
     return (
         <Root>
-            {/* GÓRA — Zdjęcie pytania */}
             <TopArea>
                 <ImageCard elevation={0}>
                     {questionImageUrl ? (
-                        <CardMedia
+                        <StyledCardMedia
+                            // @ts-expect-error - works as intended despite the type error
                             component="img"
                             image={questionImageUrl}
                             alt={questionTitle}
-                            sx={{
-                                objectFit: 'contain',
-                                height: 1,
-                                width: 1,
-                                background: '#101010',
-                            }}
                         />
                     ) : (
                         <ImagePlaceholder>
@@ -51,7 +45,6 @@ export const GameScreen = ({
                 </ImageCard>
             </TopArea>
 
-            {/* ŚRODEK — gracze na bokach, zdjęcie centralnie nad nimi */}
             <MiddleArea>
                 <PlayersRow>
                     <PlayerCard isActive={activePlayer === 1}>
@@ -72,10 +65,9 @@ export const GameScreen = ({
                 </PlayersRow>
             </MiddleArea>
 
-            {/* DÓŁ — Przyciski */}
             <BottomArea>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={12}>
                         <Button
                             variant="contained"
                             color="success"
@@ -87,7 +79,7 @@ export const GameScreen = ({
                             {isPassPenaltyActive ? `Czekaj... (${passTimer}s)` : 'Poprawna odpowiedź'}
                         </Button>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={12}>
                         <Button
                             variant="outlined"
                             fullWidth
@@ -95,7 +87,7 @@ export const GameScreen = ({
                             disabled={isPassPenaltyActive}
                             size="large"
                         >
-                            Pass
+                            Pas
                         </Button>
                     </Grid>
                 </Grid>
@@ -130,6 +122,16 @@ const ImageCard = styled(Card)(({theme}) => ({
     border: `1px solid ${theme.palette.divider}`,
 }));
 
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+    display: 'block',
+    width: '100%',
+    height: 'auto',
+    maxHeight: theme.breakpoints.up('md') ? '50vh' : '40vh',
+    objectFit: 'contain',
+    objectPosition: 'center',
+    backgroundColor: '#101010',
+}));
+
 const ImagePlaceholder = styled(Box)(({theme}) => ({
     height: '100%',
     width: '100%',
@@ -138,7 +140,7 @@ const ImagePlaceholder = styled(Box)(({theme}) => ({
     color: theme.palette.text.secondary,
 }));
 
-const MiddleArea = styled('section')(({theme}) => ({
+const MiddleArea = styled('section')(() => ({
     maxWidth: 'min(1800px, 95vw)',
     margin: '0 auto',
     width: '100%',
@@ -155,7 +157,7 @@ const PlayersRow = styled(Box)(({theme}) => ({
     width: '100%',
 }));
 
-const CenterSpace = styled(Box)(({theme}) => ({
+const CenterSpace = styled(Box)(() => ({
     flex: '0 1 320px',
 }));
 
