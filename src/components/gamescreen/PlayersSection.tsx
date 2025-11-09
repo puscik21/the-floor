@@ -12,7 +12,7 @@ const PlayersSection = ({
                             playerTimer2,
                             activePlayer,
                         }: PlayersSectionProps) => (
-    <MiddleArea>
+    <Container>
         <PlayersRow>
             <PlayerCard isActive={activePlayer === 1}>
                 <CardContent>
@@ -28,12 +28,12 @@ const PlayersSection = ({
                 </CardContent>
             </PlayerCard>
         </PlayersRow>
-    </MiddleArea>
+    </Container>
 );
 
 export default PlayersSection;
 
-const MiddleArea = styled('section')(() => ({
+const Container = styled('section')(() => ({
     maxWidth: 'min(1800px, 95vw)',
     margin: '0 auto',
     width: '100%',

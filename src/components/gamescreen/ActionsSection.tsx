@@ -14,7 +14,7 @@ const ActionsSection = ({
                             onCorrectAnswer,
                             onPass,
                         }: ActionsSectionProps) => (
-    <BottomArea>
+    <Container>
         <Grid container spacing={2}>
             <Grid size={12}>
                 <Button
@@ -40,12 +40,12 @@ const ActionsSection = ({
                 </Button>
             </Grid>
         </Grid>
-    </BottomArea>
+    </Container>
 );
 
 export default ActionsSection;
 
-const BottomArea = styled('footer')(({theme}) => ({
+const Container = styled('footer')(({theme}) => ({
     paddingBottom: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',

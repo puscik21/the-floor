@@ -3,7 +3,7 @@ import {Container, CssBaseline, ThemeProvider} from '@mui/material';
 import {darkTheme} from './theme/theme';
 
 import {WelcomeScreen} from './components/WelcomeScreen';
-import {GameScreen} from './components/GameScreen';
+import {GameScreen} from './components/gamescreen/GameScreen';
 import {FinishedScreen} from './components/FinishedScreen';
 
 function App() {

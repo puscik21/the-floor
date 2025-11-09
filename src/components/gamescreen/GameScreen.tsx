@@ -25,10 +25,10 @@ export const GameScreen = ({
                                onCorrectAnswer,
                                onPass,
                                questionImageUrl,
-                               questionTitle = 'Pytanie',
+                               questionTitle,
                            }: GameScreenProps) => {
     return (
-        <Root>
+        <Container>
             <ImageSection
                 questionImageUrl={questionImageUrl}
                 questionTitle={questionTitle}
@@ -44,11 +44,11 @@ export const GameScreen = ({
                 onCorrectAnswer={onCorrectAnswer}
                 onPass={onPass}
             />
-        </Root>
+        </Container>
     );
 };
 
-const Root = styled(Box)(({theme}) => ({
+const Container = styled(Box)(({theme}) => ({
     height: '100vh',
     width: '100%', // TODO: can be removed?
     display: 'grid',

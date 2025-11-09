@@ -7,7 +7,7 @@ type ImageSectionProps = {
 };
 
 const ImageSection = ({ questionImageUrl, questionTitle = 'Pytanie' }: ImageSectionProps) => (
-    <TopArea>
+    <Container>
         <ImageCard elevation={0}>
             {questionImageUrl ? (
                 <StyledCardMedia
@@ -24,12 +24,12 @@ const ImageSection = ({ questionImageUrl, questionTitle = 'Pytanie' }: ImageSect
                 </ImagePlaceholder>
             )}
         </ImageCard>
-    </TopArea>
+    </Container>
 );
 
 export default ImageSection;
 
-const TopArea = styled('section')(() => ({
+const Container = styled('section')(() => ({
     maxWidth: 'min(1800px, 95vw)',
     margin: '0 auto',
     width: '100%',  // TODO: Not sure abot that
