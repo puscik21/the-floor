@@ -5,12 +5,14 @@ import {darkTheme} from './theme/theme';
 import {WelcomeScreen} from './components/WelcomeScreen';
 import {GameScreen} from './components/gamescreen/GameScreen';
 import {FinishedScreen} from './components/FinishedScreen';
-import type {GameGrid, Player} from './components/grid/types.ts';
+import type {GameGrid, GridCell, Player} from './components/grid/types.ts';
 import {PlayerGrid} from './components/grid/PlayerGrid.tsx';
+import {initializeGrid} from './components/grid/gridUtils.ts';
 
-const INIT_TIME_SECONDS = 150;
+const INIT_TIME_SECONDS = 3;
 const PASS_PENALTY_SECONDS = 3;
-const GRID_SIZE = 10;
+
+type GameState = 'idle' | 'map' | 'running' | 'finished';
 
 const MOCK_PLAYERS: Player[] = [
     {id: 'p1', name: 'Anna', color: '#E53935'},
@@ -21,70 +23,30 @@ const MOCK_PLAYERS: Player[] = [
     {id: 'p6', name: 'Filip', color: '#00897B'},
 ];
 
-function initializeGrid(players: Player[]): GameGrid {
-    const grid: GameGrid = Array(GRID_SIZE)
-        .fill(null)
-        .map((_, y) =>
-            Array(GRID_SIZE)
-                .fill(null)
-                .map((_, x) => ({x, y, ownerId: null})),
-        );
-    const availableCells: { x: number; y: number }[] = [];
-    for (let y = 0; y < GRID_SIZE; y++) {
-        for (let x = 0; x < GRID_SIZE; x++) {
-            availableCells.push({x, y});
-        }
-    }
-    for (let i = availableCells.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [availableCells[i], availableCells[j]] = [
-            availableCells[j],
-            availableCells[i],
-        ];
-    }
-    players.forEach((player, index) => {
-        if (index < availableCells.length) {
-            const cellCoords = availableCells[index];
-            grid[cellCoords.y][cellCoords.x].ownerId = player.id;
-        }
-    });
-    return grid;
-}
-
-// --- GŁÓWNY KOMPONENT APP ---
-
 function App() {
-    // Rozszerzamy GameState o 'map'
-    type GameState = 'idle' | 'map' | 'running' | 'finished';
     const [gameState, setGameState] = useState<GameState>('idle');
 
-    // Stany dla pojedynku (bez zmian)
     const [playerTimer1, setPlayerTimer1] = useState(INIT_TIME_SECONDS);
     const [playerTimer2, setPlayerTimer2] = useState(INIT_TIME_SECONDS);
     const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
-    const [activePlayer, setActivePlayer] = useState<1 | 2>(1); // 1 = Challenger, 2 = Defender
-    const [winner, setWinner] = useState<1 | 2 | null>(null);
+    const [activePlayer, setActivePlayer] = useState<1 | 2>(1); // TODO: 1 = Challenger, 2 = Defender
+    const [winner, setWinner] = useState<1 | 2 | null>(null); // TODO: 1 = Challenger, 2 = Defender
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
-    // NOWE STANY: Zarządzanie całą grą
     const [allPlayers] = useState<Player[]>(MOCK_PLAYERS);
     const [grid, setGrid] = useState<GameGrid>([]);
-    const [activeMapPlayerId, setActiveMapPlayerId] = useState<string | null>(null); // Kto wybiera na mapie
+    const [activeMapPlayerId, setActiveMapPlayerId] = useState<string | null>(null);
     const [challenger, setChallenger] = useState<Player | null>(null);
     const [defender, setDefender] = useState<Player | null>(null);
 
-    // Inicjalizacja siatki i wybór pierwszego gracza
     useEffect(() => {
         if (gameState === 'idle') {
-            const initialGrid = initializeGrid(allPlayers);
-            setGrid(initialGrid);
-            // Losowy gracz zaczyna
+            setGrid(initializeGrid(allPlayers));
             const firstPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
             setActiveMapPlayerId(firstPlayer.id);
         }
     }, [gameState, allPlayers]);
 
-    // Główny timer pojedynku (bez zmian)
     useEffect(() => {
         if (gameState !== 'running') return;
         const intervalId = setInterval(() => {
@@ -95,7 +57,7 @@ function App() {
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
-    // Logika przejęcia terytorium
+    // TODO: Probably add useCallback hook
     const conquerTerritory = (winnerPlayer: Player, loserPlayer: Player) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
@@ -106,11 +68,9 @@ function App() {
             }),
         );
         setGrid(newGrid);
-        // Zwycięzca staje się aktywnym graczem na mapie
         setActiveMapPlayerId(winnerPlayer.id);
     };
 
-    // Logika końca pojedynku (ZAKTUALIZOWANA)
     useEffect(() => {
         if (gameState !== 'running') return;
 
@@ -119,39 +79,27 @@ function App() {
             setPassTimer(PASS_PENALTY_SECONDS);
         }
 
-        // Sprawdzamy, czy mamy uczestników pojedynku
         if (!challenger || !defender) return;
 
         if (playerTimer1 <= 0) {
-            setWinner(2); // Wygrywa Defender (Gracz 2)
+            setWinner(2);
             setGameState('finished');
-            conquerTerritory(defender, challenger); // Przejęcie terytorium
+            conquerTerritory(defender, challenger);
         }
         if (playerTimer2 <= 0) {
-            setWinner(1); // Wygrywa Challenger (Gracz 1)
+            setWinner(1);
             setGameState('finished');
-            conquerTerritory(challenger, defender); // Przejęcie terytorium
+            conquerTerritory(challenger, defender);
         }
-    }, [
-        passTimer,
-        playerTimer1,
-        playerTimer2,
-        isPassPenaltyActive,
-        gameState,
-        challenger,
-        defender,
-    ]);
+    }, [passTimer, playerTimer1, playerTimer2, isPassPenaltyActive, gameState, challenger, defender, conquerTerritory]);
 
-    // Handlery pojedynku (bez zmian)
     const handleCorrectAnswer = () => setActivePlayer(activePlayer === 1 ? 2 : 1);
     const handlePass = () => setIsPassPenaltyActive(true);
 
-    // Start gry (przechodzi do mapy)
     const handleStartGame = () => {
         setGameState('map');
     };
 
-    // Nowa funkcja: Start pojedynku (wywoływana z mapy)
     const handleStartDuel = (
         challengerPlayer: Player,
         defenderPlayer: Player,
@@ -159,36 +107,29 @@ function App() {
         setChallenger(challengerPlayer);
         setDefender(defenderPlayer);
 
-        // Reset timerów pojedynku
         setPlayerTimer1(INIT_TIME_SECONDS);
         setPlayerTimer2(INIT_TIME_SECONDS);
         setPassTimer(PASS_PENALTY_SECONDS);
-        setActivePlayer(1); // Challenger (Gracz 1) zawsze zaczyna
+        setActivePlayer(1); // Challenger goes first
         setWinner(null);
         setIsPassPenaltyActive(false);
-
-        setGameState('running'); // Przełącz na ekran pojedynku
+        setGameState('running');
     };
 
-    // Powrót do mapy po ekranie "Finished"
     const handleReturnToMap = () => {
-        // Resetujemy uczestników pojedynku
         setChallenger(null);
         setDefender(null);
         setGameState('map');
     };
 
-    // Kliknięcie na komórkę mapy
     const handleCellClick = (cell: GridCell) => {
         if (gameState !== 'map' || !activeMapPlayerId) return;
 
-        // Nie można kliknąć pustego pola ani swojego
         if (!cell.ownerId || cell.ownerId === activeMapPlayerId) {
-            console.log('Kliknij pole przeciwnika!');
+            console.log('Click a cell of another player!');
             return;
         }
 
-        // Mamy wyzwanie!
         const currentChallenger = allPlayers.find((p) => p.id === activeMapPlayerId);
         const currentDefender = allPlayers.find((p) => p.id === cell.ownerId);
 
@@ -197,7 +138,6 @@ function App() {
         }
     };
 
-    // Renderowanie zawartości
     const renderContent = () => {
         switch (gameState) {
             case 'running':
@@ -211,15 +151,15 @@ function App() {
                         onCorrectAnswer={handleCorrectAnswer}
                         onPass={handlePass}
                         questionImageUrl="https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg"
-                        // Przekazujemy nazwy graczy do GameScreen
+                        questionTitle="What is this?"
                         challengerName={challenger?.name || 'Gracz 1'}
                         defenderName={defender?.name || 'Gracz 2'}
                     />
                 );
             case 'finished':
                 return <FinishedScreen winner={winner} onPlayAgain={handleReturnToMap}/>;
-            case 'map':
-                { const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId);
+            case 'map': {
+                const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId);
                 return (
                     <>
                         <h1 style={{color: 'white'}}>THE FLOOR</h1>
@@ -233,7 +173,8 @@ function App() {
                             onCellClick={handleCellClick}
                         />
                     </>
-                ); }
+                );
+            }
             case 'idle':
             default:
                 return <WelcomeScreen onStartGame={handleStartGame}/>;

@@ -5,25 +5,29 @@ type PlayersSectionProps = {
     playerTimer1: number;
     playerTimer2: number;
     activePlayer: 1 | 2;
+    challengerName: string;
+    defenderName: string;
 };
 
 const PlayersSection = ({
                             playerTimer1,
                             playerTimer2,
                             activePlayer,
+                            challengerName,
+                            defenderName
                         }: PlayersSectionProps) => (
     <Container>
         <PlayersRow>
             <PlayerCard isActive={activePlayer === 1}>
                 <CardContent>
-                    <PlayerName variant="h5">Player 1</PlayerName>
+                    <PlayerName variant="h5">{challengerName}</PlayerName>
                     <PlayerTimer variant="h1">{playerTimer1}</PlayerTimer>
                 </CardContent>
             </PlayerCard>
             <CenterSpace/>
             <PlayerCard isActive={activePlayer === 2}>
                 <CardContent>
-                    <PlayerName variant="h5">Player 2</PlayerName>
+                    <PlayerName variant="h5">{defenderName}</PlayerName>
                     <PlayerTimer variant="h1">{playerTimer2}</PlayerTimer>
                 </CardContent>
             </PlayerCard>
