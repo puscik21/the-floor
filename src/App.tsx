@@ -15,12 +15,17 @@ const PASS_PENALTY_SECONDS = 3;
 type GameState = 'idle' | 'map' | 'running' | 'finished';
 
 const MOCK_PLAYERS: Player[] = [
-    {id: 'p1', name: 'Anna', color: '#E53935'},
-    {id: 'p2', name: 'Bartek', color: '#1E88E5'},
-    {id: 'p3', name: 'Celina', color: '#43A047'},
-    {id: 'p4', name: 'Daniel', color: '#FDD835'},
-    {id: 'p5', name: 'Ewa', color: '#8E24AA'},
-    {id: 'p6', name: 'Filip', color: '#00897B'},
+    {id: 'p1', name: 'Madzia', color: '#E53935'},
+    {id: 'p2', name: 'Igor', color: '#1E88E5'},
+    {id: 'p3', name: 'Nati', color: '#43A047'},
+    {id: 'p4', name: 'Grześ', color: '#FDD835'},
+    {id: 'p5', name: 'Seba', color: '#8E24AA'},
+    {id: 'p6', name: 'The Michał', color: '#00897B'},
+    {id: 'p7', name: 'Tomek', color: '#FF7043'},
+    {id: 'p8', name: 'Monika', color: '#29B6F6'},
+    {id: 'p9', name: 'Madzia 2', color: '#66BB6A'},
+//     {id: 'p10', name: 'Daniel', color: '#FFD54F'},
+//     {id: 'p11', name: 'Dominika', color: '#AB47BC'},
 ];
 
 function App() {

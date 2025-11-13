@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, styled } from '@mui/material';
 import type {GameGrid, GridCell, Player} from './types.ts';
 
-
 interface PlayerGridProps {
     grid: GameGrid;
     players: Player[];
@@ -25,9 +24,9 @@ export const PlayerGrid: React.FC<PlayerGridProps> = ({
     }, [players]);
 
     const numRows = grid.length;
-    const numCols = grid[0]?.length || 0;
-
     if (numRows === 0) return null;
+    const numCols = grid[0]?.length || 0;
+    if (numCols === 0) return null;
 
     return (
         <GridContainer numCols={numCols} numRows={numRows}>
@@ -43,7 +42,7 @@ export const PlayerGrid: React.FC<PlayerGridProps> = ({
                         style={{ backgroundColor: owner ? owner.color : '#333' }}
                         onClick={() => onCellClick(cell)}
                     >
-                        {owner ? owner.name.toUpperCase() : ''}
+                        {owner ? owner.name : ''}
                     </Cell>
                 );
             })}
@@ -56,14 +55,17 @@ const GridContainer = styled(Box, {
 })<{ numCols: number; numRows: number }>(({numCols, numRows }) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${numCols}, 1fr)`,
-    gridTemplateRows: `repeat(${numRows}, 2fr)`,
+    gridTemplateRows: `repeat(${numRows}, 1fr)`,
+
     width: '90vw',
-    height: '90vw',
     maxWidth: '800px',
+    // aspectRatio: `${numCols} / ${numRows}`, // TODO: Other possibility
+    height: '90vw',
     maxHeight: '800px',
-    border: '4px solid #fff',
+
+    border: '6px solid #333',
     backgroundColor: '#111',
-    gap: '3px',
+    gap: '3px', // TODO: Maybe 0px soon?
     margin: '20px auto',
 }));
 
@@ -77,16 +79,16 @@ const Cell = styled(Box, {
     justifyContent: 'center',
     color: 'white',
     fontWeight: 'bold',
-    fontSize: '0.9rem',
+    fontSize: '1.2rem', // TODO: Maybe size depends on the cell's size?
     cursor: isOwned ? 'pointer' : 'default',
     transition: 'transform 0.1s ease, border 0.2s ease',
     backgroundColor: '#333',
 
-    border: isActive ? `3px solid ${theme.palette.primary.main}` : 'none',
+    border: isActive ? `8px solid ${theme.palette.primary.main}` : 'none',
     zIndex: isActive ? 10 : 1,
 
     '&:hover': {
-        transform: isOwned ? 'scale(1.1)' : 'none',
+        transform: isOwned ? 'scale(1.05)' : 'none',
         zIndex: 11,
     },
 }));
