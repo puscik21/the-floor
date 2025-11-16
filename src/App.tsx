@@ -3,11 +3,11 @@ import {Container, CssBaseline, ThemeProvider} from '@mui/material';
 import {darkTheme} from './theme/theme';
 
 import {WelcomeScreen} from './components/WelcomeScreen';
-import {GameScreen} from './components/GameScreen';
+import {GameScreen} from './components/gamescreen/GameScreen';
 import {FinishedScreen} from './components/FinishedScreen';
 
 function App() {
-    const INIT_TIME_SECONDS = 15;
+    const INIT_TIME_SECONDS = 150;
     const PASS_PENALTY_SECONDS = 3;
     type GameState = 'idle' | 'running' | 'finished';
 
@@ -72,6 +72,7 @@ function App() {
                         isPassPenaltyActive={isPassPenaltyActive}
                         onCorrectAnswer={handleCorrectAnswer}
                         onPass={handlePass}
+                        questionImageUrl="https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg"
                     />
                 );
             case 'finished':
@@ -85,7 +86,7 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
-            <Container maxWidth="sm" sx={{textAlign: 'center', mt: 4}}>
+            <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
                 {renderContent()}
             </Container>
         </ThemeProvider>
