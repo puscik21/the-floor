@@ -3,11 +3,12 @@ import {styled} from '@mui/material/styles';
 import ImageSection from './ImageSection.tsx';
 import PlayersSection from './PlayersSection.tsx';
 import ActionsSection from './ActionsSection.tsx';
+import type {DuelPlayer} from '../../types.ts';
 
 export type GameScreenProps = {
-    playerTimer1: number; // TODO: 1 = Challenger, 2 = Defender
+    playerTimer1: number;
     playerTimer2: number;
-    activePlayer: 1 | 2;
+    activePlayer: DuelPlayer;
     passTimer: number;
     isPassPenaltyActive: boolean;
     onCorrectAnswer: () => void;
@@ -58,7 +59,7 @@ export const GameScreen = ({
 
 const Container = styled(Box)(({theme}) => ({
     height: '100vh',
-    width: '100%', // TODO: can be removed?
+    width: '100%',
     display: 'grid',
     gridTemplateRows: 'minmax(180px, 35vh) 1fr auto',
     gap: theme.spacing(2),

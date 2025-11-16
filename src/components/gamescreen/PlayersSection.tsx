@@ -1,10 +1,11 @@
 import {styled} from '@mui/material/styles';
 import {Box, Card, CardContent, Typography} from '@mui/material';
+import type {DuelPlayer} from '../../types.ts';
 
 type PlayersSectionProps = {
     playerTimer1: number;
     playerTimer2: number;
-    activePlayer: 1 | 2;
+    activePlayer: DuelPlayer;
     challengerName: string;
     defenderName: string;
 };
@@ -18,14 +19,14 @@ const PlayersSection = ({
                         }: PlayersSectionProps) => (
     <Container>
         <PlayersRow>
-            <PlayerCard isActive={activePlayer === 1}>
+            <PlayerCard isActive={activePlayer === 'challenger'}>
                 <CardContent>
                     <PlayerName variant="h5">{challengerName}</PlayerName>
                     <PlayerTimer variant="h1">{playerTimer1}</PlayerTimer>
                 </CardContent>
             </PlayerCard>
             <CenterSpace/>
-            <PlayerCard isActive={activePlayer === 2}>
+            <PlayerCard isActive={activePlayer === 'defender'}>
                 <CardContent>
                     <PlayerName variant="h5">{defenderName}</PlayerName>
                     <PlayerTimer variant="h1">{playerTimer2}</PlayerTimer>
@@ -46,16 +47,15 @@ const Container = styled('section')(() => ({
     justifyContent: 'center',
 }));
 
-const PlayersRow = styled(Box)(({theme}) => ({
+const PlayersRow = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: theme.spacing(50), // TODO: probably bigger Center Space
     width: '100%',
 }));
 
 const CenterSpace = styled(Box)(() => ({
-    flex: '0 1 320px',
+    flex: '0 2 800px',
 }));
 
 const PlayerCard = styled(Card, {
@@ -63,13 +63,12 @@ const PlayerCard = styled(Card, {
 })<{ isActive: boolean }>(({theme, isActive}) => ({
     flex: '1 1 40%',
     // minHeight: 220,
-    // maxWidth: '48%',
+    maxWidth: '25%',
     backgroundColor: '#1a1a1a',
     boxShadow: '0 10px 28px rgba(0,0,0,0.45)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     borderWidth: isActive ? 2 : 0,
     borderStyle: 'solid',
     borderColor: theme.palette.primary.main,

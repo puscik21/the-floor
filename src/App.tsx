@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import {Container, CssBaseline, ThemeProvider} from '@mui/material';
 import {darkTheme} from './theme/theme';
 
@@ -8,8 +8,9 @@ import {FinishedScreen} from './components/FinishedScreen';
 import type {GameGrid, GridCell, Player} from './components/grid/types.ts';
 import {PlayerGrid} from './components/grid/PlayerGrid.tsx';
 import {initializeGrid} from './components/grid/gridUtils.ts';
+import type {DuelPlayer} from './types.ts';
 
-const INIT_TIME_SECONDS = 3;
+const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
 type GameState = 'idle' | 'map' | 'running' | 'finished';
@@ -31,10 +32,12 @@ const MOCK_PLAYERS: Player[] = [
 function App() {
     const [gameState, setGameState] = useState<GameState>('idle');
 
+    // TODO: challengerTimer
+    // TODO: defenderTimer
     const [playerTimer1, setPlayerTimer1] = useState(INIT_TIME_SECONDS);
     const [playerTimer2, setPlayerTimer2] = useState(INIT_TIME_SECONDS);
     const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
-    const [activePlayer, setActivePlayer] = useState<1 | 2>(1); // TODO: 1 = Challenger, 2 = Defender
+    const [activePlayer, setActivePlayer] = useState<DuelPlayer>('challenger');
     const [winner, setWinner] = useState<Player | null>(null);
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
@@ -55,15 +58,16 @@ function App() {
     useEffect(() => {
         if (gameState !== 'running') return;
         const intervalId = setInterval(() => {
-            if (activePlayer === 1) setPlayerTimer1((prev) => prev - 1);
+            if (activePlayer === 'challenger') setPlayerTimer1((prev) => prev - 1);
             else setPlayerTimer2((prev) => prev - 1);
+
             if (isPassPenaltyActive) setPassTimer((prev) => prev - 1);
         }, 1000);
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
-    // TODO: Probably add useCallback hook
-    const conquerTerritory = (winnerPlayer: Player, loserPlayer: Player) => {
+    // useCallback() as we use it in useEffect
+    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
                 if (cell.ownerId === loserPlayer.id) {
@@ -74,7 +78,7 @@ function App() {
         );
         setGrid(newGrid);
         setActiveMapPlayerId(winnerPlayer.id);
-    };
+    }, [grid]);
 
     useEffect(() => {
         if (gameState !== 'running') return;
@@ -98,7 +102,7 @@ function App() {
         }
     }, [passTimer, playerTimer1, playerTimer2, isPassPenaltyActive, gameState, challenger, defender, conquerTerritory]);
 
-    const handleCorrectAnswer = () => setActivePlayer(activePlayer === 1 ? 2 : 1);
+    const handleCorrectAnswer = () => setActivePlayer(activePlayer === 'challenger' ? 'defender' : 'challenger');
     const handlePass = () => setIsPassPenaltyActive(true);
 
     const handleStartGame = () => {
@@ -115,7 +119,7 @@ function App() {
         setPlayerTimer1(INIT_TIME_SECONDS);
         setPlayerTimer2(INIT_TIME_SECONDS);
         setPassTimer(PASS_PENALTY_SECONDS);
-        setActivePlayer(1); // Challenger goes first
+        setActivePlayer('challenger');
         setWinner(null);
         setIsPassPenaltyActive(false);
         setGameState('running');
@@ -161,8 +165,13 @@ function App() {
                         defenderName={defender?.name || 'Gracz 2'}
                     />
                 );
-            case 'finished':
-                return <FinishedScreen winner={winner!} onPlayAgain={handleReturnToMap}/>;
+            case 'finished': {
+                if (!winner) {
+                    handleReturnToMap();
+                    return null;
+                }
+                return <FinishedScreen winner={winner} onPlayAgain={handleReturnToMap}/>;
+            }
             case 'map': {
                 const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId);
                 return (
