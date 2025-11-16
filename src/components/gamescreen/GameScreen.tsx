@@ -5,7 +5,7 @@ import PlayersSection from './PlayersSection.tsx';
 import ActionsSection from './ActionsSection.tsx';
 
 export type GameScreenProps = {
-    playerTimer1: number;
+    playerTimer1: number; // TODO: 1 = Challenger, 2 = Defender
     playerTimer2: number;
     activePlayer: 1 | 2;
     passTimer: number;
@@ -14,8 +14,12 @@ export type GameScreenProps = {
     onPass: () => void;
     questionImageUrl?: string;
     questionTitle?: string;
+    challengerName: string;
+    defenderName: string;
 };
 
+// TODO: add description
+// TODO: add START button
 export const GameScreen = ({
                                playerTimer1,
                                playerTimer2,
@@ -26,6 +30,8 @@ export const GameScreen = ({
                                onPass,
                                questionImageUrl,
                                questionTitle,
+                               challengerName,
+                               defenderName
                            }: GameScreenProps) => {
     return (
         <Container>
@@ -37,6 +43,8 @@ export const GameScreen = ({
                 playerTimer1={playerTimer1}
                 playerTimer2={playerTimer2}
                 activePlayer={activePlayer}
+                challengerName={challengerName}
+                defenderName={defenderName}
             />
             <ActionsSection
                 passTimer={passTimer}
