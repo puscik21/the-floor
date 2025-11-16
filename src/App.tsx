@@ -35,7 +35,7 @@ function App() {
     const [playerTimer2, setPlayerTimer2] = useState(INIT_TIME_SECONDS);
     const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
     const [activePlayer, setActivePlayer] = useState<1 | 2>(1); // TODO: 1 = Challenger, 2 = Defender
-    const [winner, setWinner] = useState<1 | 2 | null>(null); // TODO: 1 = Challenger, 2 = Defender
+    const [winner, setWinner] = useState<Player | null>(null);
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
     const [allPlayers] = useState<Player[]>(MOCK_PLAYERS);
@@ -87,12 +87,12 @@ function App() {
         if (!challenger || !defender) return;
 
         if (playerTimer1 <= 0) {
-            setWinner(2);
+            setWinner(defender);
             setGameState('finished');
             conquerTerritory(defender, challenger);
         }
         if (playerTimer2 <= 0) {
-            setWinner(1);
+            setWinner(challenger);
             setGameState('finished');
             conquerTerritory(challenger, defender);
         }
@@ -162,7 +162,7 @@ function App() {
                     />
                 );
             case 'finished':
-                return <FinishedScreen winner={winner} onPlayAgain={handleReturnToMap}/>;
+                return <FinishedScreen winner={winner!} onPlayAgain={handleReturnToMap}/>;
             case 'map': {
                 const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId);
                 return (
