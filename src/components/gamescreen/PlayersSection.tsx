@@ -3,16 +3,16 @@ import {Box, Card, CardContent, Typography} from '@mui/material';
 import type {DuelPlayer} from '../../types.ts';
 
 type PlayersSectionProps = {
-    playerTimer1: number;
-    playerTimer2: number;
+    challengerTimer: number;
+    defenderTimer: number;
     activePlayer: DuelPlayer;
     challengerName: string;
     defenderName: string;
 };
 
 const PlayersSection = ({
-                            playerTimer1,
-                            playerTimer2,
+                            challengerTimer,
+                            defenderTimer,
                             activePlayer,
                             challengerName,
                             defenderName
@@ -22,14 +22,14 @@ const PlayersSection = ({
             <PlayerCard isActive={activePlayer === 'challenger'}>
                 <CardContent>
                     <PlayerName variant="h5">{challengerName}</PlayerName>
-                    <PlayerTimer variant="h1">{playerTimer1}</PlayerTimer>
+                    <PlayerTimer variant="h1">{challengerTimer}</PlayerTimer>
                 </CardContent>
             </PlayerCard>
             <CenterSpace/>
             <PlayerCard isActive={activePlayer === 'defender'}>
                 <CardContent>
                     <PlayerName variant="h5">{defenderName}</PlayerName>
-                    <PlayerTimer variant="h1">{playerTimer2}</PlayerTimer>
+                    <PlayerTimer variant="h1">{defenderTimer}</PlayerTimer>
                 </CardContent>
             </PlayerCard>
         </PlayersRow>

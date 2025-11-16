@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Container, CssBaseline, ThemeProvider} from '@mui/material';
 import {darkTheme} from './theme/theme';
 
@@ -31,11 +31,8 @@ const MOCK_PLAYERS: Player[] = [
 
 function App() {
     const [gameState, setGameState] = useState<GameState>('idle');
-
-    // TODO: challengerTimer
-    // TODO: defenderTimer
-    const [playerTimer1, setPlayerTimer1] = useState(INIT_TIME_SECONDS);
-    const [playerTimer2, setPlayerTimer2] = useState(INIT_TIME_SECONDS);
+    const [challengerTimer, setChallengerTimer] = useState(INIT_TIME_SECONDS);
+    const [defenderTimer, setDefenderTimer] = useState(INIT_TIME_SECONDS);
     const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
     const [activePlayer, setActivePlayer] = useState<DuelPlayer>('challenger');
     const [winner, setWinner] = useState<Player | null>(null);
@@ -58,8 +55,8 @@ function App() {
     useEffect(() => {
         if (gameState !== 'running') return;
         const intervalId = setInterval(() => {
-            if (activePlayer === 'challenger') setPlayerTimer1((prev) => prev - 1);
-            else setPlayerTimer2((prev) => prev - 1);
+            if (activePlayer === 'challenger') setChallengerTimer((prev) => prev - 1);
+            else setDefenderTimer((prev) => prev - 1);
 
             if (isPassPenaltyActive) setPassTimer((prev) => prev - 1);
         }, 1000);
@@ -90,17 +87,17 @@ function App() {
 
         if (!challenger || !defender) return;
 
-        if (playerTimer1 <= 0) {
+        if (challengerTimer <= 0) {
             setWinner(defender);
             setGameState('finished');
             conquerTerritory(defender, challenger);
         }
-        if (playerTimer2 <= 0) {
+        if (defenderTimer <= 0) {
             setWinner(challenger);
             setGameState('finished');
             conquerTerritory(challenger, defender);
         }
-    }, [passTimer, playerTimer1, playerTimer2, isPassPenaltyActive, gameState, challenger, defender, conquerTerritory]);
+    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, conquerTerritory]);
 
     const handleCorrectAnswer = () => setActivePlayer(activePlayer === 'challenger' ? 'defender' : 'challenger');
     const handlePass = () => setIsPassPenaltyActive(true);
@@ -116,8 +113,8 @@ function App() {
         setChallenger(challengerPlayer);
         setDefender(defenderPlayer);
 
-        setPlayerTimer1(INIT_TIME_SECONDS);
-        setPlayerTimer2(INIT_TIME_SECONDS);
+        setChallengerTimer(INIT_TIME_SECONDS);
+        setDefenderTimer(INIT_TIME_SECONDS);
         setPassTimer(PASS_PENALTY_SECONDS);
         setActivePlayer('challenger');
         setWinner(null);
@@ -152,8 +149,8 @@ function App() {
             case 'running':
                 return (
                     <GameScreen
-                        playerTimer1={playerTimer1}
-                        playerTimer2={playerTimer2}
+                        challengerTimer={challengerTimer}
+                        defenderTimer={defenderTimer}
                         activePlayer={activePlayer}
                         passTimer={passTimer}
                         isPassPenaltyActive={isPassPenaltyActive}

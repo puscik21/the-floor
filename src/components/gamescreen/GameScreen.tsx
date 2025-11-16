@@ -6,8 +6,8 @@ import ActionsSection from './ActionsSection.tsx';
 import type {DuelPlayer} from '../../types.ts';
 
 export type GameScreenProps = {
-    playerTimer1: number;
-    playerTimer2: number;
+    challengerTimer: number;
+    defenderTimer: number;
     activePlayer: DuelPlayer;
     passTimer: number;
     isPassPenaltyActive: boolean;
@@ -22,8 +22,8 @@ export type GameScreenProps = {
 // TODO: add description
 // TODO: add START button
 export const GameScreen = ({
-                               playerTimer1,
-                               playerTimer2,
+                               challengerTimer,
+                               defenderTimer,
                                activePlayer,
                                passTimer,
                                isPassPenaltyActive,
@@ -41,8 +41,8 @@ export const GameScreen = ({
                 questionTitle={questionTitle}
             />
             <PlayersSection
-                playerTimer1={playerTimer1}
-                playerTimer2={playerTimer2}
+                challengerTimer={challengerTimer}
+                defenderTimer={defenderTimer}
                 activePlayer={activePlayer}
                 challengerName={challengerName}
                 defenderName={defenderName}
