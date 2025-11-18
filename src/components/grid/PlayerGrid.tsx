@@ -9,7 +9,7 @@ interface PlayerGridProps {
     onCellClick: (cell: GridCell) => void;
 }
 
-export const PlayerGrid: React.FC<PlayerGridProps> = ({
+const PlayerGrid: React.FC<PlayerGridProps> = ({
                                                           grid,
                                                           players,
                                                           activePlayerId,
@@ -49,6 +49,8 @@ export const PlayerGrid: React.FC<PlayerGridProps> = ({
         </GridContainer>
     );
 };
+
+export default PlayerGrid;
 
 const GridContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'numCols' && prop !== 'numRows',

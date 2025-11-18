@@ -4,7 +4,7 @@ type WelcomeScreenProps = {
     onStartGame: () => void;
 };
 
-export const WelcomeScreen = ({onStartGame}: WelcomeScreenProps) => {
+const WelcomeScreen = ({onStartGame}: WelcomeScreenProps) => {
     return (
         <Box>
             <Typography variant="h2" component="h1" gutterBottom>
@@ -19,3 +19,5 @@ export const WelcomeScreen = ({onStartGame}: WelcomeScreenProps) => {
         </Box>
     );
 };
+
+export default WelcomeScreen

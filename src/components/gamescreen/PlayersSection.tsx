@@ -1,40 +1,36 @@
 import {styled} from '@mui/material/styles';
 import {Box, Card, CardContent, Typography} from '@mui/material';
-import type {DuelPlayer} from '../../types.ts';
+import {useGameContext} from '../../context/GameContext.tsx';
 
-type PlayersSectionProps = {
-    challengerTimer: number;
-    defenderTimer: number;
-    activePlayer: DuelPlayer;
-    challengerName: string;
-    defenderName: string;
-};
+const PlayersSection = () => {
+    const {
+        challengerTimer,
+        defenderTimer,
+        activePlayer,
+        challengerName,
+        defenderName,
+    } = useGameContext();
 
-const PlayersSection = ({
-                            challengerTimer,
-                            defenderTimer,
-                            activePlayer,
-                            challengerName,
-                            defenderName
-                        }: PlayersSectionProps) => (
-    <Container>
-        <PlayersRow>
-            <PlayerCard isActive={activePlayer === 'challenger'}>
-                <CardContent>
-                    <PlayerName variant="h5">{challengerName}</PlayerName>
-                    <PlayerTimer variant="h1">{challengerTimer}</PlayerTimer>
-                </CardContent>
-            </PlayerCard>
-            <CenterSpace/>
-            <PlayerCard isActive={activePlayer === 'defender'}>
-                <CardContent>
-                    <PlayerName variant="h5">{defenderName}</PlayerName>
-                    <PlayerTimer variant="h1">{defenderTimer}</PlayerTimer>
-                </CardContent>
-            </PlayerCard>
-        </PlayersRow>
-    </Container>
-);
+    return (
+        <Container>
+            <PlayersRow>
+                <PlayerCard isActive={activePlayer === 'challenger'}>
+                    <CardContent>
+                        <PlayerName variant="h5">{challengerName}</PlayerName>
+                        <PlayerTimer variant="h1">{challengerTimer}</PlayerTimer>
+                    </CardContent>
+                </PlayerCard>
+                <CenterSpace/>
+                <PlayerCard isActive={activePlayer === 'defender'}>
+                    <CardContent>
+                        <PlayerName variant="h5">{defenderName}</PlayerName>
+                        <PlayerTimer variant="h1">{defenderTimer}</PlayerTimer>
+                    </CardContent>
+                </PlayerCard>
+            </PlayersRow>
+        </Container>
+    );
+}
 
 export default PlayersSection;
 

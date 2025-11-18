@@ -1,27 +1,27 @@
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
+import {useGameContext} from '../../context/GameContext.tsx';
 
-type ImageSectionProps = {
-    questionImageUrl?: string;
-    questionTitle?: string;
+const ImageSection = () => {
+    const {questionImageUrl, questionTitle} = useGameContext();
+
+    return (
+        <Container>
+            {questionImageUrl ? (
+                <StyledImg
+                    src={questionImageUrl}
+                    alt={questionTitle}
+                />
+            ) : (
+                <ImagePlaceholder>
+                    <Typography variant="subtitle1" sx={{opacity: 0.7}}>
+                        (Tu pojawi się zdjęcie do pytania)
+                    </Typography>
+                </ImagePlaceholder>
+            )}
+        </Container>
+    );
 };
-
-const ImageSection = ({ questionImageUrl, questionTitle = 'Pytanie' }: ImageSectionProps) => (
-    <Container>
-        {questionImageUrl ? (
-            <StyledImg
-                src={questionImageUrl}
-                alt={questionTitle}
-            />
-        ) : (
-            <ImagePlaceholder>
-                <Typography variant="subtitle1" sx={{ opacity: 0.7 }}>
-                    (Tu pojawi się zdjęcie do pytania)
-                </Typography>
-            </ImagePlaceholder>
-        )}
-    </Container>
-);
 
 export default ImageSection;
 

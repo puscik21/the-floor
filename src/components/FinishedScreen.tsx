@@ -6,7 +6,7 @@ type FinishedScreenProps = {
     onPlayAgain: () => void;
 };
 
-export const FinishedScreen = ({winner, onPlayAgain}: FinishedScreenProps) => {
+const FinishedScreen = ({winner, onPlayAgain}: FinishedScreenProps) => {
     return (
         <Box>
             <Typography variant="h3" gutterBottom>
@@ -21,3 +21,5 @@ export const FinishedScreen = ({winner, onPlayAgain}: FinishedScreenProps) => {
         </Box>
     );
 };
+
+export default FinishedScreen;
