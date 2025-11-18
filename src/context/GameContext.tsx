@@ -3,7 +3,7 @@ import type {DuelPlayer} from '../types';
 import type {GameGrid, GridCell, Player} from '../components/grid/types.ts';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
-const INIT_TIME_SECONDS = 3000;
+const INIT_TIME_SECONDS = 3;
 const PASS_PENALTY_SECONDS = 3;
 
 export type GameState = 'idle' | 'map' | 'running' | 'finished';

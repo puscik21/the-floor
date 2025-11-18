@@ -8,13 +8,8 @@ import FinishedScreen from './FinishedScreen.tsx';
 const GameContent = () => {
     const {
         gameState,
-        winner,
         allPlayers,
-        grid,
         activeMapPlayerId,
-        handleStartGame,
-        handleReturnToMap,
-        handleCellClick,
     } = useGameContext();
 
     const renderContent = () => {
@@ -23,32 +18,23 @@ const GameContent = () => {
                 return <GameScreen/>;
 
             case 'finished': {
-                if (!winner) {
-                    handleReturnToMap();
-                    return null;
-                }
-                return <FinishedScreen winner={winner} onPlayAgain={handleReturnToMap}/>;
+                return <FinishedScreen/>;
             }
             case 'map': {
-                const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId);
+                const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId); // TODO: possibly move to GameContext (instead of activeMapPlayerId?)
                 return (
                     <>
                         <h1 style={{color: 'white'}}>THE FLOOR</h1>
                         <h3 style={{color: 'white'}}>
                             Ruch gracza: <span style={{color: activePlayer?.color}}>{activePlayer?.name}</span>
                         </h3>
-                        <PlayerGrid
-                            grid={grid}
-                            players={allPlayers}
-                            activePlayerId={activeMapPlayerId}
-                            onCellClick={handleCellClick}
-                        />
+                        <PlayerGrid/>
                     </>
                 );
             }
             case 'idle':
             default:
-                return <WelcomeScreen onStartGame={handleStartGame}/>;
+                return <WelcomeScreen/>;
         }
     };
 

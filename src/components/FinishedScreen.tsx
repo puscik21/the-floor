@@ -1,12 +1,13 @@
 import {Box, Button, Typography} from '@mui/material';
-import type {Player} from './grid/types.ts';
+import {useGameContext} from '../context/GameContext.tsx';
 
-type FinishedScreenProps = {
-    winner: Player;
-    onPlayAgain: () => void;
-};
+const FinishedScreen = () => {
+    const {winner, handleReturnToMap} = useGameContext();
+    if (!winner) {
+        handleReturnToMap();
+        return null;
+    }
 
-const FinishedScreen = ({winner, onPlayAgain}: FinishedScreenProps) => {
     return (
         <Box>
             <Typography variant="h3" gutterBottom>
@@ -15,7 +16,7 @@ const FinishedScreen = ({winner, onPlayAgain}: FinishedScreenProps) => {
             <Typography variant="h5" color="textSecondary" gutterBottom>
                 Gratulacja!
             </Typography>
-            <Button variant="contained" size="large" onClick={onPlayAgain} sx={{mt: 2}}>
+            <Button variant="contained" size="large" onClick={handleReturnToMap} sx={{mt: 2}}>
                 Kolejna runda?
             </Button>
         </Box>

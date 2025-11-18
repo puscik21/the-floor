@@ -1,27 +1,18 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
-import type {GameGrid, GridCell, Player} from './types.ts';
+import {Box, styled} from '@mui/material';
+import type {Player} from './types.ts';
+import {useGameContext} from '../../context/GameContext.tsx';
 
-interface PlayerGridProps {
-    grid: GameGrid;
-    players: Player[];
-    activePlayerId: string | null;
-    onCellClick: (cell: GridCell) => void;
-}
+const PlayerGrid = () => {
+    const {grid, allPlayers, activeMapPlayerId, handleCellClick} = useGameContext();
 
-const PlayerGrid: React.FC<PlayerGridProps> = ({
-                                                          grid,
-                                                          players,
-                                                          activePlayerId,
-                                                          onCellClick,
-                                                      }) => {
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
-        players.forEach((player) => {
+        allPlayers.forEach((player) => {
             map.set(player.id, player);
         });
         return map;
-    }, [players]);
+    }, [allPlayers]);
 
     const numRows = grid.length;
     if (numRows === 0) return null;
@@ -32,15 +23,15 @@ const PlayerGrid: React.FC<PlayerGridProps> = ({
         <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell) => {
                 const owner = cell.ownerId ? playerMap.get(cell.ownerId) : null;
-                const isActive = owner?.id === activePlayerId;
+                const isActive = owner?.id === activeMapPlayerId;
 
                 return (
                     <Cell
                         key={`${cell.x}-${cell.y}`}
                         isOwned={!!owner}
                         isActive={isActive}
-                        style={{ backgroundColor: owner ? owner.color : '#333' }}
-                        onClick={() => onCellClick(cell)}
+                        style={{backgroundColor: owner ? owner.color : '#333'}}
+                        onClick={() => handleCellClick(cell)}
                     >
                         {owner ? owner.name : ''}
                     </Cell>
@@ -54,7 +45,7 @@ export default PlayerGrid;
 
 const GridContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'numCols' && prop !== 'numRows',
-})<{ numCols: number; numRows: number }>(({numCols, numRows }) => ({
+})<{ numCols: number; numRows: number }>(({numCols, numRows}) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${numCols}, 1fr)`,
     gridTemplateRows: `repeat(${numRows}, 1fr)`,
@@ -73,7 +64,7 @@ const GridContainer = styled(Box, {
 
 const Cell = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'isOwned' && prop !== 'isActive',
-})<{ isOwned: boolean; isActive: boolean }>(({ theme, isOwned, isActive }) => ({
+})<{ isOwned: boolean; isActive: boolean }>(({theme, isOwned, isActive}) => ({
     width: '100%',
     height: '100%',
     display: 'flex',
