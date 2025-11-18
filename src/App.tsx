@@ -7,27 +7,13 @@ import {GameScreen} from './components/gamescreen/GameScreen';
 import {FinishedScreen} from './components/FinishedScreen';
 import type {GameGrid, GridCell, Player} from './components/grid/types.ts';
 import {PlayerGrid} from './components/grid/PlayerGrid.tsx';
-import {initializeGrid} from './components/grid/gridUtils.ts';
+import {initializeGrid, MOCK_PLAYERS} from './components/grid/gridUtils.ts';
 import type {DuelPlayer} from './types.ts';
 
-const INIT_TIME_SECONDS = 300;
+const INIT_TIME_SECONDS = 30;
 const PASS_PENALTY_SECONDS = 3;
 
 type GameState = 'idle' | 'map' | 'running' | 'finished';
-
-const MOCK_PLAYERS: Player[] = [
-    {id: 'p1', name: 'Madzia', color: '#E53935'},
-    {id: 'p2', name: 'Igor', color: '#1E88E5'},
-    {id: 'p3', name: 'Nati', color: '#43A047'},
-    {id: 'p4', name: 'Grześ', color: '#FDD835'},
-    {id: 'p5', name: 'Seba', color: '#8E24AA'},
-    {id: 'p6', name: 'The Michał', color: '#00897B'},
-    {id: 'p7', name: 'Tomek', color: '#FF7043'},
-    {id: 'p8', name: 'Monika', color: '#29B6F6'},
-    {id: 'p9', name: 'Madzia 2', color: '#66BB6A'},
-//     {id: 'p10', name: 'Daniel', color: '#FFD54F'},
-//     {id: 'p11', name: 'Dominika', color: '#AB47BC'},
-];
 
 function App() {
     const [gameState, setGameState] = useState<GameState>('idle');
