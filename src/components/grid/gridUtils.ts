@@ -1,4 +1,4 @@
-import type {GameGrid, Player} from './types';
+import type {GameGrid, Player} from '../../types.ts';
 
 type Dimensions = {
     rows: number;

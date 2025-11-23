@@ -1,6 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useState} from 'react';
-import type {DuelPlayer} from '../types';
-import type {GameGrid, GridCell, Player} from '../components/grid/types.ts';
+import type {DuelPlayer, GameGrid, GridCell, Player} from '../types';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
 const INIT_TIME_SECONDS = 3;

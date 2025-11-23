@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, styled} from '@mui/material';
-import type {Player} from './types.ts';
 import {useGameContext} from '../../context/GameContext.tsx';
+import type {Player} from '../../types.ts';
 
 const PlayerGrid = () => {
     const {grid, allPlayers, activeMapPlayerId, handleCellClick} = useGameContext();
