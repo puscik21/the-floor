@@ -8,8 +8,7 @@ import FinishedScreen from './FinishedScreen.tsx';
 const GameContent = () => {
     const {
         gameState,
-        allPlayers,
-        activeMapPlayerId,
+        activeMapPlayer,
     } = useGameContext();
 
     const renderContent = () => {
@@ -21,12 +20,11 @@ const GameContent = () => {
                 return <FinishedScreen/>;
             }
             case 'map': {
-                const activePlayer = allPlayers.find(p => p.id === activeMapPlayerId); // TODO: possibly move to GameContext (instead of activeMapPlayerId?)
                 return (
                     <>
                         <h1 style={{color: 'white'}}>THE FLOOR</h1>
                         <h3 style={{color: 'white'}}>
-                            Ruch gracza: <span style={{color: activePlayer?.color}}>{activePlayer?.name}</span>
+                            Ruch gracza: <span style={{color: activeMapPlayer?.color}}>{activeMapPlayer?.name}</span>
                         </h3>
                         <PlayerGrid/>
                     </>

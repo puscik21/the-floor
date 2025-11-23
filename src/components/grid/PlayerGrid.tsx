@@ -4,7 +4,7 @@ import {useGameContext} from '../../context/GameContext.tsx';
 import type {Player} from '../../types.ts';
 
 const PlayerGrid = () => {
-    const {grid, allPlayers, activeMapPlayerId, handleCellClick} = useGameContext();
+    const {grid, allPlayers, activeMapPlayer, handleCellClick} = useGameContext();
 
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
@@ -23,7 +23,7 @@ const PlayerGrid = () => {
         <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell) => {
                 const owner = cell.ownerId ? playerMap.get(cell.ownerId) : null;
-                const isActive = owner?.id === activeMapPlayerId;
+                const isActive = owner?.id === activeMapPlayer?.id;
 
                 return (
                     <Cell

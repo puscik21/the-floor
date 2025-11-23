@@ -16,7 +16,7 @@ interface GameContextValue {
     // Map state
     grid: GameGrid;
     allPlayers: Player[];
-    activeMapPlayerId: string | null;
+    activeMapPlayer: Player | null;
 
     // Duel state
     challengerTimer: number;
@@ -52,7 +52,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
 
     const [allPlayers] = useState<Player[]>(MOCK_PLAYERS);
     const [grid, setGrid] = useState<GameGrid>([]);
-    const [activeMapPlayerId, setActiveMapPlayerId] = useState<string | null>(null);
+    const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
     const [challenger, setChallenger] = useState<Player | null>(null);
     const [defender, setDefender] = useState<Player | null>(null);
 
@@ -60,7 +60,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         if (gameState === 'idle') {
             setGrid(initializeGrid(allPlayers));
             const firstPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
-            setActiveMapPlayerId(firstPlayer.id);
+            setActiveMapPlayer(firstPlayer);
         }
     }, [gameState, allPlayers]);
 
@@ -85,7 +85,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
             }),
         );
         setGrid(newGrid);
-        setActiveMapPlayerId(winnerPlayer.id);
+        setActiveMapPlayer(winnerPlayer);
     }, [grid]);
 
     useEffect(() => {
@@ -124,14 +124,14 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     };
 
     const handleCellClick = (cell: GridCell) => {
-        if (gameState !== 'map' || !activeMapPlayerId) return;
+        if (gameState !== 'map' || !activeMapPlayer) return;
 
-        if (!cell.ownerId || cell.ownerId === activeMapPlayerId) {
+        if (!cell.ownerId || cell.ownerId === activeMapPlayer.id) {
             console.log('Kliknij pole przeciwnika!'); // TODO: Possibly add Toast here
             return;
         }
 
-        const currentChallenger = allPlayers.find((p) => p.id === activeMapPlayerId);
+        const currentChallenger = allPlayers.find((p) => p.id === activeMapPlayer.id);
         const currentDefender = allPlayers.find((p) => p.id === cell.ownerId);
 
         if (currentChallenger && currentDefender) {
@@ -157,7 +157,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         winner,
         grid,
         allPlayers,
-        activeMapPlayerId,
+        activeMapPlayer,
         challengerTimer,
         defenderTimer,
         activePlayer,
