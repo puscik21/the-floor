@@ -1,3 +1,5 @@
+export type DuelPlayer = 'challenger' | 'defender';
+
 export interface Player {
     id: string;
     name: string;
