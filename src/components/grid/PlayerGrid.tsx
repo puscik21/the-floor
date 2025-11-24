@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, styled} from '@mui/material';
+import {Box, styled, Typography} from '@mui/material';
 import {useGameContext} from '../../context/GameContext.tsx';
 import type {Player} from '../../types.ts';
 
@@ -33,7 +33,12 @@ const PlayerGrid = () => {
                         style={{backgroundColor: owner ? owner.color : '#333'}}
                         onClick={() => handleCellClick(cell)}
                     >
-                        {owner ? owner.name : ''}
+                        <Typography variant="h4" fontWeight="bold">
+                            {owner ? owner.name : ''}
+                        </Typography>
+                        <Typography variant="h5" color="textSecondary">
+                            {owner ? `(${owner.category})` : ''}
+                        </Typography>
                     </Cell>
                 );
             })}
@@ -68,11 +73,9 @@ const Cell = styled(Box, {
     width: '100%',
     height: '100%',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: '1.2rem', // TODO: Maybe size depends on the cell's size?
     cursor: isOwned ? 'pointer' : 'default',
     transition: 'transform 0.1s ease, border 0.2s ease',
     backgroundColor: '#333',
