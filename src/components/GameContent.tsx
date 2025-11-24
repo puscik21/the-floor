@@ -13,9 +13,9 @@ const GameContent = () => {
 
     const renderContent = () => {
         switch (gameState) {
-            case 'running':
+            case 'ready':
+            case 'duel':
                 return <GameScreen/>;
-
             case 'finished': {
                 return <FinishedScreen/>;
             }
@@ -30,7 +30,7 @@ const GameContent = () => {
                     </>
                 );
             }
-            case 'idle':
+            case 'init':
             default:
                 return <WelcomeScreen/>;
         }

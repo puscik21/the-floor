@@ -1,29 +1,61 @@
-import {Box, Typography} from '@mui/material';
+import {Box, Button, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
 
 const ImageSection = () => {
-    const {questionImageUrl, questionTitle} = useGameContext();
+    const {gameState, questionImageUrl, questionTitle, handleStartDuel} = useGameContext();
 
-    return (
-        <Container>
-            {questionImageUrl ? (
-                <StyledImg
-                    src={questionImageUrl}
-                    alt={questionTitle}
-                />
-            ) : (
-                <ImagePlaceholder>
-                    <Typography variant="subtitle1" sx={{opacity: 0.7}}>
-                        (Tu pojawi się zdjęcie do pytania)
+    if (gameState === 'ready') {
+        return (
+            <Container>
+                <StartButton onClick={handleStartDuel} variant="contained" color="primary">
+                    <Typography variant="h4" sx={{fontWeight: 'bold'}}>
+                        ROZPOCZNIJ GRĘ
                     </Typography>
-                </ImagePlaceholder>
-            )}
-        </Container>
-    );
+                </StartButton>
+            </Container>
+        );
+    }
+
+    else if (gameState === 'duel') {
+        return (
+            <Container>
+                {questionImageUrl ? (
+                    <StyledImg
+                        src={questionImageUrl}
+                        alt={questionTitle}
+                    />
+                ) : (
+                    <ImagePlaceholder>
+                        <Typography variant="subtitle1" sx={{opacity: 0.7}}>
+                            (Tu pojawi się zdjęcie do pytania)
+                        </Typography>
+                    </ImagePlaceholder>
+                )}
+            </Container>
+        );
+    } else {
+        return null;
+    }
 };
 
 export default ImageSection;
+
+const StartButton = styled(Button)`
+    width: 80%;
+    height: 80%;
+    max-width: 600px;
+    background-color: ${({theme}) => theme.palette.primary.main};
+    color: ${({theme}) => theme.palette.primary.contrastText};
+    border-radius: ${({theme}) => (theme.shape.borderRadius as number) * 2}px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: scale(1.02);
+        background-color: ${({theme}) => theme.palette.primary.dark};
+    }
+`;
 
 const Container = styled('section')`
     max-width: min(1800px, 95vw);
