@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useState} from 'react
 import type {DuelPlayer, GameGrid, GridCell, Player} from '../types';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
-const INIT_TIME_SECONDS = 3;
+const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
 export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
