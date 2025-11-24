@@ -5,7 +5,7 @@ import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
-export type GameState = 'idle' | 'map' | 'running' | 'finished';
+export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
 
 // TODO: Move those values to some grouping Objects
 interface GameContextValue {
@@ -34,6 +34,7 @@ interface GameContextValue {
 
     // Actions
     handleStartGame: () => void;
+    handleStartDuel: () => void;
     handleReturnToMap: () => void;
     handleCellClick: (cell: GridCell) => void;
     handleCorrectAnswer: () => void;
@@ -43,7 +44,7 @@ interface GameContextValue {
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
-    const [gameState, setGameState] = useState<GameState>('idle');
+    const [gameState, setGameState] = useState<GameState>('init');
     const [challengerTimer, setChallengerTimer] = useState(INIT_TIME_SECONDS);
     const [defenderTimer, setDefenderTimer] = useState(INIT_TIME_SECONDS);
     const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
@@ -59,7 +60,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [activeQuestionCategory, setActiveQuestionCategory] = useState<string | null>(null);
 
     useEffect(() => {
-        if (gameState === 'idle') {
+        if (gameState === 'init') {
             setGrid(initializeGrid(allPlayers));
             const firstPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
             setActiveMapPlayer(firstPlayer);
@@ -67,7 +68,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     }, [gameState, allPlayers]);
 
     useEffect(() => {
-        if (gameState !== 'running') return;
+        if (gameState !== 'duel') return;
         const intervalId = setInterval(() => {
             if (activePlayer === 'challenger') setChallengerTimer((prev) => prev - 1);
             else setDefenderTimer((prev) => prev - 1);
@@ -91,7 +92,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     }, [grid]);
 
     useEffect(() => {
-        if (gameState !== 'running') return;
+        if (gameState !== 'duel') return;
 
         if (isPassPenaltyActive && passTimer <= 0) {
             setIsPassPenaltyActive(false);
@@ -119,6 +120,10 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setGameState('map');
     };
 
+    const handleStartDuel = () => {
+        setGameState('duel');
+    };
+
     const handleReturnToMap = () => {
         setChallenger(null);
         setDefender(null);
@@ -137,11 +142,11 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         const currentDefender = allPlayers.find((p) => p.id === cell.ownerId);
 
         if (currentChallenger && currentDefender) {
-            startDuel(currentChallenger, currentDefender);
+            prepareDuel(currentChallenger, currentDefender);
         }
     };
 
-    const startDuel = (challengerPlayer: Player, defenderPlayer: Player) => {
+    const prepareDuel = (challengerPlayer: Player, defenderPlayer: Player) => {
         setChallenger(challengerPlayer);
         setDefender(defenderPlayer);
 
@@ -152,7 +157,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setActiveQuestionCategory(defenderPlayer.category)
         setWinner(null);
         setIsPassPenaltyActive(false);
-        setGameState('running');
+        setGameState('ready');
     };
 
     const value: GameContextValue = {
@@ -174,6 +179,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         questionTitle: 'Co to jest?',
 
         handleStartGame,
+        handleStartDuel,
         handleReturnToMap,
         handleCellClick,
         handleCorrectAnswer,
