@@ -24,7 +24,7 @@ const Container = styled(Box)(({theme}) => ({
     height: '100vh',
     width: '100%',
     display: 'grid',
-    gridTemplateRows: 'minmax(180px, 35vh) 1fr auto',
-    gap: theme.spacing(2),
+    gridTemplateRows: 'auto minmax(180px, 45vh) 1fr auto',
+    gap: theme.spacing(5),
     padding: theme.spacing(3),
 }));
