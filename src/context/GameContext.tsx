@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useState} from 'react
 import type {DuelPlayer, GameGrid, GridCell, Player} from '../types';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
-const INIT_TIME_SECONDS = 3;
+const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
 export type GameState = 'idle' | 'map' | 'running' | 'finished';
@@ -28,6 +28,7 @@ interface GameContextValue {
     // Info to be displayed
     challengerName: string;
     defenderName: string;
+    activeQuestionCategory: string;
     questionImageUrl?: string;
     questionTitle?: string;
 
@@ -55,6 +56,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
     const [challenger, setChallenger] = useState<Player | null>(null);
     const [defender, setDefender] = useState<Player | null>(null);
+    const [activeQuestionCategory, setActiveQuestionCategory] = useState<string | null>(null);
 
     useEffect(() => {
         if (gameState === 'idle') {
@@ -147,6 +149,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setDefenderTimer(INIT_TIME_SECONDS);
         setPassTimer(PASS_PENALTY_SECONDS);
         setActivePlayer('challenger');
+        setActiveQuestionCategory(defenderPlayer.category)
         setWinner(null);
         setIsPassPenaltyActive(false);
         setGameState('running');
@@ -166,6 +169,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
 
         challengerName: challenger?.name || 'Gracz 1',
         defenderName: defender?.name || 'Gracz 2',
+        activeQuestionCategory: activeQuestionCategory || 'Co to jest?',
         questionImageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
         questionTitle: 'Co to jest?',
 

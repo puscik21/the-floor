@@ -3,6 +3,7 @@ import {Box, styled, Typography} from '@mui/material';
 import {useGameContext} from '../../context/GameContext.tsx';
 import type {Player} from '../../types.ts';
 
+// TODO: Move Cell to separate file
 const PlayerGrid = () => {
     const {grid, allPlayers, activeMapPlayer, handleCellClick} = useGameContext();
 
