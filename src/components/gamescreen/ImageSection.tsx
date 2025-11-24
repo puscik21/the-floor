@@ -30,7 +30,6 @@ const ImageSection = () => {
 
 export default ImageSection;
 
-
 const Container = styled('section')`
     max-width: min(1800px, 95vw);
     margin: 0 auto;
