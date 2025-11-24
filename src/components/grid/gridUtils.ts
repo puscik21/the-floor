@@ -6,17 +6,17 @@ type Dimensions = {
 }
 
 export const MOCK_PLAYERS: Player[] = [
-    {id: 'p1', name: 'Madzia', color: '#E53935'},
-    {id: 'p2', name: 'Igor', color: '#1E88E5'},
-    {id: 'p3', name: 'Nati', color: '#43A047'},
-    {id: 'p4', name: 'Grześ', color: '#FDD835'},
-    {id: 'p5', name: 'Seba', color: '#8E24AA'},
-    {id: 'p6', name: 'The Michał', color: '#00897B'},
-    {id: 'p7', name: 'Tomek', color: '#FF7043'},
-    {id: 'p8', name: 'Monika', color: '#29B6F6'},
-    {id: 'p9', name: 'Madzia 2', color: '#66BB6A'},
-//     {id: 'p10', name: 'Daniel', color: '#FFD54F'},
-//     {id: 'p11', name: 'Dominika', color: '#AB47BC'},
+    {id: 'p1', name: 'Madzia', category: 'Wędkarstwo', color: '#E53935'},
+    {id: 'p2', name: 'Igor', category: 'Historia', color: '#1E88E5'},
+    {id: 'p3', name: 'Nati', category: 'Muzyka', color: '#43A047'},
+    {id: 'p4', name: 'Grześ', category: 'Informatyka', color: '#FDD835'},
+    {id: 'p5', name: 'Seba', category: 'Sport', color: '#8E24AA'},
+    {id: 'p6', name: 'The Michał', category: 'Matematyka', color: '#00897B'},
+    {id: 'p7', name: 'Tomek', category: 'Geografia', color: '#FF7043'},
+    {id: 'p8', name: 'Monika', category: 'Literatura', color: '#29B6F6'},
+    {id: 'p9', name: 'Madzia 2', category: 'Biologia', color: '#66BB6A'},
+    // {id: 'p10', name: 'Daniel', category: 'Chemia', color: '#FFD54F'},
+    // {id: 'p11', name: 'Dominika', category: 'Sztuka', color: '#AB47BC'},
 ];
 
 // TODO: with odd number of players move empty cells to the corner

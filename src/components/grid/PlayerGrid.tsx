@@ -2,10 +2,10 @@ import React from 'react';
 import {Box, styled} from '@mui/material';
 import {useGameContext} from '../../context/GameContext.tsx';
 import type {Player} from '../../types.ts';
+import PlayerCell from './PlayerCell.tsx';
 
 const PlayerGrid = () => {
-    const {grid, allPlayers, activeMapPlayer, handleCellClick} = useGameContext();
-
+    const {grid, allPlayers} = useGameContext();
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
         allPlayers.forEach((player) => {
@@ -22,19 +22,14 @@ const PlayerGrid = () => {
     return (
         <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell) => {
-                const owner = cell.ownerId ? playerMap.get(cell.ownerId) : null;
-                const isActive = owner?.id === activeMapPlayer?.id;
+                const owner: Player | null = cell.ownerId ? (playerMap.get(cell.ownerId) ?? null) : null;
 
                 return (
-                    <Cell
+                    <PlayerCell
                         key={`${cell.x}-${cell.y}`}
-                        isOwned={!!owner}
-                        isActive={isActive}
-                        style={{backgroundColor: owner ? owner.color : '#333'}}
-                        onClick={() => handleCellClick(cell)}
-                    >
-                        {owner ? owner.name : ''}
-                    </Cell>
+                        cell={cell}
+                        owner={owner}
+                    />
                 );
             })}
         </GridContainer>
@@ -45,43 +40,19 @@ export default PlayerGrid;
 
 const GridContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'numCols' && prop !== 'numRows',
-})<{ numCols: number; numRows: number }>(({numCols, numRows}) => ({
-    display: 'grid',
-    gridTemplateColumns: `repeat(${numCols}, 1fr)`,
-    gridTemplateRows: `repeat(${numRows}, 1fr)`,
+})<{ numCols: number; numRows: number }>`
+    display: grid;
 
-    width: '90vw',
-    maxWidth: '800px',
-    // aspectRatio: `${numCols} / ${numRows}`, // TODO: Other possibility
-    height: '90vw',
-    maxHeight: '800px',
+    grid-template-columns: repeat(${({numCols}) => numCols}, 1fr);
+    grid-template-rows: repeat(${({numRows}) => numRows}, 1fr);
 
-    border: '6px solid #333',
-    backgroundColor: '#111',
-    gap: '3px', // TODO: Maybe 0px soon?
-    margin: '20px auto',
-}));
+    width: 90vw;
+    max-width: 800px;
+    height: 90vw;
+    max-height: 800px;
 
-const Cell = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'isOwned' && prop !== 'isActive',
-})<{ isOwned: boolean; isActive: boolean }>(({theme, isOwned, isActive}) => ({
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: '1.2rem', // TODO: Maybe size depends on the cell's size?
-    cursor: isOwned ? 'pointer' : 'default',
-    transition: 'transform 0.1s ease, border 0.2s ease',
-    backgroundColor: '#333',
-
-    border: isActive ? `8px solid ${theme.palette.primary.main}` : 'none',
-    zIndex: isActive ? 10 : 1,
-
-    '&:hover': {
-        transform: isOwned ? 'scale(1.05)' : 'none',
-        zIndex: 11,
-    },
-}));
+    border: 6px solid #333;
+    background-color: #111;
+    gap: 3px; // TODO: Maybe 0px soon?
+    margin: 20px auto;
+`;

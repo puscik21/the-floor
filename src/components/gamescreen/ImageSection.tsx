@@ -25,34 +25,31 @@ const ImageSection = () => {
 
 export default ImageSection;
 
-const Container = styled('section')(({theme}) => ({
-    maxWidth: 'min(1800px, 95vw)',
-    margin: '0 auto',
-    width: '100%',
-    display: 'grid',
-    placeItems: 'center',
-    overflow: 'hidden',
-    borderRadius: (theme.shape.borderRadius as number) * 2,
-    backgroundColor: '#0f0f0f',
-    border: `1px solid ${theme.palette.divider}`,
-}));
+const Container = styled('section')`
+    max-width: min(1800px, 95vw);
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: ${({theme}) => (theme.shape.borderRadius as number)}px;
+    background-color: #0f0f0f;
+    border: ${({theme}) => `1.5px solid ${theme.palette.primary.main}`};
+`;
 
+const StyledImg = styled('img')`
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 35vh;
+    object-fit: contain; // Save proportions
+    object-position: center;
+`;
 
-const StyledImg = styled('img')({
-    display: 'block',
-    width: '100%',
-    height: '100%',
-    maxHeight: '35vh',
-    objectFit: 'contain', // Save proportions
-    objectPosition: 'center',
-});
-
-const ImagePlaceholder = styled(Box)(({theme}) => ({
-    height: '100%',
-    width: '100%',
-    display: 'grid',
-    placeItems: 'center',
-    color: theme.palette.text.secondary,
-    alignSelf: 'stretch', // So the placeholder fill height
-    justifySelf: 'stretch',
-}));
+const ImagePlaceholder = styled(Box)`
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    color: ${({theme}) => theme.palette.secondary.main};
+`;
