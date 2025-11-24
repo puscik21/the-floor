@@ -7,7 +7,7 @@ const ImageSection = () => {
 
     return (
         <Container>
-            {!questionImageUrl ? (
+            {questionImageUrl ? (
                 <StyledImg
                     src={questionImageUrl}
                     alt={questionTitle}
