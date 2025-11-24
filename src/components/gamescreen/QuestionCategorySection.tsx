@@ -7,7 +7,7 @@ const QuestionCategorySection = () => {
 
     return (
         <Container>
-            <CategoryText variant="h3" >
+            <CategoryText variant="h3">
                 {activeQuestionCategory}
             </CategoryText>
         </Container>
@@ -16,23 +16,22 @@ const QuestionCategorySection = () => {
 
 export default QuestionCategorySection;
 
-const Container = styled(Box)(({theme}) => ({
+const Container = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing(1, 0),
-    maxHeight: '10vh',
+    maxHeight: '5vh',
     margin: '0 auto',
     width: '100%',
     maxWidth: 'min(1800px, 95vw)',
 }));
 
 const CategoryText = styled(Typography)(({theme}) => ({
-    color: theme.palette.text.primary,
+    color: theme.palette.text.se,
     fontWeight: 'bold',
     textAlign: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    padding: theme.spacing(0.5, 2),
+    backgroundColor: '#333',
+    border: `3px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(1.5, 3.5),
 }));
