@@ -20,11 +20,11 @@ const GameScreen = () => {
 
 export default GameScreen;
 
-const Container = styled(Box)(({theme}) => ({
-    height: '100vh',
-    width: '100%',
-    display: 'grid',
-    gridTemplateRows: 'auto minmax(180px, 45vh) 1fr auto',
-    gap: theme.spacing(5),
-    padding: theme.spacing(3),
-}));
+const Container = styled(Box)`
+    height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(180px, 45vh) 1fr auto;
+    gap: ${({theme}) => theme.spacing(5)};
+    padding: ${({theme}) => theme.spacing(3)};
+`;

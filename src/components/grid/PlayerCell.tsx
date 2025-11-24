@@ -32,22 +32,23 @@ export default PlayerCell;
 
 const Cell = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'isOwned' && prop !== 'isActive',
-})<{ isOwned: boolean; isActive: boolean }>(({theme, isOwned, isActive}) => ({
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: isOwned ? 'pointer' : 'default',
-    transition: 'transform 0.1s ease, border 0.2s ease',
-    backgroundColor: '#333',
+})<{ isOwned: boolean; isActive: boolean }>`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: ${({isOwned}) => (isOwned ? 'pointer' : 'default')};
+    transition: transform 0.1s ease, border 0.2s ease;
+    background-color: #333;
 
-    border: isActive ? `8px solid ${theme.palette.primary.main}` : 'none',
-    zIndex: isActive ? 10 : 1,
+    border: ${({isActive, theme}) =>
+            isActive ? `8px solid ${theme.palette.primary.main}` : 'none'};
+    z-index: ${({isActive}) => (isActive ? 10 : 1)};
 
-    '&:hover': {
-        transform: isOwned ? 'scale(1.05)' : 'none',
-        zIndex: 11,
-    },
-}));
+    &:hover {
+        transform: ${({isOwned}) => (isOwned ? 'scale(1.05)' : 'none')};
+        z-index: 11;
+    }
+`;

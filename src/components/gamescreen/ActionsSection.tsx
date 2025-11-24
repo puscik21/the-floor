@@ -43,9 +43,9 @@ const ActionsSection = () => {
 
 export default ActionsSection;
 
-const Container = styled('footer')(({theme}) => ({
-    paddingBottom: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
+const Container = styled('footer')`
+    padding-bottom: ${({theme}) => theme.spacing(1)};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;

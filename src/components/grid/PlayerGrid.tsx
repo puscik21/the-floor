@@ -40,18 +40,19 @@ export default PlayerGrid;
 
 const GridContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'numCols' && prop !== 'numRows',
-})<{ numCols: number; numRows: number }>(({numCols, numRows}) => ({
-    display: 'grid',
-    gridTemplateColumns: `repeat(${numCols}, 1fr)`,
-    gridTemplateRows: `repeat(${numRows}, 1fr)`,
+})<{ numCols: number; numRows: number }>`
+    display: grid;
 
-    width: '90vw',
-    maxWidth: '800px',
-    height: '90vw',
-    maxHeight: '800px',
+    grid-template-columns: repeat(${({numCols}) => numCols}, 1fr);
+    grid-template-rows: repeat(${({numRows}) => numRows}, 1fr);
 
-    border: '6px solid #333',
-    backgroundColor: '#111',
-    gap: '3px', // TODO: Maybe 0px soon?
-    margin: '20px auto',
-}));
+    width: 90vw;
+    max-width: 800px;
+    height: 90vw;
+    max-height: 800px;
+
+    border: 6px solid #333;
+    background-color: #111;
+    gap: 3px; // TODO: Maybe 0px soon?
+    margin: 20px auto;
+`;
