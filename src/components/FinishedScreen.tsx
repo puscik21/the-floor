@@ -2,7 +2,7 @@ import {Box, Button, Typography} from '@mui/material';
 import {useGameContext} from '../context/GameContext.tsx';
 
 const FinishedScreen = () => {
-    const {winner, handleReturnToMap} = useGameContext();
+    const {general: {winner}, actions: {handleReturnToMap}} = useGameContext();
     if (!winner) {
         handleReturnToMap();
         return null;

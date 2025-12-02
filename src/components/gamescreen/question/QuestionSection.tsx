@@ -6,7 +6,8 @@ import QuestionPlaceholder from './QuestionPlaceholder.tsx';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionSection = () => {
-    const {gameState, questionType} = useGameContext();
+    const {general: {gameState}, duel} = useGameContext();
+    const questionType = duel.question.type;
 
     if (gameState === 'ready') {
         return (

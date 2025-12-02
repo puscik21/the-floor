@@ -3,7 +3,7 @@ import {Button, Typography} from '@mui/material';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
 const StartGameButton = () => {
-    const {handleStartDuel} = useGameContext();
+    const handleStartDuel = useGameContext().actions.handleStartDuel;
 
     return (
         <StartButton onClick={handleStartDuel}>

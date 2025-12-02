@@ -1,48 +1,21 @@
 import {createContext, useCallback, useContext, useEffect, useState} from 'react';
-import type {DuelPlayer, GameGrid, GridCell, Player} from '../types';
+import type {
+    DuelInfo,
+    DuelPlayer,
+    GameActions,
+    GameContextValue,
+    GameGrid,
+    GameState,
+    GeneralState,
+    GridCell,
+    MapState,
+    Player,
+    Question,
+} from '../types';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
-
-export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
-// TODO: introduce Question type
-export type QuestionType = 'image' | 'text'; // TODO: each question should have this value
-
-// TODO: Move those values to some grouping Objects
-interface GameContextValue {
-    // General game state
-    gameState: GameState;
-    winner: Player | null;
-
-    // Map state
-    grid: GameGrid;
-    allPlayers: Player[];
-    activeMapPlayer: Player | null;
-
-    // Duel state
-    challengerTimer: number;
-    defenderTimer: number;
-    activePlayer: DuelPlayer;
-    passTimer: number;
-    isPassPenaltyActive: boolean;
-
-    // Info to be displayed
-    challengerName: string;
-    defenderName: string;
-    activeQuestionCategory: string;
-    questionType: QuestionType;
-    questionImageUrl?: string;
-    questionText?: string;
-
-    // Actions
-    handleStartGame: () => void;
-    handleStartDuel: () => void;
-    handleReturnToMap: () => void;
-    handleCellClick: (cell: GridCell) => void;
-    handleCorrectAnswer: () => void;
-    handlePass: () => void;
-}
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
@@ -163,31 +136,50 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setGameState('ready');
     };
 
-    const value: GameContextValue = {
+    const generalState: GeneralState = {
         gameState,
         winner,
+    };
+
+    const mapState: MapState = {
         grid,
         allPlayers,
         activeMapPlayer,
+    };
+
+    const question: Question = {
+        category: activeQuestionCategory || 'Co to jest?',
+        type: 'image',
+        text: 'Kto był pierwszym królem Polski?',
+        imageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
+    }
+
+
+    const duelInfo: DuelInfo = {
         challengerTimer,
         defenderTimer,
         activePlayer,
         passTimer,
         isPassPenaltyActive,
-
         challengerName: challenger?.name || 'Gracz 1',
         defenderName: defender?.name || 'Gracz 2',
-        activeQuestionCategory: activeQuestionCategory || 'Co to jest?',
-        questionType: 'image',
-        questionText: 'Kto był pierwszym królem Polski?',
-        questionImageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
+        question,
+    };
 
+    const actions: GameActions = {
         handleStartGame,
         handleStartDuel,
         handleReturnToMap,
         handleCellClick,
         handleCorrectAnswer,
         handlePass,
+    };
+
+    const value: GameContextValue = {
+        general: generalState,
+        map: mapState,
+        duel: duelInfo,
+        actions: actions,
     };
 
     return (

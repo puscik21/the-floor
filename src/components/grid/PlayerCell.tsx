@@ -8,7 +8,7 @@ interface PlayerCellProps {
 }
 
 const PlayerCell = ({cell, owner}: PlayerCellProps) => {
-    const {activeMapPlayer, handleCellClick} = useGameContext();
+    const {map: {activeMapPlayer}, actions: {handleCellClick}} = useGameContext();
     const isActive = owner?.id === activeMapPlayer?.id;
 
     return (

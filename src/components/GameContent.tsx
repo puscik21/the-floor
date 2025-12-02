@@ -7,8 +7,8 @@ import FinishedScreen from './FinishedScreen.tsx';
 
 const GameContent = () => {
     const {
-        gameState,
-        activeMapPlayer,
+        general: {gameState},
+        map: {activeMapPlayer},
     } = useGameContext();
 
     const renderContent = () => {

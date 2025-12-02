@@ -3,12 +3,9 @@ import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
 
 const ActionsSection = () => {
-    const {
-        passTimer,
-        isPassPenaltyActive,
-        handleCorrectAnswer,
-        handlePass,
-    } = useGameContext();
+    const {duel, actions} = useGameContext();
+    const {passTimer, isPassPenaltyActive} = duel;
+    const {handleCorrectAnswer, handlePass} = actions;
 
     return (
         <Container>
