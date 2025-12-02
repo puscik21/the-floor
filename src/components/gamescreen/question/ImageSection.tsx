@@ -1,7 +1,7 @@
 import {styled} from '@mui/material/styles';
 
-import {useGameContext} from '../../context/GameContext.tsx';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const ImageSection = () => {
     const {questionImageUrl} = useGameContext();

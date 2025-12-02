@@ -1,6 +1,6 @@
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import {useGameContext} from '../../context/GameContext.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionCategorySection = () => {
     const {activeQuestionCategory} = useGameContext();

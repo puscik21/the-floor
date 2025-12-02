@@ -1,9 +1,9 @@
 import {styled} from '@mui/material/styles';
-import {useGameContext} from '../../context/GameContext.tsx';
 import StartGameButton from './StartGameButton.tsx';
 import ImageSection from './ImageSection.tsx';
 import TextSection from './TextSection.tsx';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionSection = () => {
     const {gameState, questionType} = useGameContext();
