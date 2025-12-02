@@ -1,18 +1,18 @@
 import {styled} from '@mui/material/styles';
 import {Box, Typography} from '@mui/material';
 
-const ImagePlaceholder = () => {
+const QuestionPlaceholder = () => {
 
     return (
         <Container>
-            <Typography variant="subtitle1" sx={{opacity: 0.7}}>
-                (Tu pojawi się zdjęcie do pytania)
+            <Typography variant="h3">
+                (Tu pojawi się pytanie...)
             </Typography>
         </Container>
     );
 }
 
-export default ImagePlaceholder;
+export default QuestionPlaceholder;
 
 const Container = styled(Box)`
     height: 100%;
@@ -20,4 +20,5 @@ const Container = styled(Box)`
     display: grid;
     place-items: center;
     color: ${({theme}) => theme.palette.secondary.main};
+    opacity: 0.8;
 `;

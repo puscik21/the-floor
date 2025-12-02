@@ -1,17 +1,15 @@
 import {Box} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import ImageSection from './ImageSection.tsx';
 import PlayersSection from './PlayersSection.tsx';
 import ActionsSection from './ActionsSection.tsx';
 import QuestionCategorySection from './QuestionCategorySection.tsx';
+import QuestionSection from './QuestionSection.tsx';
 
-// TODO: add description
-// TODO: add START button
 const GameScreen = () => {
     return (
         <Container>
             <QuestionCategorySection/>
-            <ImageSection/>
+            <QuestionSection/>
             <PlayersSection/>
             <ActionsSection/>
         </Container>
