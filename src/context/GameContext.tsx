@@ -6,6 +6,8 @@ const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
 export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
+// TODO: introduce Question type
+export type QuestionType = 'image' | 'text'; // TODO: each question should have this value
 
 // TODO: Move those values to some grouping Objects
 interface GameContextValue {
@@ -29,8 +31,9 @@ interface GameContextValue {
     challengerName: string;
     defenderName: string;
     activeQuestionCategory: string;
+    questionType: QuestionType;
     questionImageUrl?: string;
-    questionTitle?: string;
+    questionText?: string;
 
     // Actions
     handleStartGame: () => void;
@@ -175,8 +178,9 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         challengerName: challenger?.name || 'Gracz 1',
         defenderName: defender?.name || 'Gracz 2',
         activeQuestionCategory: activeQuestionCategory || 'Co to jest?',
+        questionType: 'image',
+        questionText: 'Kto był pierwszym królem Polski?',
         questionImageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
-        questionTitle: 'Co to jest?',
 
         handleStartGame,
         handleStartDuel,
