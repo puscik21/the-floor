@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 
-const INIT_TIME_SECONDS = 300;
+const INIT_TIME_SECONDS = 3;
 const PASS_PENALTY_SECONDS = 3;
 
 interface GameDuelStateResult {
@@ -66,7 +66,7 @@ export const useGameDuelState = (
             setGameState('finished');
             conquerTerritory(challenger, defender);
         }
-    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory]);
+    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner]);
 
     // AKCJE DUELU
     const handleCorrectAnswer = useCallback(() => setActivePlayer((prev) => prev === 'challenger' ? 'defender' : 'challenger'), []);

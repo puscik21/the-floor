@@ -7,13 +7,12 @@ interface GameMapStateResult {
     actions: {
         conquerTerritory: (winnerPlayer: Player, loserPlayer: Player) => void;
         handleCellClick: (cell: GridCell) => void;
-        prepareDuel: (challengerPlayer: Player, defenderPlayer: Player) => void;
     };
 }
 
 export const useGameMapState = (
     gameState: GameState,
-    allPlayers: Player[],
+    allPlayers: Player[], // TODO: This might be taken by some method reading players
     startDuelCallback: (challenger: Player, defender: Player) => void,
 ): GameMapStateResult => {
     const [grid, setGrid] = useState<GameGrid>([]);
@@ -40,14 +39,10 @@ export const useGameMapState = (
         setActiveMapPlayer(winnerPlayer);
     }, [grid]);
 
-    const prepareDuel = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {
-        // Wszystkie kroki przygotowania przenosimy do funkcji wyżej,
-        // aby GameContext mógł też zresetować stan Duelu.
-        startDuelCallback(challengerPlayer, defenderPlayer);
-    }, [startDuelCallback]);
+    const findPlayerById = useCallback((id: string): Player | undefined => {
+        return allPlayers.find((p) => p.id === id)
+    }, [allPlayers]);
 
-
-    // KLIKNIĘCIE NA KOMÓRKĘ
     const handleCellClick = useCallback((cell: GridCell) => {
         if (gameState !== 'map' || !activeMapPlayer) return;
 
@@ -56,28 +51,26 @@ export const useGameMapState = (
             return;
         }
 
-        const currentChallenger = allPlayers.find((p) => p.id === activeMapPlayer.id);
-        const currentDefender = allPlayers.find((p) => p.id === cell.ownerId);
+        const currentChallenger = findPlayerById(activeMapPlayer.id)
+        const currentDefender = findPlayerById(cell.ownerId)
 
         if (currentChallenger && currentDefender) {
-            prepareDuel(currentChallenger, currentDefender);
+            startDuelCallback(currentChallenger, currentDefender);
         }
-    }, [gameState, activeMapPlayer, allPlayers, prepareDuel]);
+    }, [gameState, activeMapPlayer, findPlayerById, startDuelCallback]);
 
-
-    // Zwracamy pogrupowany stan i akcje
     const mapState: MapState = {
         grid,
         allPlayers,
         activeMapPlayer,
     };
 
+    // TODO: simplify
     return {
         mapState,
         actions: {
             conquerTerritory,
             handleCellClick,
-            prepareDuel,
         },
     };
 };
