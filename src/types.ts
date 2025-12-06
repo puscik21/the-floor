@@ -51,7 +51,7 @@ export type DuelPlayer = 'challenger' | 'defender';
 export type Question = {
     category: string;
     type: QuestionType;
-    imageUrl?: string;
+    imageUrl?: string; // TODO: probably not needed now
     text?: string;
 }
 

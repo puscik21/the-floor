@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 
-const INIT_TIME_SECONDS = 3;
+const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
 
 interface GameDuelStateResult {
