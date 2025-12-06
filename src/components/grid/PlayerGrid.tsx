@@ -5,7 +5,7 @@ import type {Player} from '../../types.ts';
 import PlayerCell from './PlayerCell.tsx';
 
 const PlayerGrid = () => {
-    const {grid, allPlayers} = useGameContext();
+    const {grid, allPlayers} = useGameContext().map;
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
         allPlayers.forEach((player) => {

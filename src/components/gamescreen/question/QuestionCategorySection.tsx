@@ -1,14 +1,14 @@
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import {useGameContext} from '../../context/GameContext.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionCategorySection = () => {
-    const {activeQuestionCategory} = useGameContext();
+    const category = useGameContext().duel.question.category;
 
     return (
         <Container>
             <CategoryText variant="h3">
-                {activeQuestionCategory}
+                {category}
             </CategoryText>
         </Container>
     );
@@ -30,7 +30,7 @@ const CategoryText = styled(Typography)`
     font-weight: bold;
     text-align: center;
     background-color: #333;
-    border: 3px solid ${({ theme }) => theme.palette.divider};
-    border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-    padding: ${({ theme }) => theme.spacing(1.5, 3.5)};
+    border: 3px solid ${({theme}) => theme.palette.divider};
+    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+    padding: ${({theme}) => theme.spacing(1.5, 3.5)};
 `;

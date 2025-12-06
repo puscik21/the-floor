@@ -1,10 +1,10 @@
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import {useGameContext} from '../../context/GameContext.tsx';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const TextSection = () => {
-    const {questionText} = useGameContext();
+    const questionText = useGameContext().duel.question.text;
 
     if (!questionText) {
         return <QuestionPlaceholder/>

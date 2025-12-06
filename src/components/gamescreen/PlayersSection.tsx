@@ -9,7 +9,7 @@ const PlayersSection = () => {
         activePlayer,
         challengerName,
         defenderName,
-    } = useGameContext();
+    } = useGameContext().duel;
 
     return (
         <Container>
@@ -65,7 +65,7 @@ const PlayerCard = styled(Card, {
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     border-width: ${({isActive}) => (isActive ? 2 : 0)}px;
     border-style: solid;
     border-color: ${({theme}) => theme.palette.primary.main};

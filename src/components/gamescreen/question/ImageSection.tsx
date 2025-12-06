@@ -1,18 +1,18 @@
 import {styled} from '@mui/material/styles';
 
-import {useGameContext} from '../../context/GameContext.tsx';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
+import {useGameContext} from '../../../context/GameContext.tsx';
 
 const ImageSection = () => {
-    const {questionImageUrl} = useGameContext();
+    const imageUrl = useGameContext().duel.question.imageUrl;
 
-    if (!questionImageUrl) {
+    if (!imageUrl) {
         return <QuestionPlaceholder/>;
     }
 
     return (
         <StyledImg
-            src={questionImageUrl}
+            src={imageUrl}
             alt="Image did not load..."
         />
     );

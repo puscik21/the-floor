@@ -2,8 +2,8 @@ import {Box} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import PlayersSection from './PlayersSection.tsx';
 import ActionsSection from './ActionsSection.tsx';
-import QuestionCategorySection from './QuestionCategorySection.tsx';
-import QuestionSection from './QuestionSection.tsx';
+import QuestionCategorySection from './question/QuestionCategorySection.tsx';
+import QuestionSection from './question/QuestionSection.tsx';
 
 const GameScreen = () => {
     return (

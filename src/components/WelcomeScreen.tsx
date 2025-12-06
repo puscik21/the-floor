@@ -2,7 +2,7 @@ import {Box, Button, Typography} from '@mui/material';
 import {useGameContext} from '../context/GameContext.tsx';
 
 const WelcomeScreen = () => {
-    const {handleStartGame} = useGameContext();
+    const handleStartGame = useGameContext().actions.handleStartGame;
 
     return (
         <Box>
