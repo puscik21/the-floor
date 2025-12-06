@@ -6,8 +6,8 @@ import {getTextFromCategory} from './questionUtils.ts';
 
 // TODO: in current version only image is displayed, use this for text questions in the future
 const TextSection = () => {
-    const category = useGameContext().duel.questionCategory;
-    const questionText = getTextFromCategory(category, 1);
+    const category = useGameContext().duel.question.category;
+    const questionText = getTextFromCategory(category, 1); // TODO: Move to Context
 
     if (!questionText) {
         return <QuestionPlaceholder/>

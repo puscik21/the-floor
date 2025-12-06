@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {DuelInfo, DuelPlayer, GameState, Player} from '../types';
+import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
+import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
 
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
@@ -29,6 +30,9 @@ export const useGameDuelState = (
     const [challenger, setChallenger] = useState<Player | null>(null);
     const [defender, setDefender] = useState<Player | null>(null);
 
+    const [questionId, setQuestionId] = useState(1);
+    const [questionImageUrl, setQuestionImageUrl] = useState('/util/placeholder.png');
+
     useEffect(() => {
         if (gameState !== 'duel') return;
         const intervalId = setInterval(() => {
@@ -47,6 +51,7 @@ export const useGameDuelState = (
         if (isPassPenaltyActive && passTimer <= 0) {
             setIsPassPenaltyActive(false);
             setPassTimer(PASS_PENALTY_SECONDS);
+            setQuestionId(prevNumber => prevNumber + 1);
         }
 
         if (!challenger || !defender) return;
@@ -63,9 +68,17 @@ export const useGameDuelState = (
         }
     }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner]);
 
-    const handleCorrectAnswer = useCallback(() => setActivePlayer((prev: DuelPlayer) => {
-        return prev === 'challenger' ? 'defender' : 'challenger'
-    }), []);
+    useEffect(() => {
+        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
+    }, [questionId]);
+
+    const handleCorrectAnswer = useCallback(() => {
+        setActivePlayer((prev: DuelPlayer) => {
+            return prev === 'challenger' ? 'defender' : 'challenger'
+        })
+        setQuestionId(prevNumber => prevNumber + 1);
+    }, []);
+
     const handlePass = useCallback(() => setIsPassPenaltyActive(true), []);
 
     const handleReturnToMap = useCallback(() => {
@@ -83,7 +96,19 @@ export const useGameDuelState = (
         setActivePlayer('challenger');
         setWinner(null);
         setIsPassPenaltyActive(false);
+        setQuestionId(1)
     }, [setWinner]);
+
+    const getQuestionCategory = () => {
+        // return defender?.category || 'Co to jest?'; // TODO: Revert
+        return 'Informatyka';
+    }
+
+    const question: Question = {
+        id: questionId,
+        category: getQuestionCategory(),
+        imageUrl: questionImageUrl,
+    }
 
     const duelInfo: DuelInfo = {
         challengerTimer,
@@ -93,7 +118,7 @@ export const useGameDuelState = (
         isPassPenaltyActive,
         challengerName: challenger?.name || 'Gracz 1',
         defenderName: defender?.name || 'Gracz 2',
-        questionCategory: defender?.category || 'Co to jest?',
+        question,
     };
 
     return {

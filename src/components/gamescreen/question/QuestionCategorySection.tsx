@@ -3,7 +3,7 @@ import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionCategorySection = () => {
-    const category = useGameContext().duel.questionCategory;
+    const category = useGameContext().duel.question.category;
 
     return (
         <Container>

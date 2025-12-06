@@ -42,10 +42,17 @@ export interface DuelInfo {
 
     challengerName: string;
     defenderName: string;
-    questionCategory: string;
+
+    question: Question;
 }
 
 export type DuelPlayer = 'challenger' | 'defender';
+
+export type Question = {
+    id: number
+    category: string;
+    imageUrl: string;
+}
 
 export interface GameActions {
     handleStartGame: () => void;

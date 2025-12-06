@@ -2,11 +2,9 @@ import {styled} from '@mui/material/styles';
 
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
 import {useGameContext} from '../../../context/GameContext.tsx';
-import {getImageFromCategory} from './questionUtils.ts';
 
 const ImageSection = () => {
-    const category = useGameContext().duel.questionCategory;
-    const imageUrl = getImageFromCategory(category, 1);
+    const imageUrl = useGameContext().duel.question.imageUrl;
 
     if (!imageUrl) {
         return <QuestionPlaceholder/>;
