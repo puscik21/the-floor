@@ -14,7 +14,7 @@ import type {
 } from '../types';
 import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 
-const INIT_TIME_SECONDS = 300;
+const INIT_TIME_SECONDS = 3;
 const PASS_PENALTY_SECONDS = 3;
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
@@ -28,11 +28,13 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [winner, setWinner] = useState<Player | null>(null);
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
+    // USUNIĘTO: isConquering
+
     const [allPlayers] = useState<Player[]>(MOCK_PLAYERS);
     const [grid, setGrid] = useState<GameGrid>([]);
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
     const [challenger, setChallenger] = useState<Player | null>(null);
-    const [defender, setDefender] = useState<Player | null>(null);
+    const [defender, setDefender, ] = useState<Player | null>(null);
     const [activeQuestionCategory, setActiveQuestionCategory] = useState<string | null>(null);
 
     useEffect(() => {
@@ -54,6 +56,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
+    // PRZYWRÓCONO: Natychmiastowe przejęcie terenu
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
@@ -107,10 +110,11 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     };
 
     const handleCellClick = (cell: GridCell) => {
+        // PRZYWRÓCONO: Brak blokady interakcji
         if (gameState !== 'map' || !activeMapPlayer) return;
 
         if (!cell.ownerId || cell.ownerId === activeMapPlayer.id) {
-            console.log('Kliknij pole przeciwnika!'); // TODO: Possibly add Toast here
+            console.log('Kliknij pole przeciwnika!');
             return;
         }
 
