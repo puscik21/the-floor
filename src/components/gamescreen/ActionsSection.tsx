@@ -1,11 +1,33 @@
 import {Button, Grid} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
+import {useCallback, useEffect} from 'react';
 
 const ActionsSection = () => {
     const {duel, actions} = useGameContext();
     const {passTimer, isPassPenaltyActive} = duel;
     const {handleCorrectAnswer, handlePass} = actions;
+
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        if (isPassPenaltyActive) {
+            return;
+        }
+
+        if (event.code === 'Space') {
+            event.preventDefault();
+            handleCorrectAnswer();
+        } else if (event.key === 'f' || event.key === 'F') {
+            handlePass();
+        }
+    }, [isPassPenaltyActive, handleCorrectAnswer, handlePass]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleKeyDown]);
 
     return (
         <Container>
