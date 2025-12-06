@@ -2,9 +2,12 @@ import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';
 import {useGameContext} from '../../../context/GameContext.tsx';
+import {getTextFromCategory} from './questionUtils.ts';
 
+// TODO: in current version only image is displayed, use this for text questions in the future
 const TextSection = () => {
-    const questionText = useGameContext().duel.question.text;
+    const category = useGameContext().duel.questionCategory;
+    const questionText = getTextFromCategory(category, 1);
 
     if (!questionText) {
         return <QuestionPlaceholder/>

@@ -1,13 +1,11 @@
 import {styled} from '@mui/material/styles';
 import StartGameButton from './StartGameButton.tsx';
 import ImageSection from './ImageSection.tsx';
-import TextSection from './TextSection.tsx';
-import QuestionPlaceholder from './QuestionPlaceholder.tsx';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
 const QuestionSection = () => {
-    const {general: {gameState}, duel} = useGameContext();
-    const questionType = duel.question.type;
+    const gameState = useGameContext().general.gameState;
+    // const questionType = duel.question.type; // TODO: retrieve type from each question in the future
 
     if (gameState === 'ready') {
         return (
@@ -18,10 +16,11 @@ const QuestionSection = () => {
     } else if (gameState === 'duel') {
         return (
             <Container>
-                {questionType === 'image' && <ImageSection/>}
-                {questionType === 'text' && <TextSection/>}
+                <ImageSection/>
+                {/*{questionType === 'image' && <ImageSection/>}*/}
+                {/*{questionType === 'text' && <TextSection/>}*/}
                 {/* Handle unknown question type */}
-                {questionType !== 'image' && questionType !== 'text' && <QuestionPlaceholder/>}
+                {/*{questionType !== 'image' && questionType !== 'text' && <QuestionPlaceholder/>}*/}
             </Container>
         );
     }

@@ -42,22 +42,10 @@ export interface DuelInfo {
 
     challengerName: string;
     defenderName: string;
-
-    question: Question;
+    questionCategory: string;
 }
 
 export type DuelPlayer = 'challenger' | 'defender';
-
-export type Question = {
-    category: string;
-    type: QuestionType;
-    imageUrl?: string; // TODO: probably not needed now
-    text?: string;
-}
-
-// TODO: introduce Question type
-// TODO: each question should have this value
-export type QuestionType = 'image' | 'text';
 
 export interface GameActions {
     handleStartGame: () => void;

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
+import type {DuelInfo, DuelPlayer, GameState, Player} from '../types';
 
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
@@ -85,13 +85,6 @@ export const useGameDuelState = (
         setIsPassPenaltyActive(false);
     }, [setWinner]);
 
-    const question: Question = {
-        category: defender?.category || 'Co to jest?',
-        type: 'image',
-        text: 'Kto był pierwszym królem Polski?',
-        imageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
-    }
-
     const duelInfo: DuelInfo = {
         challengerTimer,
         defenderTimer,
@@ -100,7 +93,7 @@ export const useGameDuelState = (
         isPassPenaltyActive,
         challengerName: challenger?.name || 'Gracz 1',
         defenderName: defender?.name || 'Gracz 2',
-        question,
+        questionCategory: defender?.category || 'Co to jest?',
     };
 
     return {
