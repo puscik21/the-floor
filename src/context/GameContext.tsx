@@ -41,7 +41,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     );
 
     const prepareDuel = useCallback((challenger: Player, defender: Player) => {
-        duelActions.resetDuelState(challenger, defender);
+        duelActions.prepareDuelState(challenger, defender);
         setGameState('ready');
     }, [duelActions, setGameState]);
 

@@ -10,8 +10,7 @@ interface GameDuelStateResult {
         handleCorrectAnswer: () => void;
         handlePass: () => void;
         handleReturnToMap: () => void;
-        // Funkcja do resetowania timera przy starcie duelu (wywoływana z GameContext)
-        resetDuelState: (challenger: Player, defender: Player) => void;
+        prepareDuelState: (challenger: Player, defender: Player) => void;
     };
 }
 
@@ -27,13 +26,9 @@ export const useGameDuelState = (
     const [activePlayer, setActivePlayer] = useState<DuelPlayer>('challenger');
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
-    // Potrzebujemy też stanu Challenger/Defender, ale będziemy go przechowywać w GameContext
     const [challenger, setChallenger] = useState<Player | null>(null);
     const [defender, setDefender] = useState<Player | null>(null);
 
-    // ... (Możesz tu przenieść logikę Question, jeśli jest niezależna od innych stanów)
-
-    // TIMERY
     useEffect(() => {
         if (gameState !== 'duel') return;
         const intervalId = setInterval(() => {
@@ -45,7 +40,7 @@ export const useGameDuelState = (
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
-    // LOGIKA ZAKOŃCZENIA/KARY
+    // TODO: Improve duel timer
     useEffect(() => {
         if (gameState !== 'duel') return;
 
@@ -68,12 +63,18 @@ export const useGameDuelState = (
         }
     }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner]);
 
-    // AKCJE DUELU
-    const handleCorrectAnswer = useCallback(() => setActivePlayer((prev) => prev === 'challenger' ? 'defender' : 'challenger'), []);
+    const handleCorrectAnswer = useCallback(() => setActivePlayer((prev: DuelPlayer) => {
+        return prev === 'challenger' ? 'defender' : 'challenger'
+    }), []);
     const handlePass = useCallback(() => setIsPassPenaltyActive(true), []);
 
-    // RESETOWANIE POJEDYNKU (Używane przez GameContext przy starcie)
-    const resetDuelState = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {
+    const handleReturnToMap = useCallback(() => {
+        setChallenger(null);
+        setDefender(null);
+        setGameState('map');
+    }, [setGameState]);
+
+    const prepareDuelState = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {
         setChallenger(challengerPlayer);
         setDefender(defenderPlayer);
         setChallengerTimer(INIT_TIME_SECONDS);
@@ -84,12 +85,6 @@ export const useGameDuelState = (
         setIsPassPenaltyActive(false);
     }, [setWinner]);
 
-    const handleReturnToMap = useCallback(() => {
-        setChallenger(null);
-        setDefender(null);
-        setGameState('map');
-    }, [setGameState]);
-
     const question: Question = {
         category: defender?.category || 'Co to jest?',
         type: 'image',
@@ -97,7 +92,6 @@ export const useGameDuelState = (
         imageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
     }
 
-    // Zwracamy stan i akcje
     const duelInfo: DuelInfo = {
         challengerTimer,
         defenderTimer,
@@ -115,7 +109,7 @@ export const useGameDuelState = (
             handleCorrectAnswer,
             handlePass,
             handleReturnToMap,
-            resetDuelState,
+            prepareDuelState,
         },
     };
 };
