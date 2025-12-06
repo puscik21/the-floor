@@ -1,6 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 import type {GameContextValue, GameState, Player} from '../types';
-import {MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
 
@@ -28,7 +27,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const {
         mapState,
         actions: mapActions,
-    } = useGameMapState(gameState, MOCK_PLAYERS, startDuelWrapper);
+    } = useGameMapState(gameState, startDuelWrapper);
 
     const {
         duelInfo,
