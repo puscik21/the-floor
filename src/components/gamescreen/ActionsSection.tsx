@@ -1,12 +1,9 @@
+// Rozwiązanie TS1A4A: Używamy 'type' do importu tylko typu ButtonProps
+import {Button, Grid, type ButtonProps} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
-// Usunięto import 'type ButtonProps' i interface PrimaryButtonProps,
-// aby uniknąć błędów TS1A4A i ESLint: no-empty-object-type
-
-// Tworzymy lokalny PUSTY typ, który jest używany jako generyczny dla styled().
-// To oszukuje Typescripta, aby nie sprawdzał ButtonProps i omija TS2769,
-// a jednocześnie nie łamie reguł ESLint (no-explicit-any).
-type EmptyProps = {};
+// Nie potrzebujemy już ręcznie definiować interfejsu PrimaryButtonProps
+// (rozwiązuje ESLint: no-empty-object-type)
 
 const ActionsSection = () => {
     const {duel, actions} = useGameContext();
@@ -18,6 +15,8 @@ const ActionsSection = () => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <PrimaryButton
+                        // Po instalacji poprawnej wersji MUI (5.x),
+                        // TS2769 zniknie samoczynnie.
                         variant="contained"
                         fullWidth
                         onClick={handleCorrectAnswer}
@@ -54,9 +53,8 @@ const Container = styled('footer')`
     width: 100%;
 `;
 
-// Użycie <EmptyProps> pozwala na pomyślne wywołanie styled(Button)
-// i omija błąd TS2769 bez naruszania reguł ESLint.
-const PrimaryButton = styled(Button)<EmptyProps>` 
+// Teraz, gdy ButtonProps jest poprawny, używamy go jawnie.
+const PrimaryButton = styled(Button)<ButtonProps>` 
     background: linear-gradient(180deg, #17a2ff, #0a84c9);
     color: white;
     padding: ${({theme}) => theme.spacing(1.5)};
@@ -66,8 +64,8 @@ const PrimaryButton = styled(Button)<EmptyProps>`
     &:hover { transform: translateY(-2px); }
 `;
 
-// Użycie <EmptyProps>
-const SecondaryButton = styled(Button)<EmptyProps>` 
+// Jawne użycie ButtonProps
+const SecondaryButton = styled(Button)<ButtonProps>`
     border: 2px solid rgba(255,255,255,0.08);
     padding: ${({theme}) => theme.spacing(1.25)};
     height: 56px;
