@@ -1,11 +1,12 @@
-import {styled} from '@mui/material/styles';
+// src/components/game/question/QuestionPlaceholder.tsx
 import {Box, Typography} from '@mui/material';
+import {styled} from '@mui/material/styles';
 
 const QuestionPlaceholder = () => {
 
     return (
         <Container>
-            <Typography variant="h3">
+            <Typography variant="h4" sx={{fontWeight: 700, color: 'rgba(255,255,255,0.92)'}}>
                 (Tu pojawi się pytanie...)
             </Typography>
         </Container>
@@ -19,6 +20,5 @@ const Container = styled(Box)`
     width: 100%;
     display: grid;
     place-items: center;
-    color: ${({theme}) => theme.palette.secondary.main};
-    opacity: 0.8;
+    color: rgba(255,255,255,0.9);
 `;

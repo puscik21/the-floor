@@ -1,3 +1,4 @@
+// src/components/game/question/StartGameButton.tsx
 import {styled} from '@mui/material/styles';
 import {Button, Typography} from '@mui/material';
 import {useGameContext} from '../../../context/GameContext.tsx';
@@ -18,20 +19,17 @@ export default StartGameButton;
 
 const StartButton = styled(Button)`
     width: 80%;
-    height: 80%;
-    max-width: 600px;
-    background-color: ${({theme}) => theme.palette.primary.main};
-    color: ${({theme}) => theme.palette.primary.contrastText};
+    height: 120px;
+    max-width: 700px;
+    background: linear-gradient(180deg,#17a2ff,#0a84c9);
+    color: white;
     border-radius: ${({theme}) => (theme.shape.borderRadius as number) * 2}px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s;
-
-    &:hover {
-        transform: scale(1.02);
-        background-color: ${({theme}) => theme.palette.primary.dark};
-    }
+    box-shadow: 0 14px 36px rgba(10,40,80,0.6);
+    transition: transform 0.16s;
+    &:hover { transform: translateY(-4px) scale(1.01); }
 `;
 
 const Text = styled(Typography)`
-    font-weight: bold;
-`
+    font-weight: 900;
+    letter-spacing: 1px;
+`;
