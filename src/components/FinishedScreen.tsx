@@ -1,72 +1,95 @@
-import {Box, Button, Typography} from '@mui/material';
-import {styled} from '@mui/material/styles'; // Importujemy 'styled'
-import {useGameContext} from '../context/GameContext.tsx';
+import { Box, Button, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useGameContext } from '../context/GameContext.tsx';
 
-// 1. Stylowany kontener dla całego ekranu
-const StyledBox = styled(Box)`
-    background-color: #1a1a1a; // Ciemne tło
-    color: #ffffff; // Biały tekst
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); // Głęboki cień
+// --- Wrapper zajmujący cały ekran i centrowanie ---
+const FullscreenCenter = styled(Box)`
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;   // poziomo
+    align-items: center;       // pionowo
+    background: #000;          // żeby nie było białych marginesów
 `;
 
-// 2. Stylowany przycisk z gradientem (jak w ActionsSection)
-// Używamy <any> lub <ButtonProps> w zależności od konfiguracji,
-// ale po naprawie json możemy użyć <ButtonProps> lub usunąć typowanie dla prostoty.
+// --- Główny kontener ekranu zwycięstwa ---
+const StyledWrapper = styled(Box)`
+    background: radial-gradient(circle at top, #222 0%, #0f0f0f 70%);
+    color: #ffffff;
+    padding: 60px 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0,0,0,0.7), inset 0 0 30px rgba(255,255,255,0.03);
+    max-width: 700px;
+    width: 90%;
+    margin: 0 auto;
+`;
+
+// --- Przyciski ---
 const RestartButton = styled(Button)`
-    background: linear-gradient(180deg, #17a2ff, #0a84c9); // Niebieski gradient
+    background: linear-gradient(180deg, #17a2ff, #0a84c9);
     color: white;
-    padding: 12px 30px;
-    height: 60px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-top: ${({theme}) => theme.spacing(3)};
-    transition: transform 0.2s;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    
+    padding: 16px 40px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    border-radius: 12px;
+    margin-top: 40px;
+    box-shadow: 0 8px 25px rgba(23,162,255,0.4);
+    transition: 0.25s;
+
     &:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(180deg, #17a2ff, #0a84c9); // Zapobieganie zmianie gradientu
-        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        background: linear-gradient(180deg, #1bb9ff, #0a84c9);
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 12px 30px rgba(23,162,255,0.55);
     }
 `;
 
-
 const FinishedScreen = () => {
-    const {general: {winner}, actions: {handleReturnToMap}} = useGameContext();
+    const {
+        general: { winner },
+        actions: { handleReturnToMap },
+    } = useGameContext();
+
     if (!winner) {
         handleReturnToMap();
         return null;
     }
 
     return (
-        <StyledBox> {/* Używamy stylowanego Boxa */}
-            <Typography
-                variant="h3"
-                gutterBottom
-                sx={{
-                    fontWeight: 700,
-                    mb: 3,
-                    textShadow: '0 0 10px rgba(255, 255, 255, 0.1)'
-                }}
-            >
-                <span style={{color: winner.color}}>{winner.name}</span> wygrał!
-            </Typography>
+        <FullscreenCenter>
+            <StyledWrapper>
+                <Typography
+                    variant="h3"
+                    sx={{
+                        fontWeight: 800,
+                        mb: 2,
+                        textShadow: '0 0 15px rgba(255,255,255,0.25)',
+                        letterSpacing: '1px'
+                    }}
+                >
+                          <span style={{ color: 'inherit' }}>
+                            {winner.name}
+                          </span>{' '}
+                    wygrał!
+                </Typography>
 
-            <Typography variant="h5" sx={{color: '#aaa', mb: 3}}>
-                Gratulacje!
-            </Typography>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        color: '#bfbfbf',
+                        mb: 4,
+                        fontWeight: 400,
+                        letterSpacing: '0.5px'
+                    }}
+                >
+                    Gratulacje, Floor Master!
+                </Typography>
 
-            <RestartButton
-                variant="contained"
-                size="large"
-                onClick={handleReturnToMap}
-            >
-                Kolejna runda?
-            </RestartButton>
-        </StyledBox>
+                <RestartButton onClick={handleReturnToMap}>
+                    Kolejna runda?
+                </RestartButton>
+            </StyledWrapper>
+        </FullscreenCenter>
     );
 };
 
