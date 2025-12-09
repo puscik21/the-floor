@@ -1,9 +1,6 @@
-// Rozwiązanie TS1A4A: Używamy 'type' do importu tylko typu ButtonProps
 import {Button, Grid, type ButtonProps} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
-// Nie potrzebujemy już ręcznie definiować interfejsu PrimaryButtonProps
-// (rozwiązuje ESLint: no-empty-object-type)
 
 const ActionsSection = () => {
     const {duel, actions} = useGameContext();
