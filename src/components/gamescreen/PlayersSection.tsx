@@ -11,20 +11,24 @@ const PlayersSection = () => {
         defenderName,
     } = useGameContext().duel;
 
+    const timeAsText = (time: number): string => {
+        return Math.max(0, time).toFixed(1)
+    }
+
     return (
         <Container>
             <PlayersRow>
                 <PlayerCard isActive={activePlayer === 'challenger'}>
                     <CardInner>
                         <PlayerName variant="h6">{challengerName}</PlayerName>
-                        <PlayerTimer variant="h2">{challengerTimer.toFixed(1)}</PlayerTimer>
+                        <PlayerTimer variant="h2">{timeAsText(challengerTimer)}</PlayerTimer>
                     </CardInner>
                 </PlayerCard>
                 <CenterSpace/>
                 <PlayerCard isActive={activePlayer === 'defender'}>
                     <CardInner>
                         <PlayerName variant="h6">{defenderName}</PlayerName>
-                        <PlayerTimer variant="h2">{defenderTimer.toFixed(1)}</PlayerTimer>
+                        <PlayerTimer variant="h2">{timeAsText(defenderTimer)}</PlayerTimer>
                     </CardInner>
                 </PlayerCard>
             </PlayersRow>
@@ -62,15 +66,15 @@ const PlayerCard = styled(Card, {
     flex: 1 1 40%;
     max-width: 25%;
     background-color: #0a1133;
-    box-shadow: inset 0 0 18px rgba(0,40,110,0.45);
+    box-shadow: inset 0 0 18px rgba(0, 40, 110, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid rgba(255,255,255,0.04);
+    border: 3px solid rgba(255, 255, 255, 0.04);
     transition: transform 0.12s ease, box-shadow 0.25s ease, border 0.2s ease;
     cursor: pointer;
 
-    ${({ isActive }) => isActive && `
+    ${({isActive}) => isActive && `
         border: 4px solid #17a2ff;
         box-shadow: 
             0 0 18px #17a2ff,
@@ -90,11 +94,11 @@ const CardInner = styled(CardContent)`
 const PlayerName = styled(Typography)`
     text-transform: uppercase;
     font-weight: 900;
-    color: rgba(255,255,255,0.95);
+    color: rgba(255, 255, 255, 0.95);
 `;
 
 const PlayerTimer = styled(Typography)`
     font-weight: 900;
-    color: rgba(255,255,255,0.98);
+    color: rgba(255, 255, 255, 0.98);
     font-size: 2.4rem;
 `;
