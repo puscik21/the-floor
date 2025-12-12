@@ -89,7 +89,7 @@ export const useGameDuelState = (
             console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
-                finishDuel(winner, winner.id === challenger.id ? defender : challenger);
+                finishDuel(winner, winner.name === challenger.name ? defender : challenger);
             }
         }
 

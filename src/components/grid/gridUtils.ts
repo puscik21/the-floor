@@ -30,7 +30,7 @@ export function initializeGrid(players: Player[]): GameGrid {
                     return {
                         x,
                         y,
-                        ownerId: player ? player.id : null,
+                        ownerName: player ? player.name : null,
                     };
                 }),
         );

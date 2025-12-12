@@ -13,7 +13,7 @@ const PlayerCell = ({ cell, owner }: PlayerCellProps) => {
         actions: { handleCellClick },
     } = useGameContext();
 
-    const isActive = owner?.id === activeMapPlayer?.id;
+    const isActive = owner?.name === activeMapPlayer?.name;
 
     return (
         <Cell
