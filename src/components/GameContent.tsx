@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container} from '@mui/material';
+import {Container, GlobalStyles} from '@mui/material';
 import {useGameContext} from '../context/GameContext.tsx';
 import GameScreen from './gamescreen/GameScreen.tsx';
 import WelcomeScreen from './WelcomeScreen.tsx';
@@ -24,10 +24,28 @@ const GameContent: React.FC = () => {
         }
     };
 
+    const globalStyles = {
+        html: {
+            height: '100%',
+        },
+        body: {
+            margin: 0,
+            padding: 0,
+            height: '100%',
+            overflow: 'hidden',
+        },
+        '#root': {
+            height: '100%',
+        },
+    };
+
     return (
-        <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
-            {renderContent()}
-        </Container>
+        <>
+            <GlobalStyles styles={globalStyles}/>
+            <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
+                {renderContent()}
+            </Container>
+        </>
     );
 };
 
