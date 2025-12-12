@@ -1,189 +1,68 @@
-import {createContext, useCallback, useContext, useEffect, useState} from 'react';
-import type {
-    DuelInfo,
-    DuelPlayer,
-    GameActions,
-    GameContextValue,
-    GameGrid,
-    GameState,
-    GeneralState,
-    GridCell,
-    MapState,
-    Player,
-    Question,
-} from '../types';
-import {initializeGrid, MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
-
-const INIT_TIME_SECONDS = 3;
-const PASS_PENALTY_SECONDS = 3;
+import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
+import type {GameContextValue, GameState, Player} from '../types';
+import {MOCK_PLAYERS} from '../components/grid/gridUtils.ts';
+import {useGameDuelState} from './useGameDuelState.ts';
+import {useGameMapState} from './useGameMapState.ts';
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<GameState>('init');
-    const [challengerTimer, setChallengerTimer] = useState(INIT_TIME_SECONDS);
-    const [defenderTimer, setDefenderTimer] = useState(INIT_TIME_SECONDS);
-    const [passTimer, setPassTimer] = useState(PASS_PENALTY_SECONDS);
-    const [activePlayer, setActivePlayer] = useState<DuelPlayer>('challenger');
     const [winner, setWinner] = useState<Player | null>(null);
-    const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
 
-    // USUNIĘTO: isConquering
+    const handleSetWinner = useCallback((player: Player | null) => setWinner(player), []);
+    const handleStartGame = useCallback(() => setGameState('map'), []);
+    const handleStartDuel = useCallback(() => setGameState('duel'), []);
 
-    const [allPlayers] = useState<Player[]>(MOCK_PLAYERS);
-    const [grid, setGrid] = useState<GameGrid>([]);
-    const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
-    const [challenger, setChallenger] = useState<Player | null>(null);
-    const [defender, setDefender, ] = useState<Player | null>(null);
-    const [activeQuestionCategory, setActiveQuestionCategory] = useState<string | null>(null);
+    // To omit circular dependencies
+    const prepareDuelRef = useRef<((challenger: Player, defender: Player) => void)>(undefined);
 
-    useEffect(() => {
-        if (gameState === 'init') {
-            setGrid(initializeGrid(allPlayers));
-            const firstPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
-            setActiveMapPlayer(firstPlayer);
+    const startDuelWrapper = useCallback((challenger: Player, defender: Player) => {
+        if (prepareDuelRef.current) {
+            prepareDuelRef.current(challenger, defender);
+        } else {
+            console.error('prepareDuel logic not yet initialized!');
         }
-    }, [gameState, allPlayers]);
+    }, []);
 
-    useEffect(() => {
-        if (gameState !== 'duel') return;
-        const intervalId = setInterval(() => {
-            if (activePlayer === 'challenger') setChallengerTimer((prev) => prev - 1);
-            else setDefenderTimer((prev) => prev - 1);
+    const {
+        mapState,
+        actions: mapActions,
+    } = useGameMapState(gameState, MOCK_PLAYERS, startDuelWrapper);
 
-            if (isPassPenaltyActive) setPassTimer((prev) => prev - 1);
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, [activePlayer, gameState, isPassPenaltyActive]);
-
-    // PRZYWRÓCONO: Natychmiastowe przejęcie terenu
-    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player) => {
-        const newGrid = grid.map((row) =>
-            row.map((cell) => {
-                if (cell.ownerId === loserPlayer.id) {
-                    return {...cell, ownerId: winnerPlayer.id};
-                }
-                return cell;
-            }),
-        );
-        setGrid(newGrid);
-        setActiveMapPlayer(winnerPlayer);
-    }, [grid]);
-
-    useEffect(() => {
-        if (gameState !== 'duel') return;
-
-        if (isPassPenaltyActive && passTimer <= 0) {
-            setIsPassPenaltyActive(false);
-            setPassTimer(PASS_PENALTY_SECONDS);
-        }
-
-        if (!challenger || !defender) return;
-
-        if (challengerTimer <= 0) {
-            setWinner(defender);
-            setGameState('finished');
-            conquerTerritory(defender, challenger);
-        }
-        if (defenderTimer <= 0) {
-            setWinner(challenger);
-            setGameState('finished');
-            conquerTerritory(challenger, defender);
-        }
-    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, conquerTerritory]);
-
-    const handleCorrectAnswer = () => setActivePlayer(activePlayer === 'challenger' ? 'defender' : 'challenger');
-    const handlePass = () => setIsPassPenaltyActive(true);
-
-    const handleStartGame = () => {
-        setGameState('map');
-    };
-
-    const handleStartDuel = () => {
-        setGameState('duel');
-    };
-
-    const handleReturnToMap = () => {
-        setChallenger(null);
-        setDefender(null);
-        setGameState('map');
-    };
-
-    const handleCellClick = (cell: GridCell) => {
-        // PRZYWRÓCONO: Brak blokady interakcji
-        if (gameState !== 'map' || !activeMapPlayer) return;
-
-        if (!cell.ownerId || cell.ownerId === activeMapPlayer.id) {
-            console.log('Kliknij pole przeciwnika!');
-            return;
-        }
-
-        const currentChallenger = allPlayers.find((p) => p.id === activeMapPlayer.id);
-        const currentDefender = allPlayers.find((p) => p.id === cell.ownerId);
-
-        if (currentChallenger && currentDefender) {
-            prepareDuel(currentChallenger, currentDefender);
-        }
-    };
-
-    const prepareDuel = (challengerPlayer: Player, defenderPlayer: Player) => {
-        setChallenger(challengerPlayer);
-        setDefender(defenderPlayer);
-
-        setChallengerTimer(INIT_TIME_SECONDS);
-        setDefenderTimer(INIT_TIME_SECONDS);
-        setPassTimer(PASS_PENALTY_SECONDS);
-        setActivePlayer('challenger');
-        setActiveQuestionCategory(defenderPlayer.category)
-        setWinner(null);
-        setIsPassPenaltyActive(false);
-        setGameState('ready');
-    };
-
-    const generalState: GeneralState = {
+    const {
+        duelInfo,
+        actions: duelActions,
+    } = useGameDuelState(
         gameState,
-        winner,
-    };
+        setGameState,
+        handleSetWinner,
+        mapActions.conquerTerritory,
+    );
 
-    const mapState: MapState = {
-        grid,
-        allPlayers,
-        activeMapPlayer,
-    };
+    const prepareDuel = useCallback((challenger: Player, defender: Player) => {
+        duelActions.prepareDuelState(challenger, defender);
+        setGameState('ready');
+    }, [duelActions, setGameState]);
 
-    const question: Question = {
-        category: activeQuestionCategory || 'Co to jest?',
-        type: 'image',
-        text: 'Kto był pierwszym królem Polski?',
-        imageUrl: 'https://przepisna.pl/wp-content/uploads/marchewka-wartosci-odzywcze.jpeg',
-    }
-
-
-    const duelInfo: DuelInfo = {
-        challengerTimer,
-        defenderTimer,
-        activePlayer,
-        passTimer,
-        isPassPenaltyActive,
-        challengerName: challenger?.name || 'Gracz 1',
-        defenderName: defender?.name || 'Gracz 2',
-        question,
-    };
-
-    const actions: GameActions = {
-        handleStartGame,
-        handleStartDuel,
-        handleReturnToMap,
-        handleCellClick,
-        handleCorrectAnswer,
-        handlePass,
-    };
+    // here, at the end, we connect the real function with useRef
+    useEffect(() => {
+        prepareDuelRef.current = prepareDuel;
+    }, [prepareDuel]);
 
     const value: GameContextValue = {
-        general: generalState,
+        general: {
+            gameState,
+            winner,
+        },
         map: mapState,
         duel: duelInfo,
-        actions: actions,
+        actions: {
+            handleStartGame,
+            handleStartDuel,
+            ...mapActions,
+            ...duelActions,
+        },
     };
 
     return (
