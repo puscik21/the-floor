@@ -47,9 +47,8 @@ export const useGameDuelState = (
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
     const getQuestionCategory = useCallback(() => {
-        // return defender?.category || 'Co to jest?'; // TODO: Revert
-        return 'Informatyka';
-    }, [])
+        return defender?.category || 'Co to jest?';
+    }, [defender?.category])
 
     useEffect(() => {
         setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
