@@ -9,20 +9,10 @@ const FloorScreen = () => {
     return (
         <MapScreenWrapper>
             <FloorTitle variant="h2">THE FLOOR</FloorTitle>
-
-            <Box
-                sx={{
-                    color: 'rgba(255,255,255,0.92)',
-                    fontSize: '1.05rem',
-                    mb: 2,
-                    display: 'flex',
-                    gap: 1,
-                    alignItems: 'center',
-                }}
-            >
-                <span>Ruch gracza:</span>
+            <Header>
+                <HeaderText>Ruch gracza:</HeaderText>
                 <PlayerName>{activeMapPlayer?.name || '-'}</PlayerName>
-            </Box>
+            </Header>
             <PlayerGrid/>
             <PassButton>Pas</PassButton>
         </MapScreenWrapper>
@@ -31,32 +21,46 @@ const FloorScreen = () => {
 
 export default FloorScreen;
 
-const FloorTitle = styled(Typography)(() => `
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-align: center;
-  margin: 12px 0 8px 0;
-  font-size: 3rem;
-  line-height: 1;
-  background: linear-gradient(180deg, #FFD700 0%, #FFA500 40%, #D4AF37 80%, #FFD700 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow:
-    0 6px 12px rgba(0, 40, 120, 0.6),
+const FloorTitle = styled(Typography)`
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-align: center;
+    margin: 12px 0 8px 0;
+    font-size: 3rem;
+    line-height: 1;
+    background: linear-gradient(180deg, #FFD700 0%, #FFA500 40%, #D4AF37 80%, #FFD700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 6px 12px rgba(0, 40, 120, 0.6),
     0 0 18px rgba(0, 140, 255, 0.25);
-`);
+`;
+
+const Header = styled(Box)`
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+`;
 
 const MapScreenWrapper = styled(Box)`
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(180deg, #020b2d 0%, #3b4c93 100%);
+    background: linear-gradient(180deg, #020b2d 0%, #243b95 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 32px 16px;
 `;
 
+const HeaderText = styled(Typography)`
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+`;
+
 const PlayerName = styled(Typography)`
+    font-size: 20px;
     text-transform: uppercase;
     font-weight: 900;
     color: rgba(255, 255, 255, 0.95);
@@ -74,7 +78,7 @@ const PassButton = styled(Button)`
     transition: transform 0.22s, box-shadow 0.22s;
 
     &:hover {
-        //transform: translateY(-3px) scale(1.02);
+        transform: scale(1.1);
         box-shadow: 0 14px 38px rgba(23, 162, 255, 0.44);
     }
 `;
