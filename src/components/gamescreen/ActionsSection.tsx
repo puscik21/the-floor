@@ -1,15 +1,19 @@
-import {Button, Grid, type ButtonProps} from '@mui/material';
+import {Button, type ButtonProps, Grid} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
 import {useCallback, useEffect} from 'react';
 
 const ActionsSection = () => {
-    const {duel, actions} = useGameContext();
+    const {general, duel, actions} = useGameContext();
     const {passTimer, isPassPenaltyActive} = duel;
     const {handleCorrectAnswer, handlePass} = actions;
 
+    const areKeysDisabled = useCallback(() => isPassPenaltyActive || general.gameState !== 'duel',
+        [general.gameState, isPassPenaltyActive],
+    );
+
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (isPassPenaltyActive) {
+        if (areKeysDisabled()) {
             return;
         }
 
@@ -19,7 +23,7 @@ const ActionsSection = () => {
         } else if (event.key === 'f' || event.key === 'F') {
             handlePass();
         }
-    }, [isPassPenaltyActive, handleCorrectAnswer, handlePass]);
+    }, [areKeysDisabled, handleCorrectAnswer, handlePass]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -39,10 +43,10 @@ const ActionsSection = () => {
                         variant="contained"
                         fullWidth
                         onClick={handleCorrectAnswer}
-                        disabled={isPassPenaltyActive}
+                        disabled={areKeysDisabled()}
                         size="large"
                     >
-                        {isPassPenaltyActive ? `Czekaj... (${passTimer}s)` : 'Poprawna odpowiedź'}
+                        {isPassPenaltyActive ? `Czekaj... (${passTimer.toFixed(0)}s)` : 'Poprawna odpowiedź'}
                     </PrimaryButton>
                 </Grid>
 
@@ -51,7 +55,7 @@ const ActionsSection = () => {
                         variant="outlined"
                         fullWidth
                         onClick={handlePass}
-                        disabled={isPassPenaltyActive}
+                        disabled={areKeysDisabled()}
                         size="large"
                     >
                         Pas
@@ -93,17 +97,17 @@ const PrimaryButton = styled(Button)<ButtonProps>`
 `;
 
 const SecondaryButton = styled(Button)<ButtonProps>`
-    border: 2px solid rgba(255,255,255,0.08);
+    border: 2px solid rgba(255, 255, 255, 0.08);
     height: 56px;
     font-weight: 800;
-    color: rgba(255,255,255,0.95);
+    color: rgba(255, 255, 255, 0.95);
 
     transition: all 0.25s ease;
+
     &:hover {
-        box-shadow:
-                0 0 10px #17a2ff,
-                0 0 20px rgba(23, 162, 255, 0.4),
-                inset 0 0 20px rgba(255,255,255,0.1);
+        box-shadow: 0 0 10px #17a2ff,
+        0 0 20px rgba(23, 162, 255, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
         transform: scale(1.005);
     }
 `;

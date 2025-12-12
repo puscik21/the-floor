@@ -68,7 +68,7 @@ const PlayerName = styled(Typography)`
 `;
 
 const PassButton = styled(Button)`
-    background: linear-gradient(180deg, #17a2ff, #086498);
+    background: linear-gradient(180deg, #17a2ff, #054e75);
     color: white;
     padding: 14px 36px;
     font-size: 1.05rem;

@@ -70,7 +70,7 @@ export const useGameDuelState = (
         conquerTerritory(winningPlayer, losingPlayer, inheritedCategory);
     }, [conquerTerritory, setGameState, setWinner])
 
-    const tryAdvanceQuestion = useCallback(async (currentId: number) => {
+    const tryAdvanceQuestionId = useCallback(async (currentId: number) => {
         if (isCheckingNextQuestion) return;
 
         setIsCheckingNextQuestion(true);
@@ -102,7 +102,7 @@ export const useGameDuelState = (
         if (isPassPenaltyActive && passTimer <= 0) {
             setIsPassPenaltyActive(false);
             setPassTimer(PASS_PENALTY_SECONDS);
-            tryAdvanceQuestion(questionId);
+            tryAdvanceQuestionId(questionId);
         }
 
         if (!challenger || !defender) return;
@@ -113,14 +113,14 @@ export const useGameDuelState = (
         if (defenderTimer <= 0) {
             finishDuel(challenger, defender, challenger.category);
         }
-    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner, tryAdvanceQuestion, questionId, finishDuel]);
+    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner, tryAdvanceQuestionId, questionId, finishDuel]);
 
     const handleCorrectAnswer = useCallback(() => {
         setActivePlayer((prev: DuelPlayer) => {
             return prev === 'challenger' ? 'defender' : 'challenger'
         })
-        tryAdvanceQuestion(questionId);
-    }, [questionId, tryAdvanceQuestion]);
+        tryAdvanceQuestionId(questionId);
+    }, [questionId, tryAdvanceQuestionId]);
 
     const handlePass = useCallback(() => setIsPassPenaltyActive(true), []);
 

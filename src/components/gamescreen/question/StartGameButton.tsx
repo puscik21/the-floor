@@ -20,12 +20,15 @@ const StartButton = styled(Button)`
     width: 80%;
     height: 120px;
     max-width: 700px;
-    background: linear-gradient(180deg,#17a2ff,#0a84c9);
+    background: linear-gradient(180deg, #17a2ff, #054e75);
     color: white;
     border-radius: ${({theme}) => (theme.shape.borderRadius as number) * 2}px;
-    box-shadow: 0 14px 36px rgba(10,40,80,0.6);
+    box-shadow: 0 14px 36px rgba(10, 40, 80, 0.6);
     transition: transform 0.16s;
-    &:hover { transform: translateY(-4px) scale(1.01); }
+
+    &:hover {
+        transform: scale(1.05);
+    }
 `;
 
 const Text = styled(Typography)`
