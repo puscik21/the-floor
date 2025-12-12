@@ -17,14 +17,14 @@ const PlayersSection = () => {
                 <PlayerCard isActive={activePlayer === 'challenger'}>
                     <CardInner>
                         <PlayerName variant="h6">{challengerName}</PlayerName>
-                        <PlayerTimer variant="h2">{challengerTimer}</PlayerTimer>
+                        <PlayerTimer variant="h2">{challengerTimer.toFixed(1)}</PlayerTimer>
                     </CardInner>
                 </PlayerCard>
                 <CenterSpace/>
                 <PlayerCard isActive={activePlayer === 'defender'}>
                     <CardInner>
                         <PlayerName variant="h6">{defenderName}</PlayerName>
-                        <PlayerTimer variant="h2">{defenderTimer}</PlayerTimer>
+                        <PlayerTimer variant="h2">{defenderTimer.toFixed(1)}</PlayerTimer>
                     </CardInner>
                 </PlayerCard>
             </PlayersRow>

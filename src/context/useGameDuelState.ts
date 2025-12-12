@@ -38,11 +38,11 @@ export const useGameDuelState = (
     useEffect(() => {
         if (gameState !== 'duel') return;
         const intervalId = setInterval(() => {
-            if (activePlayer === 'challenger') setChallengerTimer((prev) => prev - 1);
-            else setDefenderTimer((prev) => prev - 1);
+            if (activePlayer === 'challenger') setChallengerTimer((prev) => prev - 0.1);
+            else setDefenderTimer((prev) => prev - 0.1);
 
-            if (isPassPenaltyActive) setPassTimer((prev) => prev - 1);
-        }, 1000);
+            if (isPassPenaltyActive) setPassTimer((prev) => prev - 0.1);
+        }, 100);
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
