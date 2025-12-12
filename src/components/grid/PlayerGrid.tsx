@@ -9,7 +9,7 @@ const PlayerGrid = () => {
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
         allPlayers.forEach((player) => {
-            map.set(player.id, player);
+            map.set(player.name, player);
         });
         return map;
     }, [allPlayers]);
@@ -22,7 +22,7 @@ const PlayerGrid = () => {
     return (
         <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell) => {
-                const owner: Player | null = cell.ownerId ? (playerMap.get(cell.ownerId) ?? null) : null;
+                const owner: Player | null = cell.ownerName ? (playerMap.get(cell.ownerName) ?? null) : null;
 
                 return (
                     <PlayerCell

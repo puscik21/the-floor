@@ -13,17 +13,12 @@ export function initializeGrid(players: Player[]): GameGrid {
     const {rows, cols} = calculateGridDimensions(numPlayers);
     const totalCells = rows * cols;
 
-    const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+    const shufflePlayers = false; // Take fron config file
+    const shuffledPlayers = shufflePlayers ? [...players].sort(() => Math.random() - 0.5) : [...players]
     const cellOwners: (Player | null)[] = shuffledPlayers;
     while (cellOwners.length < totalCells) {
         cellOwners.push(null); // Fill with empty cells
     }
-
-    // TODO: Here we shuffle, so the empty cells are in random places
-    //  We should rather put them in the corners
-    //  will only 1 square be always empty?
-    cellOwners.sort(() => Math.random() - 0.5);
-
 
     return Array(rows)
         .fill(null)
@@ -31,11 +26,11 @@ export function initializeGrid(players: Player[]): GameGrid {
             Array(cols)
                 .fill(null)
                 .map((_, x) => {
-                    const player = cellOwners.pop();
+                    const player = cellOwners.shift();
                     return {
                         x,
                         y,
-                        ownerId: player ? player.id : null,
+                        ownerName: player ? player.name : null,
                     };
                 }),
         );

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { styled, keyframes } from '@mui/material/styles';
-import { useGameContext } from '../context/GameContext.tsx';
+import React, {useEffect, useRef} from 'react';
+import {Box, Button, Typography} from '@mui/material';
+import {keyframes, styled} from '@mui/material/styles';
+import {useGameContext} from '../context/GameContext.tsx';
 
 /* -------------------------
    Animations (keyframes)
@@ -262,7 +262,7 @@ const FinishedScreen: React.FC = () => {
           }}
         >
           <Trophy aria-hidden>🏆</Trophy>
-          <WinnerName color={winner.color ?? '#17a2ff'}>{winner.name}</WinnerName>
+          <WinnerName>{winner.name}</WinnerName>
           <span style={{ color: '#d0d0d0', marginLeft: 8, fontWeight: 600 }}>wygrał!</span>
         </Typography>
 

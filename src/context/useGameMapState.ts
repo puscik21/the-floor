@@ -31,8 +31,8 @@ export const useGameMapState = (
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
-                if (cell.ownerId === loserPlayer.id) {
-                    return {...cell, ownerId: winnerPlayer.id};
+                if (cell.ownerName === loserPlayer.name) {
+                    return {...cell, ownerName: winnerPlayer.name};
                 }
                 return cell;
             }),
@@ -41,25 +41,25 @@ export const useGameMapState = (
         setActiveMapPlayer(winnerPlayer);
     }, [grid]);
 
-    const findPlayerById = useCallback((id: string): Player | undefined => {
-        return allPlayers.find((p) => p.id === id)
+    const findPlayerByName = useCallback((name: string): Player | undefined => {
+        return allPlayers.find((p) => p.name === name)
     }, [allPlayers]);
 
     const handleCellClick = useCallback((cell: GridCell) => {
         if (gameState !== 'map' || !activeMapPlayer) return;
 
-        if (!cell.ownerId || cell.ownerId === activeMapPlayer.id) {
+        if (!cell.ownerName || cell.ownerName === activeMapPlayer.name) {
             console.log('Kliknij pole przeciwnika!');
             return;
         }
 
-        const currentChallenger = findPlayerById(activeMapPlayer.id)
-        const currentDefender = findPlayerById(cell.ownerId)
+        const currentChallenger = findPlayerByName(activeMapPlayer.name)
+        const currentDefender = findPlayerByName(cell.ownerName)
 
         if (currentChallenger && currentDefender) {
             startDuelCallback(currentChallenger, currentDefender);
         }
-    }, [gameState, activeMapPlayer, findPlayerById, startDuelCallback]);
+    }, [gameState, activeMapPlayer, findPlayerByName, startDuelCallback]);
 
     const mapState: MapState = {
         grid,

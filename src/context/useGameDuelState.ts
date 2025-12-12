@@ -3,7 +3,7 @@ import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
 import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
 
-const INIT_TIME_SECONDS = 300;
+const INIT_TIME_SECONDS = 5;
 const PASS_PENALTY_SECONDS = 3;
 
 interface GameDuelStateResult {
@@ -47,9 +47,8 @@ export const useGameDuelState = (
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
     const getQuestionCategory = useCallback(() => {
-        // return defender?.category || 'Co to jest?'; // TODO: Revert
-        return 'Informatyka';
-    }, [])
+        return defender?.category || 'Co to jest?';
+    }, [defender?.category])
 
     useEffect(() => {
         setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
@@ -89,7 +88,7 @@ export const useGameDuelState = (
             console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
-                finishDuel(winner, winner.id === challenger.id ? defender : challenger);
+                finishDuel(winner, winner.name === challenger.name ? defender : challenger);
             }
         }
 

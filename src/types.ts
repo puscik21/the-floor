@@ -13,10 +13,8 @@ export interface GeneralState {
 export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
 
 export interface Player {
-    id: string;
     name: string;
     category: string;
-    color: string;
 }
 
 export type GameGrid = GridCell[][];
@@ -24,7 +22,7 @@ export type GameGrid = GridCell[][];
 export interface GridCell {
     x: number;
     y: number;
-    ownerId: string | null;
+    ownerName: string | null;
 }
 
 export interface MapState {

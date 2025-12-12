@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useGameContext } from '../context/GameContext.tsx';
+import {Box, Container, Typography} from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {useGameContext} from '../context/GameContext.tsx';
 import GameScreen from './gamescreen/GameScreen.tsx';
 import WelcomeScreen from './WelcomeScreen.tsx';
 import PlayerGrid from './grid/PlayerGrid.tsx';
@@ -37,17 +37,17 @@ const MapScreenWrapper = styled(Box)`
 
 const GameContent: React.FC = () => {
     const {
-        general: { gameState },
-        map: { activeMapPlayer },
+        general: {gameState},
+        map: {activeMapPlayer},
     } = useGameContext();
 
     const renderContent = () => {
         switch (gameState) {
             case 'ready':
             case 'duel':
-                return <GameScreen />;
+                return <GameScreen/>;
             case 'finished':
-                return <FinishedScreen />;
+                return <FinishedScreen/>;
             case 'map':
                 return (
                     <MapScreenWrapper>
@@ -64,25 +64,29 @@ const GameContent: React.FC = () => {
                             }}
                         >
                             <span>Ruch gracza:</span>
-                            <span style={{ color: activeMapPlayer?.color || '#17a2ff', fontWeight: 700 }}>
-                {activeMapPlayer?.name || '-'}
-              </span>
+                            <PlayerName>{activeMapPlayer?.name || '-'}</PlayerName>
                         </Box>
 
-                        <PlayerGrid />
+                        <PlayerGrid/>
                     </MapScreenWrapper>
                 );
             case 'init':
             default:
-                return <WelcomeScreen />;
+                return <WelcomeScreen/>;
         }
     };
 
     return (
-        <Container maxWidth={false} disableGutters sx={{ textAlign: 'center' }}>
+        <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
             {renderContent()}
         </Container>
     );
 };
 
 export default GameContent;
+
+const PlayerName = styled(Typography)`
+    text-transform: uppercase;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.95);
+`;

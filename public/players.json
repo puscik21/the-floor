@@ -1,56 +1,38 @@
 [
   {
-    "id": "p1",
     "name": "Madzia",
-    "category": "Wędkarstwo",
-    "color": "#E53935"
+    "category": "Wędkarstwo"
   },
   {
-    "id": "p2",
     "name": "Igor",
-    "category": "Historia",
-    "color": "#1E88E5"
+    "category": "Historia"
   },
   {
-    "id": "p3",
     "name": "Nati",
-    "category": "Muzyka",
-    "color": "#43A047"
+    "category": "Muzyka"
   },
   {
-    "id": "p4",
     "name": "Grześ",
-    "category": "Informatyka",
-    "color": "#FDD835"
+    "category": "Informatyka"
   },
   {
-    "id": "p5",
     "name": "Seba",
-    "category": "Sport",
-    "color": "#8E24AA"
+    "category": "Sport"
   },
   {
-    "id": "p6",
     "name": "The Michał",
-    "category": "Matematyka",
-    "color": "#00897B"
+    "category": "Matematyka"
   },
   {
-    "id": "p7",
     "name": "Tomek",
-    "category": "Geografia",
-    "color": "#FF7043"
+    "category": "Geografia"
   },
   {
-    "id": "p8",
     "name": "Monika",
-    "category": "Literatura",
-    "color": "#29B6F6"
+    "category": "Literatura"
   },
   {
-    "id": "p9",
     "name": "Madzia 2",
-    "category": "Biologia",
-    "color": "#66BB6A"
+    "category": "Biologia"
   }
 ]
