@@ -1,4 +1,3 @@
-// src/components/game/question/ImageSection.tsx
 import {styled} from '@mui/material/styles';
 import {Box} from '@mui/material';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';

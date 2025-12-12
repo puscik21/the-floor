@@ -1,4 +1,3 @@
-// src/components/game/question/TextSection.tsx
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import QuestionPlaceholder from './QuestionPlaceholder.tsx';

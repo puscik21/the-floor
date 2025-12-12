@@ -1,4 +1,3 @@
-// FinishedScreen.tsx
 import React, { useEffect, useRef } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';

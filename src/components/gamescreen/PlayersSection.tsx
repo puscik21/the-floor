@@ -1,4 +1,3 @@
-// src/components/game/PlayersSection.tsx
 import {styled} from '@mui/material/styles';
 import {Box, Card, CardContent, Typography} from '@mui/material';
 import {useGameContext} from '../../context/GameContext.tsx';

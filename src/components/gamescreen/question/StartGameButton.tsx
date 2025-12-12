@@ -1,4 +1,3 @@
-// src/components/game/question/StartGameButton.tsx
 import {styled} from '@mui/material/styles';
 import {Button, Typography} from '@mui/material';
 import {useGameContext} from '../../../context/GameContext.tsx';

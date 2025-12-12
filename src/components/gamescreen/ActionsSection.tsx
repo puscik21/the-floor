@@ -10,7 +10,7 @@ const ActionsSection = () => {
     return (
         <Container>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <PrimaryButton
                         // Po instalacji poprawnej wersji MUI (5.x),
                         // TS2769 zniknie samoczynnie.
@@ -24,7 +24,7 @@ const ActionsSection = () => {
                     </PrimaryButton>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <SecondaryButton
                         variant="outlined"
                         fullWidth
