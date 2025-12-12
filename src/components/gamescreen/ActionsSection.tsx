@@ -74,7 +74,6 @@ const Container = styled('footer')`
     align-items: center;
     justify-content: center;
     width: 50%;
-
     margin-left: auto;
     margin-right: auto;
 `;
@@ -85,7 +84,6 @@ const PrimaryButton = styled(Button)<ButtonProps>`
     height: 64px;
     font-weight: 800;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), inset 0 0 12px rgba(255, 255, 255, 0.02);
-
     transition: all 0.25s ease;
 
     &:hover {
@@ -101,7 +99,6 @@ const SecondaryButton = styled(Button)<ButtonProps>`
     height: 56px;
     font-weight: 800;
     color: rgba(255, 255, 255, 0.95);
-
     transition: all 0.25s ease;
 
     &:hover {

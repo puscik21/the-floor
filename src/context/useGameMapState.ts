@@ -8,6 +8,7 @@ interface GameMapStateResult {
     actions: {
         conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
+        handlePassFloorClick: () => void;
     };
 }
 
@@ -18,6 +19,7 @@ export const useGameMapState = (
     const [grid, setGrid] = useState<GameGrid>([]);
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
     const [allPlayers, setAllPlayers] = useState<Player[]>([]);
+    const [hasWonPreviousDuel, setHasWonPreviousDuel] = useState(false);
 
     useEffect(() => {
         if (gameState === 'init') {
@@ -39,12 +41,15 @@ export const useGameMapState = (
         );
         setGrid(newGrid);
 
-        setAllPlayers(allPlayers.map(player =>
-            player.name == winnerPlayer.name
-                ? {...player, category: inheritedCategory}
-                : player,
-        ))
+        setAllPlayers(allPlayers
+            .filter(p => p.name !== loserPlayer.name)
+            .map(player =>
+                player.name == winnerPlayer.name
+                    ? {...player, category: inheritedCategory}
+                    : player,
+            ));
         setActiveMapPlayer(winnerPlayer);
+        setHasWonPreviousDuel(true);
     }, [grid, allPlayers]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
@@ -67,10 +72,23 @@ export const useGameMapState = (
         }
     }, [gameState, activeMapPlayer, findPlayerByName, startDuelCallback]);
 
+    const handlePassFloorClick = useCallback(() => {
+        const potentialNextPlayers: Player[] = allPlayers.filter(p => p.name !== activeMapPlayer?.name)
+        if (potentialNextPlayers.length === 0) {
+            console.log('Brak innych graczy do wylosowania');
+            return null;
+        }
+
+        const randomIndex = Math.floor(Math.random() * potentialNextPlayers.length)
+        setActiveMapPlayer(potentialNextPlayers[randomIndex])
+        setHasWonPreviousDuel(false)
+    }, [activeMapPlayer?.name, allPlayers]);
+
     const mapState: MapState = {
         grid,
         allPlayers,
         activeMapPlayer,
+        hasWonPreviousDuel,
     };
 
     return {
@@ -78,6 +96,7 @@ export const useGameMapState = (
         actions: {
             conquerTerritory,
             handleCellClick,
+            handlePassFloorClick,
         },
     };
 };

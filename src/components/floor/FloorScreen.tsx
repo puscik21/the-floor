@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
 
 const FloorScreen = () => {
-    const activeMapPlayer = useGameContext().map.activeMapPlayer;
+    const {map: {hasWonPreviousDuel, activeMapPlayer}, actions: {handlePassFloorClick}} = useGameContext();
 
     return (
         <MapScreenWrapper>
@@ -14,7 +14,12 @@ const FloorScreen = () => {
                 <PlayerName>{activeMapPlayer?.name || '-'}</PlayerName>
             </Header>
             <PlayerGrid/>
-            <PassButton>Pas</PassButton>
+            <PassButton
+                disabled={!hasWonPreviousDuel}
+                onClick={handlePassFloorClick}
+            >
+                Pas
+            </PassButton>
         </MapScreenWrapper>
     );
 }
@@ -69,6 +74,7 @@ const PlayerName = styled(Typography)`
 
 const PassButton = styled(Button)`
     background: linear-gradient(180deg, #17a2ff, #054e75);
+    width: 300px;
     color: white;
     padding: 14px 36px;
     font-size: 1.05rem;

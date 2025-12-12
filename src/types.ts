@@ -29,6 +29,7 @@ export interface MapState {
     grid: GameGrid;
     allPlayers: Player[];
     activeMapPlayer: Player | null;
+    hasWonPreviousDuel: boolean;
 }
 
 export interface DuelInfo {
@@ -59,4 +60,5 @@ export interface GameActions {
     handleCellClick: (cell: GridCell) => void;
     handleCorrectAnswer: () => void;
     handlePass: () => void;
+    handlePassFloorClick: () => void;
 }
