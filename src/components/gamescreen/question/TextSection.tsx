@@ -12,7 +12,7 @@ const TextSection = () => {
 
     return (
         <Container>
-            <StyledText variant="h3">
+            <StyledText variant="h4">
                 {questionText}
             </StyledText>
         </Container>
@@ -31,8 +31,9 @@ const Container = styled(Box)`
 `;
 
 const StyledText = styled(Typography)`
-    color: ${({theme}) => theme.palette.text.primary};
+    color: rgba(255,255,255,0.95);
     text-align: center;
     padding: ${({theme}) => theme.spacing(2)};
-    font-weight: bold;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 `;

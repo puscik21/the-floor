@@ -8,6 +8,7 @@ export interface GameContextValue {
 export interface GeneralState {
     gameState: GameState;
     winner: Player | null;
+    // Usunięto: isConquering: boolean;
 }
 
 export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
