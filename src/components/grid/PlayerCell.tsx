@@ -21,7 +21,6 @@ const PlayerCell = ({ cell, owner }: PlayerCellProps) => {
             isActive={isActive}
             onClick={() => handleCellClick(cell)}
         >
-            {/* --- IMIĘ GRACZA (DRUKOWANE) --- */}
             <Typography
                 variant="h5"
                 sx={{
@@ -35,11 +34,10 @@ const PlayerCell = ({ cell, owner }: PlayerCellProps) => {
                 {owner ? owner.name : ''}
             </Typography>
 
-            {/* --- KATEGORIA (DRUKOWANA) --- */}
             <Typography
                 variant="body1"
                 sx={{
-                    color: 'rgba(255,255,255,0.95)',
+                    color: 'rgba(255,255,255,0.6)',
                     mt: 0.8,
                     fontWeight: 700,
                     fontSize: '1rem',
