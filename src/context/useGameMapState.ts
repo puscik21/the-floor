@@ -6,7 +6,7 @@ import playersConfig from '../../public/players.json';
 interface GameMapStateResult {
     mapState: MapState;
     actions: {
-        conquerTerritory: (winnerPlayer: Player, loserPlayer: Player) => void;
+        conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
     };
 }
@@ -17,18 +17,18 @@ export const useGameMapState = (
 ): GameMapStateResult => {
     const [grid, setGrid] = useState<GameGrid>([]);
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
-
-    const allPlayers: Player[] = playersConfig;
+    const [allPlayers, setAllPlayers] = useState<Player[]>([]);
 
     useEffect(() => {
         if (gameState === 'init') {
-            setGrid(initializeGrid(allPlayers));
-            const firstPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
+            setAllPlayers(playersConfig)
+            setGrid(initializeGrid(playersConfig));
+            const firstPlayer = playersConfig[Math.floor(Math.random() * playersConfig.length)];
             setActiveMapPlayer(firstPlayer);
         }
-    }, [gameState, allPlayers]);
+    }, [gameState]);
 
-    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player) => {
+    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
                 if (cell.ownerName === loserPlayer.name) {
@@ -38,8 +38,14 @@ export const useGameMapState = (
             }),
         );
         setGrid(newGrid);
+
+        setAllPlayers(allPlayers.map(player =>
+            player.name == winnerPlayer.name
+                ? {...player, category: inheritedCategory}
+                : player,
+        ))
         setActiveMapPlayer(winnerPlayer);
-    }, [grid]);
+    }, [grid, allPlayers]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
         return allPlayers.find((p) => p.name === name)
@@ -67,7 +73,6 @@ export const useGameMapState = (
         activeMapPlayer,
     };
 
-    // TODO: simplify
     return {
         mapState,
         actions: {

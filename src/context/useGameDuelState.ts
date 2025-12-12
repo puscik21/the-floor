@@ -3,7 +3,7 @@ import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
 import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
 
-const INIT_TIME_SECONDS = 5;
+const INIT_TIME_SECONDS = 3;
 const PASS_PENALTY_SECONDS = 3;
 
 interface GameDuelStateResult {
@@ -20,7 +20,7 @@ export const useGameDuelState = (
     gameState: GameState,
     setGameState: (state: GameState) => void,
     setWinner: (player: Player | null) => void,
-    conquerTerritory: (winnerPlayer: Player, loserPlayer: Player) => void,
+    conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void,
 ): GameDuelStateResult => {
     const [challengerTimer, setChallengerTimer] = useState(INIT_TIME_SECONDS);
     const [defenderTimer, setDefenderTimer] = useState(INIT_TIME_SECONDS);
@@ -64,10 +64,10 @@ export const useGameDuelState = (
         return defender;
     }, [challengerTimer, defenderTimer]);
 
-    const finishDuel = useCallback((winningPlayer: Player, losingPlayer: Player) => {
+    const finishDuel = useCallback((winningPlayer: Player, losingPlayer: Player, inheritedCategory: string) => {
         setWinner(winningPlayer);
         setGameState('finished');
-        conquerTerritory(winningPlayer, losingPlayer);
+        conquerTerritory(winningPlayer, losingPlayer, inheritedCategory);
     }, [conquerTerritory, setGameState, setWinner])
 
     const tryAdvanceQuestion = useCallback(async (currentId: number) => {
@@ -88,7 +88,7 @@ export const useGameDuelState = (
             console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
-                finishDuel(winner, winner.name === challenger.name ? defender : challenger);
+                finishDuel(winner, winner.name === challenger.name ? defender : challenger, challenger.category);
             }
         }
 
@@ -108,10 +108,10 @@ export const useGameDuelState = (
         if (!challenger || !defender) return;
 
         if (challengerTimer <= 0) {
-            finishDuel(defender, challenger);
+            finishDuel(defender, challenger, challenger.category);
         }
         if (defenderTimer <= 0) {
-            finishDuel(challenger, defender);
+            finishDuel(challenger, defender, challenger.category);
         }
     }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner, tryAdvanceQuestion, questionId, finishDuel]);
 
