@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
+import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
 
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
@@ -32,6 +33,7 @@ export const useGameDuelState = (
 
     const [questionId, setQuestionId] = useState(1);
     const [questionImageUrl, setQuestionImageUrl] = useState('/util/placeholder.png');
+    const [isCheckingNextQuestion, setIsCheckingNextQuestion] = useState(false);
 
     useEffect(() => {
         if (gameState !== 'duel') return;
@@ -44,6 +46,56 @@ export const useGameDuelState = (
         return () => clearInterval(intervalId);
     }, [activePlayer, gameState, isPassPenaltyActive]);
 
+    const getQuestionCategory = useCallback(() => {
+        // return defender?.category || 'Co to jest?'; // TODO: Revert
+        return 'Informatyka';
+    }, [])
+
+    useEffect(() => {
+        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
+    }, [getQuestionCategory, questionId]);
+
+    const getWinnerOnTimeout = useCallback((challenger: Player, defender: Player) => {
+        if (challengerTimer > defenderTimer) {
+            return challenger;
+        }
+        if (defenderTimer > challengerTimer) {
+            return defender;
+        }
+        return defender;
+    }, [challengerTimer, defenderTimer]);
+
+    const finishDuel = useCallback((winningPlayer: Player, losingPlayer: Player) => {
+        setWinner(winningPlayer);
+        setGameState('finished');
+        conquerTerritory(winningPlayer, losingPlayer);
+    }, [conquerTerritory, setGameState, setWinner])
+
+    const tryAdvanceQuestion = useCallback(async (currentId: number) => {
+        if (isCheckingNextQuestion) return;
+
+        setIsCheckingNextQuestion(true);
+
+        const currentCategory = getQuestionCategory();
+        const nextId = currentId + 1;
+        const nextImageUrl = getImageFromCategory(currentCategory, nextId);
+
+        const exists = await checkImageExists(nextImageUrl);
+
+        if (exists) {
+            setQuestionId(nextId);
+        } else {
+            // TODO: Toastify
+            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
+            if (challenger && defender) {
+                const winner = getWinnerOnTimeout(challenger, defender);
+                finishDuel(winner, winner.id === challenger.id ? defender : challenger);
+            }
+        }
+
+        setIsCheckingNextQuestion(false);
+    }, [isCheckingNextQuestion, getQuestionCategory, challenger, defender, getWinnerOnTimeout, finishDuel]);
+
     // TODO: Improve duel timer
     useEffect(() => {
         if (gameState !== 'duel') return;
@@ -51,33 +103,25 @@ export const useGameDuelState = (
         if (isPassPenaltyActive && passTimer <= 0) {
             setIsPassPenaltyActive(false);
             setPassTimer(PASS_PENALTY_SECONDS);
-            setQuestionId(prevNumber => prevNumber + 1);
+            tryAdvanceQuestion(questionId);
         }
 
         if (!challenger || !defender) return;
 
         if (challengerTimer <= 0) {
-            setWinner(defender);
-            setGameState('finished');
-            conquerTerritory(defender, challenger);
+            finishDuel(defender, challenger);
         }
         if (defenderTimer <= 0) {
-            setWinner(challenger);
-            setGameState('finished');
-            conquerTerritory(challenger, defender);
+            finishDuel(challenger, defender);
         }
-    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner]);
-
-    useEffect(() => {
-        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
-    }, [questionId]);
+    }, [passTimer, challengerTimer, defenderTimer, isPassPenaltyActive, gameState, challenger, defender, setGameState, conquerTerritory, setWinner, tryAdvanceQuestion, questionId, finishDuel]);
 
     const handleCorrectAnswer = useCallback(() => {
         setActivePlayer((prev: DuelPlayer) => {
             return prev === 'challenger' ? 'defender' : 'challenger'
         })
-        setQuestionId(prevNumber => prevNumber + 1);
-    }, []);
+        tryAdvanceQuestion(questionId);
+    }, [questionId, tryAdvanceQuestion]);
 
     const handlePass = useCallback(() => setIsPassPenaltyActive(true), []);
 
@@ -98,11 +142,6 @@ export const useGameDuelState = (
         setIsPassPenaltyActive(false);
         setQuestionId(1)
     }, [setWinner]);
-
-    const getQuestionCategory = () => {
-        // return defender?.category || 'Co to jest?'; // TODO: Revert
-        return 'Informatyka';
-    }
 
     const question: Question = {
         id: questionId,

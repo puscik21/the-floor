@@ -76,19 +76,7 @@ const PlayerCard = styled(Card, {
             0 0 18px #17a2ff,
             0 0 36px #17a2ff,
             inset 0 0 30px #17a2ff;
-        transform: translateY(-2px);
     `}
-
-    &:hover {
-        transform: translateY(-4px) scale(1.01);
-        ${({ isActive }) => !isActive && `
-            box-shadow:
-                0 0 12px #ffffff,
-                0 0 24px #ffffff,
-                inset 0 0 20px rgba(255,255,255,0.12);
-            border: 4px solid #ffffff;
-        `}
-    }
 `;
 
 const CardInner = styled(CardContent)`
