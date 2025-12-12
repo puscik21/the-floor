@@ -45,13 +45,14 @@ const Header = styled(Box)`
 `;
 
 const MapScreenWrapper = styled(Box)`
-    width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: auto;
     background: linear-gradient(180deg, #020b2d 0%, #243b95 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 32px 16px;
+    box-sizing: border-box;
 `;
 
 const HeaderText = styled(Typography)`
