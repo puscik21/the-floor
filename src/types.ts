@@ -15,7 +15,6 @@ export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
 export interface Player {
     name: string;
     category: string;
-    color: string;
 }
 
 export type GameGrid = GridCell[][];

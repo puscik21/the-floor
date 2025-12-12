@@ -3,7 +3,7 @@ import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
 import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
 
-const INIT_TIME_SECONDS = 300;
+const INIT_TIME_SECONDS = 5;
 const PASS_PENALTY_SECONDS = 3;
 
 interface GameDuelStateResult {
