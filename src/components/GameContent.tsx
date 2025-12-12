@@ -4,7 +4,7 @@ import {styled} from '@mui/material/styles';
 import {useGameContext} from '../context/GameContext.tsx';
 import GameScreen from './gamescreen/GameScreen.tsx';
 import WelcomeScreen from './WelcomeScreen.tsx';
-import PlayerGrid from './grid/PlayerGrid.tsx';
+import PlayerGrid from './floor/PlayerGrid.tsx';
 import FinishedScreen from './FinishedScreen.tsx';
 
 /* --- Styl nagłówka THE FLOOR (spójny z WelcomeScreen) --- */
@@ -48,7 +48,7 @@ const GameContent: React.FC = () => {
                 return <GameScreen/>;
             case 'finished':
                 return <FinishedScreen/>;
-            case 'map':
+            case 'floor':
                 return (
                     <MapScreenWrapper>
                         <FloorTitle variant="h2">THE FLOOR</FloorTitle>

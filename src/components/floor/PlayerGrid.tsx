@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, styled} from '@mui/material';
+import {Box, Button, styled} from '@mui/material';
 import {useGameContext} from '../../context/GameContext.tsx';
 import type {Player} from '../../types.ts';
 import PlayerCell from './PlayerCell.tsx';
@@ -20,19 +20,22 @@ const PlayerGrid = () => {
     if (numCols === 0) return null;
 
     return (
-        <GridContainer numCols={numCols} numRows={numRows}>
-            {grid.flat().map((cell) => {
-                const owner: Player | null = cell.ownerName ? (playerMap.get(cell.ownerName) ?? null) : null;
+        <>
+            <GridContainer numCols={numCols} numRows={numRows}>
+                {grid.flat().map((cell) => {
+                    const owner: Player | null = cell.ownerName ? (playerMap.get(cell.ownerName) ?? null) : null;
 
-                return (
-                    <PlayerCell
-                        key={`${cell.x}-${cell.y}`}
-                        cell={cell}
-                        owner={owner}
-                    />
-                );
-            })}
-        </GridContainer>
+                    return (
+                        <PlayerCell
+                            key={`${cell.x}-${cell.y}`}
+                            cell={cell}
+                            owner={owner}
+                        />
+                    );
+                })}
+            </GridContainer>
+            <PassButton>Pas</PassButton>
+        </>
     );
 };
 
@@ -55,4 +58,21 @@ const GridContainer = styled(Box, {
     background-color: #111;
     gap: 3px; // TODO: Maybe 0px soon?
     margin: 20px auto;
+`;
+
+const PassButton = styled(Button)`
+    background: linear-gradient(180deg, #17a2ff, #0a84c9);
+    color: white;
+    padding: 14px 36px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: 12px;
+    margin-top: 34px;
+    box-shadow: 0 10px 30px rgba(23, 162, 255, 0.28);
+    transition: transform 0.22s, box-shadow 0.22s;
+
+    &:hover {
+        //transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 14px 38px rgba(23, 162, 255, 0.44);
+    }
 `;

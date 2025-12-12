@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameGrid, GameState, GridCell, MapState, Player} from '../types';
-import {initializeGrid} from '../components/grid/gridUtils.ts';
+import {initializeGrid} from '../components/floor/gridUtils.ts';
 import playersConfig from '../../public/players.json';
 
 interface GameMapStateResult {
@@ -52,7 +52,7 @@ export const useGameMapState = (
     }, [allPlayers]);
 
     const handleCellClick = useCallback((cell: GridCell) => {
-        if (gameState !== 'map' || !activeMapPlayer) return;
+        if (gameState !== 'floor' || !activeMapPlayer) return;
 
         if (!cell.ownerName || cell.ownerName === activeMapPlayer.name) {
             console.log('Kliknij pole przeciwnika!');

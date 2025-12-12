@@ -127,7 +127,7 @@ export const useGameDuelState = (
     const handleReturnToMap = useCallback(() => {
         setChallenger(null);
         setDefender(null);
-        setGameState('map');
+        setGameState('floor');
     }, [setGameState]);
 
     const prepareDuelState = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {

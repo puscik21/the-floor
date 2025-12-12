@@ -10,7 +10,7 @@ export interface GeneralState {
     winner: Player | null;
 }
 
-export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
+export type GameState = 'init' | 'floor' | 'ready' | 'duel' | 'finished';
 
 export interface Player {
     name: string;
