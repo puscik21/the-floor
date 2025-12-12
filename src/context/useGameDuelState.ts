@@ -2,6 +2,8 @@ import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
 import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
+import {fetchExternalImage} from '../components/gamescreen/question/tauriHelper.tsx';
+import { invoke } from '@tauri-apps/api/tauri';
 
 const INIT_TIME_SECONDS = 300;
 const PASS_PENALTY_SECONDS = 3;
@@ -51,9 +53,9 @@ export const useGameDuelState = (
         return 'Informatyka';
     }, [])
 
-    useEffect(() => {
-        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
-    }, [getQuestionCategory, questionId]);
+    // useEffect(() => {
+    //     setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
+    // }, [getQuestionCategory, questionId]);
 
     const getWinnerOnTimeout = useCallback((challenger: Player, defender: Player) => {
         if (challengerTimer > defenderTimer) {
@@ -71,6 +73,20 @@ export const useGameDuelState = (
         conquerTerritory(winningPlayer, losingPlayer);
     }, [conquerTerritory, setGameState, setWinner])
 
+    const fetchExternalImage = async (category: string, id: number): Promise<string> => {
+        // To jest nasz nowy "getImageFromCategory" + "checkImageExists"
+        const relativePath = `${category}/${id}.jpg`;
+
+        // Wywołanie komendy Rust: Rust odczyta plik z dysku i zwróci Data URL (Base64)
+        const base64DataUrl: string = await invoke('get_base64_image', {
+            // Pamiętaj: w Rust dodaliśmy "categories/" do ścieżki,
+            // więc tu wysyłamy tylko to, co jest wewnątrz "categories/".
+            relativePath: `${category}/${id}.jpg`
+        });
+
+        return base64DataUrl;
+    };
+
     const tryAdvanceQuestion = useCallback(async (currentId: number) => {
         if (isCheckingNextQuestion) return;
 
@@ -78,23 +94,31 @@ export const useGameDuelState = (
 
         const currentCategory = getQuestionCategory();
         const nextId = currentId + 1;
-        const nextImageUrl = getImageFromCategory(currentCategory, nextId);
 
-        const exists = await checkImageExists(nextImageUrl);
+        try {
+            // Krok 1: Próbujemy asynchronicznie pobrać następne zdjęcie z dysku (przez Rust)
+            const nextImageUrl = await fetchExternalImage(currentCategory, nextId);
 
-        if (exists) {
-            setQuestionId(nextId);
-        } else {
+            // Krok 2: Jeśli Rust zwrócił Base64 (bez błędu), to plik istnieje.
+            setQuestionImageUrl(nextImageUrl); // Ustawiamy nowy Data URL
+            setQuestionId(nextId); // Przechodzimy do następnego ID
+
+        } catch (error) {
+            // Krok 3: Jeśli Rust zwrócił błąd, plik nie istnieje lub jest błąd odczytu.
+            // W naszym przypadku błąd z Rust o braku pliku: `Błąd: Nie znaleziono pliku...`
+
             // TODO: Toastify
-            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
+            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`, error);
+
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
+                // Wywołaj funkcję, która kończy pojedynek (zwycięstwo na czas)
                 finishDuel(winner, winner.id === challenger.id ? defender : challenger);
             }
         }
 
         setIsCheckingNextQuestion(false);
-    }, [isCheckingNextQuestion, getQuestionCategory, challenger, defender, getWinnerOnTimeout, finishDuel]);
+    }, [isCheckingNextQuestion, getQuestionCategory, challenger, defender, getWinnerOnTimeout, finishDuel, setQuestionImageUrl, setQuestionId]);
 
     // TODO: Improve duel timer
     useEffect(() => {
