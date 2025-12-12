@@ -8,7 +8,6 @@ export interface GameContextValue {
 export interface GeneralState {
     gameState: GameState;
     winner: Player | null;
-    // Usunięto: isConquering: boolean;
 }
 
 export type GameState = 'init' | 'map' | 'ready' | 'duel' | 'finished';
@@ -50,15 +49,10 @@ export interface DuelInfo {
 export type DuelPlayer = 'challenger' | 'defender';
 
 export type Question = {
+    id: number
     category: string;
-    type: QuestionType;
-    imageUrl?: string;
-    text?: string;
+    imageUrl: string;
 }
-
-// TODO: introduce Question type
-// TODO: each question should have this value
-export type QuestionType = 'image' | 'text';
 
 export interface GameActions {
     handleStartGame: () => void;

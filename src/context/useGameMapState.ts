@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameGrid, GameState, GridCell, MapState, Player} from '../types';
 import {initializeGrid} from '../components/grid/gridUtils.ts';
+import playersConfig from '../../public/players.json';
 
 interface GameMapStateResult {
     mapState: MapState;
@@ -12,11 +13,12 @@ interface GameMapStateResult {
 
 export const useGameMapState = (
     gameState: GameState,
-    allPlayers: Player[], // TODO: This might be taken by some method reading players
     startDuelCallback: (challenger: Player, defender: Player) => void,
 ): GameMapStateResult => {
     const [grid, setGrid] = useState<GameGrid>([]);
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
+
+    const allPlayers: Player[] = playersConfig;
 
     useEffect(() => {
         if (gameState === 'init') {
