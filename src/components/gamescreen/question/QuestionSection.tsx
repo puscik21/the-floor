@@ -37,6 +37,8 @@ const Container = styled('section')`
     place-items: center;
     overflow: hidden;
     border-radius: ${({theme}) => (theme.shape.borderRadius as number)}px;
-    background-color: #0f0f0f;
-    border: ${({theme}) => `1.5px solid ${theme.palette.primary.main}`};
+    background-color: #0a1133;
+    border: 3px solid rgba(255,255,255,0.06);
+    box-shadow: inset 0 0 30px rgba(0,50,120,0.14);
+    padding: ${({theme}) => theme.spacing(2)};
 `;

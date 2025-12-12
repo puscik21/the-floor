@@ -15,17 +15,17 @@ const PlayersSection = () => {
         <Container>
             <PlayersRow>
                 <PlayerCard isActive={activePlayer === 'challenger'}>
-                    <CardContent>
-                        <PlayerName variant="h5">{challengerName}</PlayerName>
-                        <PlayerTimer variant="h1">{challengerTimer}</PlayerTimer>
-                    </CardContent>
+                    <CardInner>
+                        <PlayerName variant="h6">{challengerName}</PlayerName>
+                        <PlayerTimer variant="h2">{challengerTimer}</PlayerTimer>
+                    </CardInner>
                 </PlayerCard>
                 <CenterSpace/>
                 <PlayerCard isActive={activePlayer === 'defender'}>
-                    <CardContent>
-                        <PlayerName variant="h5">{defenderName}</PlayerName>
-                        <PlayerTimer variant="h1">{defenderTimer}</PlayerTimer>
-                    </CardContent>
+                    <CardInner>
+                        <PlayerName variant="h6">{defenderName}</PlayerName>
+                        <PlayerTimer variant="h2">{defenderTimer}</PlayerTimer>
+                    </CardInner>
                 </PlayerCard>
             </PlayersRow>
         </Container>
@@ -48,35 +48,53 @@ const PlayersRow = styled(Box)`
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    gap: ${({theme}) => theme.spacing(2)};
 `;
 
 const CenterSpace = styled(Box)`
-    flex: 0 2 800px;
+    flex: 0 2 400px;
 `;
 
+/* PlayerCard: spójny wygląd z kafelkiem */
 const PlayerCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'isActive',
 })<{ isActive: boolean }>`
     flex: 1 1 40%;
-    // min-height: 220px;
     max-width: 25%;
-    background-color: #1a1a1a;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    background-color: #0a1133;
+    box-shadow: inset 0 0 18px rgba(0,40,110,0.45);
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 3px solid rgba(255,255,255,0.04);
+    transition: transform 0.12s ease, box-shadow 0.25s ease, border 0.2s ease;
+    cursor: pointer;
 
-    border-width: ${({isActive}) => (isActive ? 2 : 0)}px;
-    border-style: solid;
-    border-color: ${({theme}) => theme.palette.primary.main};
-    transition: border-width 0.2s ease-in-out;
+    ${({ isActive }) => isActive && `
+        border: 4px solid #17a2ff;
+        box-shadow: 
+            0 0 18px #17a2ff,
+            0 0 36px #17a2ff,
+            inset 0 0 30px #17a2ff;
+    `}
+`;
+
+const CardInner = styled(CardContent)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ${({theme}) => theme.spacing(0.5)};
 `;
 
 const PlayerName = styled(Typography)`
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 900;
+    color: rgba(255,255,255,0.95);
 `;
 
 const PlayerTimer = styled(Typography)`
-    font-weight: bold;
+    font-weight: 900;
+    color: rgba(255,255,255,0.98);
+    font-size: 2.4rem;
 `;
