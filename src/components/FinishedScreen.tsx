@@ -1,21 +1,13 @@
 import {Box, Button, Typography} from '@mui/material';
 import {keyframes, styled} from '@mui/material/styles';
 import {useGameContext} from '../context/GameContext.tsx';
-import type {Player} from '../types.ts';
 import ConfettiOverlay from './confetti/ConfettiOverlay.tsx';
 
-const FinishedScreen= () => {
+const FinishedScreen = () => {
     const {
-        // general: { winner }, // TODO: uncomment
+        general: {winner},
         actions: {handleReturnToMap},
     } = useGameContext();
-
-
-// TODO: remove
-    const winner: Player = {
-        name: 'Natusia',
-        category: 'Modelki Wiktoria Sikret',
-    }
 
     if (!winner) return handleReturnToMap();
 

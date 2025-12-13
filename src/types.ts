@@ -10,7 +10,7 @@ export interface GeneralState {
     winner: Player | null;
 }
 
-export type GameState = 'init' | 'floor' | 'ready' | 'duel' | 'finished';
+export type GameState = 'init' | 'floor' | 'ready' | 'duel' | 'finished' | 'podium';
 
 export interface Player {
     name: string;
@@ -30,6 +30,7 @@ export interface MapState {
     allPlayers: Player[];
     activeMapPlayer: Player | null;
     hasWonPreviousDuel: boolean;
+    positionToPlayer: Map<number, Player>
 }
 
 export interface DuelInfo {

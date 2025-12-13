@@ -19,9 +19,11 @@ const GameContent: React.FC = () => {
                 return <FinishedScreen/>;
             case 'floor':
                 return <FloorScreen/>
+            case 'podium':
+                return <PodiumScreen/>
             case 'init':
             default:
-                return <PodiumScreen/>;
+                return <WelcomeScreen/>;
         }
     };
 

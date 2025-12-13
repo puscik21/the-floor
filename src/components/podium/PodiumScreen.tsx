@@ -1,27 +1,28 @@
-import React from 'react';
 import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import type {PodiumPlayer} from '../../types.ts';
+import type {Player, PodiumPlayer, PodiumPosition} from '../../types.ts';
 import PodiumStep from './PodiumStep.tsx';
 import ConfettiOverlay from '../confetti/ConfettiOverlay.tsx';
+import {useGameContext} from '../../context/GameContext.tsx';
 
-const mockPodiumData: PodiumPlayer[] = [
-    {name: 'Krzysiek', score: 125, position: 1},
-    {name: 'Anna', score: 98, position: 2},
-    {name: 'Mateusz', score: 87, position: 3},
-].sort((a, b) => a.position - b.position);
+const mapPlayerToPodiumPlayer = (position: PodiumPosition, player: Player): PodiumPlayer => {
+    return {name: player.name, score: 125, position: position}
+}
 
-const PodiumScreen: React.FC = () => {
-    // const { podiumData } = useGameContext(); // TODO: soon
-    const podiumData = mockPodiumData;
+const PodiumScreen = () => {
+    const positionToPlayer = useGameContext().map.positionToPlayer;
 
-    const firstPlace = podiumData.find(p => p.position === 1);
-    const secondPlace = podiumData.find(p => p.position === 2);
-    const thirdPlace = podiumData.find(p => p.position === 3);
+    if (positionToPlayer.size < 3) {
+        return null;
+    }
+
+    const firstPlace = mapPlayerToPodiumPlayer(1, positionToPlayer.get(1)!)
+    const secondPlace = mapPlayerToPodiumPlayer(2, positionToPlayer.get(2)!)
+    const thirdPlace = mapPlayerToPodiumPlayer(3, positionToPlayer.get(3)!)
 
     return (
         <EndGameScreenWrapper>
-            <ConfettiOverlay duration={60000} initialBurst={200} zIndex={50} />
+            <ConfettiOverlay duration={60000} initialBurst={200} zIndex={50}/>
             <Title variant="h2">ZWYCIĘZCY!</Title>
 
             <PodiumContainer>
