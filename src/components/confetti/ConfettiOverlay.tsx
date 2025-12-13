@@ -1,4 +1,3 @@
-import React from 'react';
 import {useConfetti} from './useConfetti.ts'; // Zmień ścieżkę do useConfetti
 import {styled} from '@mui/material/styles';
 
