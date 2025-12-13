@@ -62,3 +62,11 @@ export interface GameActions {
     handlePass: () => void;
     handlePassFloorClick: () => void;
 }
+
+export interface PodiumPlayer {
+    name: string;
+    score: number; // TODO: change to number of won games
+    position: PodiumPosition;
+}
+
+export type PodiumPosition = 1 | 2 | 3;
