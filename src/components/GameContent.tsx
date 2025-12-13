@@ -5,6 +5,7 @@ import GameScreen from './gamescreen/GameScreen.tsx';
 import FinishedScreen from './FinishedScreen.tsx';
 import FloorScreen from './floor/FloorScreen.tsx';
 import WelcomeScreen from './WelcomeScreen.tsx';
+import PodiumScreen from './podium/PodiumScreen.tsx';
 
 const GameContent: React.FC = () => {
     const gameState = useGameContext().general.gameState;
@@ -20,7 +21,7 @@ const GameContent: React.FC = () => {
                 return <FloorScreen/>
             case 'init':
             default:
-                return <WelcomeScreen/>;
+                return <PodiumScreen/>;
         }
     };
 

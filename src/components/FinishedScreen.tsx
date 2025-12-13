@@ -1,11 +1,10 @@
-import React from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import {keyframes, styled} from '@mui/material/styles';
 import {useGameContext} from '../context/GameContext.tsx';
 import type {Player} from '../types.ts';
 import ConfettiOverlay from './confetti/ConfettiOverlay.tsx';
 
-const FinishedScreen: React.FC = () => {
+const FinishedScreen= () => {
     const {
         // general: { winner }, // TODO: uncomment
         actions: {handleReturnToMap},

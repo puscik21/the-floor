@@ -1,4 +1,4 @@
-import {RefObject, useEffect, useRef} from 'react';
+import {type RefObject, useEffect, useRef} from 'react';
 
 type Particle = {
     x: number;
@@ -116,7 +116,7 @@ function createConfettiAnimation(canvas: HTMLCanvasElement, duration: number, in
  * @param duration Time to live of 'active' confetti (in ms).
  * @param initialBurst - init number of particles
  */
-export const useConfetti = (duration: number, initialBurst: number): RefObject<HTMLCanvasElement> => {
+export const useConfetti = (duration: number, initialBurst: number): RefObject<HTMLCanvasElement| null> => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const stopConfettiRef = useRef<(() => void) | null>(null);
 

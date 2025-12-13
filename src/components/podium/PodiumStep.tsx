@@ -9,8 +9,8 @@ interface PodiumStepProps {
 
 const PodiumStep = ({player}: PodiumStepProps) => {
     return (
-        <Container key={player.position} position={player.position}>
-            <PositionText position={player.position}>{player.position}</PositionText>
+        <Container key={player.position} podiumPosition={player.position}>
+            <PositionText podiumPosition={player.position}>{player.position}</PositionText>
             <PlayerNameText>{player.name}</PlayerNameText>
         </Container>
     );
@@ -19,7 +19,7 @@ const PodiumStep = ({player}: PodiumStepProps) => {
 export default PodiumStep;
 
 interface PodiumStepStyleProps {
-    position: PodiumPosition;
+    podiumPosition: PodiumPosition;
 }
 
 const Container = styled(Box)<PodiumStepStyleProps>`
@@ -34,8 +34,8 @@ const Container = styled(Box)<PodiumStepStyleProps>`
     font-weight: 800;
     text-transform: uppercase;
 
-    ${({position}) => {
-        const styles = getStepStyles(position);
+    ${({podiumPosition}) => {
+        const styles = getStepStyles(podiumPosition);
         return `
             height: ${styles.height};
             width: ${styles.width};
