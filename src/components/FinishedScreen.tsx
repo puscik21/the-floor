@@ -9,7 +9,10 @@ const FinishedScreen = () => {
         actions: {handleReturnToMap},
     } = useGameContext();
 
-    if (!winner) return handleReturnToMap();
+    if (!winner) {
+        handleReturnToMap()
+        return null;
+    }
 
     return (
         <FullscreenCenter>
