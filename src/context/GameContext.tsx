@@ -49,6 +49,12 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         prepareDuelRef.current = prepareDuel;
     }, [prepareDuel]);
 
+    useEffect(() => {
+        if (mapState.allPlayers.length == 1) {
+            setGameState('podium')
+        }
+    }, [mapState.allPlayers, mapState.positionToPlayer]);
+
     const value: GameContextValue = {
         general: {
             gameState,

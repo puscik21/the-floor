@@ -20,6 +20,7 @@ export const useGameMapState = (
     const [activeMapPlayer, setActiveMapPlayer] = useState<Player | null>(null);
     const [allPlayers, setAllPlayers] = useState<Player[]>([]);
     const [hasWonPreviousDuel, setHasWonPreviousDuel] = useState(false);
+    const [positionToPlayer, setPositionToPlayer] = useState<Map<number, Player>>(new Map());
 
     useEffect(() => {
         if (gameState === 'init') {
@@ -41,16 +42,25 @@ export const useGameMapState = (
         );
         setGrid(newGrid);
 
-        setAllPlayers(allPlayers
+        const position = allPlayers.length;
+        const newAllPlayers = allPlayers
             .filter(p => p.name !== loserPlayer.name)
             .map(player =>
                 player.name == winnerPlayer.name
                     ? {...player, category: inheritedCategory}
                     : player,
-            ));
+            );
+        setAllPlayers(newAllPlayers);
         setActiveMapPlayer(winnerPlayer);
         setHasWonPreviousDuel(true);
-    }, [grid, allPlayers]);
+
+        const newPlayerMap = new Map(positionToPlayer);
+        newPlayerMap.set(position, loserPlayer);
+        if (allPlayers.length === 2) {
+            newPlayerMap.set(1, winnerPlayer);
+        }
+        setPositionToPlayer(newPlayerMap);
+    }, [grid, allPlayers, positionToPlayer]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
         return allPlayers.find((p) => p.name === name)
@@ -89,6 +99,7 @@ export const useGameMapState = (
         allPlayers,
         activeMapPlayer,
         hasWonPreviousDuel,
+        positionToPlayer
     };
 
     return {
