@@ -2,6 +2,210 @@ import React, {useEffect, useRef} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import {keyframes, styled} from '@mui/material/styles';
 import {useGameContext} from '../context/GameContext.tsx';
+import type {Player} from '../types.ts';
+
+type Particle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  rot: number;
+  vr: number;
+  color: string;
+  life: number;
+  ttl: number;
+};
+
+// TODO: to samo
+const random = (min: number, max: number) => Math.random() * (max - min) + min;
+
+/**
+ * createConfetti returns a cleanup function () => void
+ * It ensures ctx is not null before proceeding (TS-safe).
+ */
+// TODO: to samo
+function createConfetti(canvas: HTMLCanvasElement, duration = 2200) {
+  const maybeCtx = canvas.getContext('2d');
+  if (!maybeCtx) return () => {};
+
+  const ctx = maybeCtx as CanvasRenderingContext2D;
+
+  const w = (canvas.width = window.innerWidth);
+  const h = (canvas.height = window.innerHeight);
+  const colors = ['#17a2ff', '#ffb86b', '#ff5a7a', '#7efc6b', '#c792ff', '#fff475'];
+  const particles: Particle[] = [];
+
+  const spawn = (count: number) => {
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: random(w * 0.35, w * 0.65),
+        y: random(h * 0.25, h * 0.45),
+        vx: random(-4, 4),
+        vy: random(-10, -4),
+        size: random(6, 12),
+        rot: random(0, Math.PI * 2),
+        vr: random(-0.12, 0.12),
+        color: colors[(Math.random() * colors.length) | 0],
+        life: 0,
+        ttl: random(60, 120),
+      });
+    }
+  };
+
+  let raf = 0;
+
+  // initial burst
+  spawn(28);
+
+  function render() {
+    ctx.clearRect(0, 0, w, h);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.vy += 0.28; // gravity
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life++;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+
+      if (p.y > h + 30 || p.life > p.ttl) {
+        particles.splice(i, 1);
+      }
+    }
+
+    // occasional small spawn to keep it lively for short time
+    if (Math.random() < 0.08) spawn(1);
+
+    if (particles.length > 0) {
+      raf = requestAnimationFrame(render);
+    } else {
+      cancelAnimationFrame(raf);
+    }
+  }
+
+  render();
+
+  // stop after `duration` ms (particles will naturally die out)
+  const stopper = setTimeout(() => {
+    // nothing needed here — cleanup will clear raf/timeouts
+  }, duration);
+
+  return () => {
+    clearTimeout(stopper);
+    cancelAnimationFrame(raf);
+    ctx.clearRect(0, 0, w, h);
+  };
+}
+
+/* -------------------------
+   FinishedScreen component
+   ------------------------- */
+const FinishedScreen: React.FC = () => {
+  const {
+    // general: { winner }, // TODO: uncomment
+    actions: { handleReturnToMap },
+  } = useGameContext();
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const stopConfettiRef = useRef<(() => void) | null>(null);
+
+
+// TODO: remove
+  const winner: Player = {
+    name: 'Natusia',
+    category: 'Modelki Wiktoria Sikret'
+  }
+
+  useEffect(() => {
+    if (!winner) {
+      handleReturnToMap();
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // launch confetti once when component mounts
+    stopConfettiRef.current = createConfetti(canvas, 2600);
+
+    // optional: resize handler to keep canvas full-screen
+    const onResize = () => {
+      const cv = canvasRef.current;
+      if (!cv) return;
+      cv.width = window.innerWidth;
+      cv.height = window.innerHeight;
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (stopConfettiRef.current) stopConfettiRef.current();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [winner]);
+
+  if (!winner) return null;
+
+  return (
+    <FullscreenCenter>
+      {/* canvas sits behind visually but in DOM above/below as needed */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          pointerEvents: 'none',
+          width: '100%',
+          height: '100%',
+          zIndex: 250,
+        }}
+      />
+      <StyledWrapper>
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 800,
+            mb: 1,
+            textShadow: '0 0 12px rgba(255,255,255,0.08)',
+            letterSpacing: '0.6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1,
+          }}
+        >
+          <Trophy aria-hidden>🏆</Trophy>
+          <WinnerName>{winner.name}</WinnerName>
+          <span style={{ color: '#d0d0d0', marginLeft: 8, fontWeight: 600 }}>wygrał!</span>
+        </Typography>
+
+        <Typography
+          variant="h5"
+          sx={{
+            color: '#bfbfbf',
+            mb: 3,
+            fontWeight: 400,
+            letterSpacing: '0.4px',
+          }}
+        >
+          Gratulacje, Floor Master!
+        </Typography>
+
+        <RestartButton onClick={handleReturnToMap}>Kolejna runda?</RestartButton>
+      </StyledWrapper>
+    </FullscreenCenter>
+  );
+};
+
+export default FinishedScreen;
 
 /* -------------------------
    Animations (keyframes)
@@ -88,200 +292,3 @@ const RestartButton = styled(Button)`
     box-shadow: 0 14px 38px rgba(23,162,255,0.44);
   }
 `;
-
-/* -------------------------
-   Simple Confetti Canvas
-   ------------------------- */
-type Particle = {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  rot: number;
-  vr: number;
-  color: string;
-  life: number;
-  ttl: number;
-};
-
-const random = (min: number, max: number) => Math.random() * (max - min) + min;
-
-/**
- * createConfetti returns a cleanup function () => void
- * It ensures ctx is not null before proceeding (TS-safe).
- */
-function createConfetti(canvas: HTMLCanvasElement, duration = 2200) {
-  const maybeCtx = canvas.getContext('2d');
-  if (!maybeCtx) return () => {};
-
-  const ctx = maybeCtx as CanvasRenderingContext2D;
-
-  const w = (canvas.width = window.innerWidth);
-  const h = (canvas.height = window.innerHeight);
-  const colors = ['#17a2ff', '#ffb86b', '#ff5a7a', '#7efc6b', '#c792ff', '#fff475'];
-  const particles: Particle[] = [];
-
-  const spawn = (count: number) => {
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: random(w * 0.35, w * 0.65),
-        y: random(h * 0.25, h * 0.45),
-        vx: random(-4, 4),
-        vy: random(-10, -4),
-        size: random(6, 12),
-        rot: random(0, Math.PI * 2),
-        vr: random(-0.12, 0.12),
-        color: colors[(Math.random() * colors.length) | 0],
-        life: 0,
-        ttl: random(60, 120),
-      });
-    }
-  };
-
-  let raf = 0;
-
-  // initial burst
-  spawn(28);
-
-  function render() {
-    ctx.clearRect(0, 0, w, h);
-
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-      p.vy += 0.28; // gravity
-      p.x += p.vx;
-      p.y += p.vy;
-      p.rot += p.vr;
-      p.life++;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-      ctx.restore();
-
-      if (p.y > h + 30 || p.life > p.ttl) {
-        particles.splice(i, 1);
-      }
-    }
-
-    // occasional small spawn to keep it lively for short time
-    if (Math.random() < 0.08) spawn(1);
-
-    if (particles.length > 0) {
-      raf = requestAnimationFrame(render);
-    } else {
-      cancelAnimationFrame(raf);
-    }
-  }
-
-  render();
-
-  // stop after `duration` ms (particles will naturally die out)
-  const stopper = setTimeout(() => {
-    // nothing needed here — cleanup will clear raf/timeouts
-  }, duration);
-
-  return () => {
-    clearTimeout(stopper);
-    cancelAnimationFrame(raf);
-    ctx.clearRect(0, 0, w, h);
-  };
-}
-
-/* -------------------------
-   FinishedScreen component
-   ------------------------- */
-const FinishedScreen: React.FC = () => {
-  const {
-    general: { winner },
-    actions: { handleReturnToMap },
-  } = useGameContext();
-
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const stopConfettiRef = useRef<(() => void) | null>(null);
-
-  useEffect(() => {
-    if (!winner) {
-      handleReturnToMap();
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    // launch confetti once when component mounts
-    stopConfettiRef.current = createConfetti(canvas, 2600);
-
-    // optional: resize handler to keep canvas full-screen
-    const onResize = () => {
-      const cv = canvasRef.current;
-      if (!cv) return;
-      cv.width = window.innerWidth;
-      cv.height = window.innerHeight;
-    };
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-      if (stopConfettiRef.current) stopConfettiRef.current();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [winner]);
-
-  if (!winner) return null;
-
-  return (
-    <FullscreenCenter>
-      {/* canvas sits behind visually but in DOM above/below as needed */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          pointerEvents: 'none',
-          width: '100%',
-          height: '100%',
-          zIndex: 250,
-        }}
-      />
-      <StyledWrapper>
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: 800,
-            mb: 1,
-            textShadow: '0 0 12px rgba(255,255,255,0.08)',
-            letterSpacing: '0.6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1,
-          }}
-        >
-          <Trophy aria-hidden>🏆</Trophy>
-          <WinnerName>{winner.name}</WinnerName>
-          <span style={{ color: '#d0d0d0', marginLeft: 8, fontWeight: 600 }}>wygrał!</span>
-        </Typography>
-
-        <Typography
-          variant="h5"
-          sx={{
-            color: '#bfbfbf',
-            mb: 3,
-            fontWeight: 400,
-            letterSpacing: '0.4px',
-          }}
-        >
-          Gratulacje, Floor Master!
-        </Typography>
-
-        <RestartButton onClick={handleReturnToMap}>Kolejna runda?</RestartButton>
-      </StyledWrapper>
-    </FullscreenCenter>
-  );
-};
-
-export default FinishedScreen;
