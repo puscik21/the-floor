@@ -87,5 +87,4 @@ const PassButton = styled(Button)`
     &:hover {
         transform: scale(1.1);
         box-shadow: 0 14px 38px rgba(23, 162, 255, 0.44);
-    }
-`;
+    }`;
