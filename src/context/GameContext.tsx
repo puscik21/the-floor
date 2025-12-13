@@ -10,7 +10,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [winner, setWinner] = useState<Player | null>(null);
 
     const handleSetWinner = useCallback((player: Player | null) => setWinner(player), []);
-    const handleStartGame = useCallback(() => setGameState('map'), []);
+    const handleStartGame = useCallback(() => setGameState('floor'), []);
     const handleStartDuel = useCallback(() => setGameState('duel'), []);
 
     // To omit circular dependencies
