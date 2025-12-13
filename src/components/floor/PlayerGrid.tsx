@@ -20,21 +20,19 @@ const PlayerGrid = () => {
     if (numCols === 0) return null;
 
     return (
-        <>
-            <GridContainer numCols={numCols} numRows={numRows}>
-                {grid.flat().map((cell) => {
-                    const owner: Player | null = cell.ownerName ? (playerMap.get(cell.ownerName) ?? null) : null;
+        <GridContainer numCols={numCols} numRows={numRows}>
+            {grid.flat().map((cell) => {
+                const owner: Player | null = cell.ownerName ? (playerMap.get(cell.ownerName) ?? null) : null;
 
-                    return (
-                        <PlayerCell
-                            key={`${cell.x}-${cell.y}`}
-                            cell={cell}
-                            owner={owner}
-                        />
-                    );
-                })}
-            </GridContainer>
-        </>
+                return (
+                    <PlayerCell
+                        key={`${cell.x}-${cell.y}`}
+                        cell={cell}
+                        owner={owner}
+                    />
+                );
+            })}
+        </GridContainer>
     );
 };
 
