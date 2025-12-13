@@ -65,11 +65,11 @@ const Title = styled(Typography)`
 
 const PodiumContainer = styled(Box)`
     display: flex;
-    align-items: flex-end; /* Ważne: ustawia elementy na dole */
+    align-items: flex-end; /* Set items on the bottom - all steps starts from the same height */
     justify-content: center;
     width: 100%;
     max-width: 600px;
-    height: 50%; /* Wysokość dla wizualizacji różnicy poziomów */
+    height: 50%;
     margin-top: 40px;
 `;
 
