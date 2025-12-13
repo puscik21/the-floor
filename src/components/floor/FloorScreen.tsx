@@ -73,18 +73,18 @@ const PlayerName = styled(Typography)`
 `;
 
 const PassButton = styled(Button)`
-background: linear-gradient(180deg, #17a2ff, #054e75);
-width: 300px;
-color: white;
-padding: 14px 36px;
-font-size: 1.05rem;
-font-weight: 800;
-border-radius: 12px;
-margin-top: 34px;
-box-shadow: 0 10px 30px rgba(23, 162, 255, 0.28);
-transition: transform 0.22s, box-shadow 0.22s;
+    background: linear-gradient(180deg, #17a2ff, #054e75);
+    width: 300px;
+    color: white;
+    padding: 14px 36px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: 12px;
+    margin-top: 34px;
+    box-shadow: 0 10px 30px rgba(23, 162, 255, 0.28);
+    transition: transform 0.22s, box-shadow 0.22s;
 
-&:hover {
-transform: scale(1.1);
-box-shadow: 0 14px 38px rgba(23, 162, 255, 0.44);
-}`;
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 14px 38px rgba(23, 162, 255, 0.44);
+    }`;

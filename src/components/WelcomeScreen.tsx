@@ -19,15 +19,15 @@ box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
 
 // Kontener główny
 const WelcomeContainer = styled(Box)`
-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-color: white;
-text-align: center;
-padding: 16px; /* zastępuje theme.spacing(2) */
-${TileBackground()}
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 16px; /* zastępuje theme.spacing(2) */
+    ${TileBackground()}
 `;
 
 // Tytuł (opakowanie ze złotą ramką) - korzysta z framer-motion div

@@ -76,9 +76,8 @@ const Cell = styled(Box, {
     cursor: ${({isOwned}) => (isOwned ? 'pointer' : 'default')};
     transition: transform 0.12s ease, box-shadow 0.3s ease, border 0.3s ease;
 
-    background:
-            radial-gradient(circle at top, rgba(0, 160, 255, 0.18), transparent 60%),
-            linear-gradient(180deg, #0a1133, #050922);
+    background: radial-gradient(circle at top, rgba(0, 160, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, #0a1133, #050922);
     box-shadow: inset 0 0 12px rgba(0, 40, 110, 0.6);
 
     border: 2px solid rgba(255, 255, 255, 0.06);
@@ -86,9 +85,9 @@ const Cell = styled(Box, {
 
     &:hover {
         ${({isOwned, isActive}) =>
-            isOwned &&
-            !isActive &&
-            `
+                isOwned &&
+                !isActive &&
+                `
             box-shadow: 
                 0 0 10px #ffffff, 
                 0 0 20px #ffffff,
@@ -98,8 +97,8 @@ const Cell = styled(Box, {
     }
 
     ${({isActive}) =>
-        isActive &&
-        `
+            isActive &&
+            `
         border: 4px solid #17a2ff;
         box-shadow: 
             0 0 15px #17a2ff,

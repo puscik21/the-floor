@@ -45,29 +45,27 @@ const GridContainer = styled(Box)`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px;
-    
+
 
     width: min(92vw, 1100px);
 
     padding: 16px;
     margin: 24px auto;
 
-    background:
-            linear-gradient(180deg, #050b2e, #0a1a4f),
-            repeating-linear-gradient(
-                    90deg,
-                    rgba(0, 140, 255, 0.08) 0px,
-                    rgba(0, 140, 255, 0.08) 1px,
-                    transparent 1px,
-                    transparent 40px
-            );
+    background: linear-gradient(180deg, #050b2e, #0a1a4f),
+    repeating-linear-gradient(
+            90deg,
+            rgba(0, 140, 255, 0.08) 0px,
+            rgba(0, 140, 255, 0.08) 1px,
+            transparent 1px,
+            transparent 40px
+    );
 
     border-radius: 20px;
     border: 2px solid rgba(0, 160, 255, 0.35);
 
-    box-shadow:
-            0 0 40px rgba(0, 120, 255, 0.35),
-            inset 0 0 30px rgba(0, 60, 180, 0.45);
+    box-shadow: 0 0 40px rgba(0, 120, 255, 0.35),
+    inset 0 0 30px rgba(0, 60, 180, 0.45);
 `;
 
 const AnimatedCellWrapper = styled(Box)`
