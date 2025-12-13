@@ -48,7 +48,6 @@ const GridContainer = styled(Box)`
     
 
     width: min(92vw, 1100px);
-    aspect-ratio: 16 / 9;
 
     padding: 16px;
     margin: 24px auto;
