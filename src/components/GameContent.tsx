@@ -21,7 +21,8 @@ const GameContent: React.FC = () => {
             case 'init':
             default:
                 // return <WelcomeScreen/>;
-                return <PodiumScreen/>;
+                // return <PodiumScreen/>;
+                return <FinishedScreen/>;
         }
     };
 

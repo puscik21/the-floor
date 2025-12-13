@@ -3,6 +3,7 @@ import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import type {PodiumPlayer} from '../../types.ts';
 import PodiumStep from './PodiumStep.tsx';
+import ConfettiOverlay from '../confetti/ConfettiOverlay.tsx';
 
 const mockPodiumData: PodiumPlayer[] = [
     {name: 'Krzysiek', score: 125, position: 1},
@@ -20,6 +21,7 @@ const PodiumScreen: React.FC = () => {
 
     return (
         <EndGameScreenWrapper>
+            <ConfettiOverlay duration={3000} zIndex={50} />
             <Title variant="h2">ZWYCIĘZCY!</Title>
 
             <PodiumContainer>
