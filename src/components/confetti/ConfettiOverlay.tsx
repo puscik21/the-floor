@@ -1,32 +1,30 @@
 import React from 'react';
-import { useConfetti } from './useConfetti.ts'; // Zmień ścieżkę do useConfetti
-import { styled } from '@mui/material/styles';
+import {useConfetti} from './useConfetti.ts'; // Zmień ścieżkę do useConfetti
+import {styled} from '@mui/material/styles';
 
 interface ConfettiOverlayProps {
-    duration?: number; // Czas trwania animacji w ms (domyślnie 2600)
-    zIndex?: number;   // Warstwa (domyślnie 250)
+    duration?: number; // Time of animation in ms
+    initialBurst?: number;
+    zIndex?: number;
 }
 
 const StyledCanvas = styled('canvas')({
     position: 'fixed',
     left: 0,
     top: 0,
-    pointerEvents: 'none', // Ważne, aby nie blokować kliknięć pod spodem
+    pointerEvents: 'none', // Important to not block clicks below
     width: '100%',
     height: '100%',
 });
 
-/**
- * Renderuje animację konfetti jako stałą nakładkę na całym ekranie.
- */
-const ConfettiOverlay: React.FC<ConfettiOverlayProps> = ({ duration = 2600, zIndex = 250 }) => {
-    const canvasRef = useConfetti(duration);
+const ConfettiOverlay = ({duration = 2600, initialBurst = 40, zIndex = 250}: ConfettiOverlayProps) => {
+    const canvasRef = useConfetti(duration, initialBurst);
 
     return (
         <StyledCanvas
             ref={canvasRef}
-            style={{ zIndex }}
-            aria-hidden="true" // Element tylko dekoracyjny
+            style={{zIndex}}
+            aria-hidden="true" // Decorative element
         />
     );
 };

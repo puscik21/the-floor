@@ -15,7 +15,7 @@ type Particle = {
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
-function createConfettiAnimation(canvas: HTMLCanvasElement, duration = 2200) {
+function createConfettiAnimation(canvas: HTMLCanvasElement, duration: number, initialBurst: number) {
     const maybeCtx = canvas.getContext('2d');
     if (!maybeCtx) return () => {
     };
@@ -27,7 +27,6 @@ function createConfettiAnimation(canvas: HTMLCanvasElement, duration = 2200) {
     canvas.width = w;
     canvas.height = h;
 
-    // Używamy tych samych kolorów, co wcześniej
     const colors = ['#17a2ff', '#ffb86b', '#ff5a7a', '#7efc6b', '#c792ff', '#fff475'];
     const particles: Particle[] = [];
 
@@ -52,7 +51,7 @@ function createConfettiAnimation(canvas: HTMLCanvasElement, duration = 2200) {
     const startTime = performance.now();
 
     // initial burst
-    spawn(40);
+    spawn(initialBurst);
 
     function render(time: number) {
         ctx.clearRect(0, 0, w, h);
@@ -115,8 +114,9 @@ function createConfettiAnimation(canvas: HTMLCanvasElement, duration = 2200) {
 /**
  * Hook for maintaining confetti lifetime.
  * @param duration Time to live of 'active' confetti (in ms).
+ * @param initialBurst - init number of particles
  */
-export const useConfetti = (duration = 2600): RefObject<HTMLCanvasElement> => {
+export const useConfetti = (duration: number, initialBurst: number): RefObject<HTMLCanvasElement> => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const stopConfettiRef = useRef<(() => void) | null>(null);
 
@@ -125,7 +125,7 @@ export const useConfetti = (duration = 2600): RefObject<HTMLCanvasElement> => {
         if (!canvas) return;
 
         // Run confetti
-        stopConfettiRef.current = createConfettiAnimation(canvas, duration);
+        stopConfettiRef.current = createConfettiAnimation(canvas, duration, initialBurst);
 
         return () => {
             // Cleanup
@@ -133,7 +133,7 @@ export const useConfetti = (duration = 2600): RefObject<HTMLCanvasElement> => {
                 stopConfettiRef.current();
             }
         };
-    }, [duration]);
+    }, [duration, initialBurst]);
 
     return canvasRef;
 };

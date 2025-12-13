@@ -21,7 +21,7 @@ const PodiumScreen: React.FC = () => {
 
     return (
         <EndGameScreenWrapper>
-            <ConfettiOverlay duration={3000} zIndex={50} />
+            <ConfettiOverlay duration={60000} initialBurst={200} zIndex={50} />
             <Title variant="h2">ZWYCIĘZCY!</Title>
 
             <PodiumContainer>

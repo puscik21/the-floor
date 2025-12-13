@@ -22,7 +22,7 @@ const FinishedScreen: React.FC = () => {
 
     return (
         <FullscreenCenter>
-            <ConfettiOverlay duration={3000} zIndex={50}/>
+            <ConfettiOverlay duration={3000} initialBurst={40} zIndex={50}/>
             <StyledWrapper>
                 <Typography
                     variant="h3"
