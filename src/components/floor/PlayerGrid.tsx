@@ -19,6 +19,7 @@ const PlayerGrid = () => {
     const numCols = grid[0]?.length || 0;
     if (numCols === 0) return null;
 
+    const nextAnimationDelay = Math.max(120, 1500 / allPlayers.length);
     return (
         <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell, index) => {
@@ -29,7 +30,7 @@ const PlayerGrid = () => {
                 return (
                     <AnimatedCellWrapper
                         key={`${cell.x}-${cell.y}`}
-                        style={{animationDelay: `${index * 40}ms`}}
+                        style={{animationDelay: `${index * nextAnimationDelay}ms`}}
                     >
                         <PlayerCell cell={cell} owner={owner}/>
                     </AnimatedCellWrapper>
@@ -74,9 +75,9 @@ const GridContainer = styled(Box, {
 `;
 
 const AnimatedCellWrapper = styled(Box)`
-    animation: tileEnter 420ms ease-out forwards;
+    animation: tileEnter 400ms ease-out forwards;
     opacity: 0;
-    transform: scale(0.85);
+    transform: scale(0.1);
 
     @keyframes tileEnter {
         to {
