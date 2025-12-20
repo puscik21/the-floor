@@ -21,32 +21,12 @@ const PlayerCell = ({cell, owner}: PlayerCellProps) => {
             isActive={isActive}
             onClick={() => handleCellClick(cell)}
         >
-            <Typography
-                variant="h5"
-                sx={{
-                    fontWeight: 900,
-                    color: 'white',
-                    textTransform: 'uppercase',
-                    textShadow: owner ? '0 0 4px rgba(0, 160, 255, 0.7), 0 0 8px rgba(0, 0, 0, 0.5)' : 'none',
-                    lineHeight: 1.1,
-                }}
-            >
+            <PlayerName>
                 {owner ? owner.name : ''}
-            </Typography>
-
-            <Typography
-                variant="body1"
-                sx={{
-                    color: 'rgba(255,255,255,0.6)',
-                    mt: 0.8,
-                    fontWeight: 700,
-                    fontSize: '1rem',
-                    textTransform: 'uppercase',
-                    textShadow: owner ? '0 0 3px rgba(0, 0, 0, 0.9)' : 'none',
-                }}
-            >
+            </PlayerName>
+            <CategoryName>
                 {owner ? owner.category : ''}
-            </Typography>
+            </CategoryName>
         </Cell>
     );
 };
@@ -94,4 +74,17 @@ const Cell = styled(Box, {
 
     padding: 6px;
     text-align: center;
+`;
+
+const PlayerName = styled(Typography)`
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    font-size: 2vw;
+`;
+
+const CategoryName = styled(Typography)`
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5vw;
 `;
