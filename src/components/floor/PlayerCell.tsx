@@ -27,9 +27,7 @@ const PlayerCell = ({cell, owner}: PlayerCellProps) => {
                     fontWeight: 900,
                     color: 'white',
                     textTransform: 'uppercase',
-                    textShadow: owner
-                        ? '0 0 4px rgba(0, 160, 255, 0.7), 0 0 8px rgba(0, 0, 0, 0.5)'
-                        : 'none',
+                    textShadow: owner ? '0 0 4px rgba(0, 160, 255, 0.7), 0 0 8px rgba(0, 0, 0, 0.5)' : 'none',
                     lineHeight: 1.1,
                 }}
             >
@@ -44,9 +42,7 @@ const PlayerCell = ({cell, owner}: PlayerCellProps) => {
                     fontWeight: 700,
                     fontSize: '1rem',
                     textTransform: 'uppercase',
-                    textShadow: owner
-                        ? '0 0 3px rgba(0, 0, 0, 0.9)'
-                        : 'none',
+                    textShadow: owner ? '0 0 3px rgba(0, 0, 0, 0.9)' : 'none',
                 }}
             >
                 {owner ? owner.category : ''}
@@ -57,48 +53,37 @@ const PlayerCell = ({cell, owner}: PlayerCellProps) => {
 
 export default PlayerCell;
 
-/* ---------------- styled ---------------- */
-
 const Cell = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'isOwned' && prop !== 'isActive',
 })<{ isOwned: boolean; isActive: boolean }>`
-    /* ✅ JEDYNA DODANA LINIJKA */
-    aspect-ratio: 1 / 1;
-
     width: 100%;
     height: 100%;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     cursor: ${({isOwned}) => (isOwned ? 'pointer' : 'default')};
     transition: transform 0.12s ease, box-shadow 0.3s ease, border 0.3s ease;
 
-    background: radial-gradient(circle at top, rgba(0, 160, 255, 0.18), transparent 60%),
-    linear-gradient(180deg, #0a1133, #050922);
+    background: radial-gradient(circle, rgba(0, 160, 255, 0.18), transparent 80%), linear-gradient(180deg, #0a1133, #050922);
     box-shadow: inset 0 0 12px rgba(0, 40, 110, 0.6);
 
     border: 2px solid rgba(255, 255, 255, 0.06);
     z-index: ${({isActive}) => (isActive ? 10 : 1)};
 
     &:hover {
-        ${({isOwned, isActive}) =>
-                isOwned &&
-                !isActive &&
-                `
-            box-shadow: 
-                0 0 10px #ffffff, 
-                0 0 20px #ffffff,
-                inset 0 0 15px rgba(255, 255, 255, 0.4); 
-            border: 4px solid #ffffff; 
+        // white glow for inactive cells
+        ${({isOwned, isActive}) => isOwned && !isActive && `
+             box-shadow: 
+                 0 0 10px #ffffff, 
+                 0 0 20px #ffffff,
+                 inset 0 0 15px rgba(255, 255, 255, 0.4); 
+             border: 4px solid #ffffff; 
         `}
     }
 
-    ${({isActive}) =>
-            isActive &&
-            `
+    // blue glow for active player cells
+    ${({isActive}) => isActive && `
         border: 4px solid #17a2ff;
         box-shadow: 
             0 0 15px #17a2ff,
