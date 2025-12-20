@@ -6,7 +6,6 @@ import PlayerCell from './PlayerCell.tsx';
 
 const PlayerGrid = () => {
     const {grid, allPlayers} = useGameContext().map;
-
     const playerMap = React.useMemo(() => {
         const map = new Map<string, Player>();
         allPlayers.forEach((player) => {
@@ -15,10 +14,13 @@ const PlayerGrid = () => {
         return map;
     }, [allPlayers]);
 
-    if (grid.length === 0) return null;
+    const numRows = grid.length;
+    if (numRows === 0) return null;
+    const numCols = grid[0]?.length || 0;
+    if (numCols === 0) return null;
 
     return (
-        <GridContainer>
+        <GridContainer numCols={numCols} numRows={numRows}>
             {grid.flat().map((cell, index) => {
                 const owner = cell.ownerName
                     ? playerMap.get(cell.ownerName) ?? null
@@ -27,9 +29,9 @@ const PlayerGrid = () => {
                 return (
                     <AnimatedCellWrapper
                         key={`${cell.x}-${cell.y}`}
-                        style={{ animationDelay: `${index * 40}ms` }}
+                        style={{animationDelay: `${index * 40}ms`}}
                     >
-                        <PlayerCell cell={cell} owner={owner} />
+                        <PlayerCell cell={cell} owner={owner}/>
                     </AnimatedCellWrapper>
                 );
             })}
@@ -39,18 +41,30 @@ const PlayerGrid = () => {
 
 export default PlayerGrid;
 
-/* ---------------- styled ---------------- */
-
-const GridContainer = styled(Box)`
+const GridContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'numCols' && prop !== 'numRows',
+})<{ numCols: number; numRows: number }>`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    
+    /* minmax to make sure the Cell is never smaller then content */
+    grid-template-columns: repeat(${props => props.numCols}, minmax(0, 1fr));
+    grid-template-rows: repeat(${props => props.numRows}, minmax(0, 1fr));
+    grid-auto-flow: row; // TODO: can be removed?
+    overflow: hidden;    /* Dont let cells to overflow outside the parent container */
+
     gap: 10px;
+    // gap: 3px; // TODO: Maybe 0px soon?
 
 
     width: min(92vw, 1100px);
+     //width: 90vw;
+     //max-width: 800px;
+     //height: 90vw;
+     //max-height: 800px;
 
     padding: 16px;
     margin: 24px auto;
+    // margin: 20px auto;
 
     background: linear-gradient(180deg, #050b2e, #0a1a4f),
     repeating-linear-gradient(

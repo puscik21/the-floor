@@ -56,6 +56,7 @@ export default PlayerCell;
 const Cell = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'isOwned' && prop !== 'isActive',
 })<{ isOwned: boolean; isActive: boolean }>`
+    aspect-ratio: 1 / 1;
     width: 100%;
     height: 100%;
     display: flex;
