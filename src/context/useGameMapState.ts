@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameGrid, GameState, GridCell, MapState, Player} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
-import playersConfig from '../../public/players.json';
 
 interface GameMapStateResult {
     mapState: MapState;
@@ -24,12 +23,29 @@ export const useGameMapState = (
 
     useEffect(() => {
         if (gameState === 'init') {
-            setAllPlayers(playersConfig)
-            setGrid(initializeGrid(playersConfig));
-            const firstPlayer = playersConfig[Math.floor(Math.random() * playersConfig.length)];
-            setActiveMapPlayer(firstPlayer);
+            loadPlayersData().then(playersConfig => {
+                setAllPlayers(playersConfig)
+                setGrid(initializeGrid(playersConfig));
+                const firstPlayer = playersConfig[Math.floor(Math.random() * playersConfig.length)];
+                setActiveMapPlayer(firstPlayer);
+            })
         }
     }, [gameState]);
+
+    const loadPlayersData = async (): Promise<Player[]> => {
+        try {
+            // Date.now() - to omit browser's cache (cache busting)
+            const response = await fetch(`./players.json?t=${Date.now()}`);
+            if (!response.ok) {
+                throw new Error(`Błąd: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Nie udało się załadować graczy:', error);
+            return [];
+        }
+    }
 
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>
@@ -99,7 +115,7 @@ export const useGameMapState = (
         allPlayers,
         activeMapPlayer,
         hasWonPreviousDuel,
-        positionToPlayer
+        positionToPlayer,
     };
 
     return {

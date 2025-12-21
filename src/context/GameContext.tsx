@@ -1,13 +1,41 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
-import type {GameContextValue, GameState, Player} from '../types';
+import type {GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
+const defaultGameConfig: GameConfig = {
+    initTimeSeconds: 60,
+    passPenaltySeconds: 3,
+};
+
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<GameState>('init');
     const [winner, setWinner] = useState<Player | null>(null);
+    const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig);
+
+    useEffect(() => {
+        loadGameConfig().then(config => {
+            setGameConfig(config);
+        })
+    }, []);
+
+    // TODO: use generic method for loading files
+    const loadGameConfig = async (): Promise<GameConfig> => {
+        try {
+            // Date.now() - to omit browser's cache (cache busting)
+            const response = await fetch(`./config.json?t=${Date.now()}`);
+            if (!response.ok) {
+                throw new Error(`Błąd: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Nie udało się załadować graczy:', error);
+            return defaultGameConfig;
+        }
+    }
 
     const handleSetWinner = useCallback((player: Player | null) => setWinner(player), []);
     const handleStartGame = useCallback(() => setGameState('floor'), []);
@@ -33,6 +61,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         duelInfo,
         actions: duelActions,
     } = useGameDuelState(
+        gameConfig,
         gameState,
         setGameState,
         handleSetWinner,
