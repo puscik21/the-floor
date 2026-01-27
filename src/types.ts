@@ -1,3 +1,8 @@
+export interface GameConfig {
+    initTimeSeconds: number;
+    passPenaltySeconds: number;
+}
+
 export interface GameContextValue {
     general: GeneralState;
     map: MapState;
