@@ -1,6 +1,9 @@
 export interface GameConfig {
     initTimeSeconds: number;
     passPenaltySeconds: number;
+    imageFileFormat: string;
+    correctAnswerButton: string;
+    passButton: string;
 }
 
 export interface GameContextValue {

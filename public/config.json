@@ -1,4 +1,7 @@
 {
   "initTimeSeconds": 60,
-  "passPenaltySeconds": 3
+  "passPenaltySeconds": 3,
+  "imageFileFormat": "jpg",
+  "correctAnswerButton": "space",
+  "passButton": "a"
 }
