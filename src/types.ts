@@ -11,6 +11,7 @@ export interface GameContextValue {
     map: MapState;
     duel: DuelInfo;
     actions: GameActions;
+    config: GameConfig;
 }
 
 export interface GeneralState {

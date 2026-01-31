@@ -4,7 +4,7 @@ import {useGameContext} from '../../context/GameContext.tsx';
 import {useCallback, useEffect} from 'react';
 
 const ActionsSection = () => {
-    const {general, duel, actions} = useGameContext();
+    const {general, duel, actions, config} = useGameContext();
     const {passTimer, isPassPenaltyActive} = duel;
     const {handleCorrectAnswer, handlePass} = actions;
 
@@ -17,13 +17,23 @@ const ActionsSection = () => {
             return;
         }
 
-        if (event.code === 'Space') {
+        const configCorrectAnswer = config.correctAnswerButton.toLowerCase();
+        const configPass = config.passButton.toLowerCase();
+
+        const pressedKey = event.key.toLowerCase();
+        const pressedCode = event.code.toLowerCase(); // for 'Space' button
+
+        if (configCorrectAnswer === 'space' && (pressedCode === 'space' || pressedKey === ' ')) {
             event.preventDefault();
             handleCorrectAnswer();
-        } else if (event.key === 'f' || event.key === 'F') {
+            return;
+        } else if (pressedKey === configCorrectAnswer) {
+            handleCorrectAnswer();
+            return;
+        } else if (pressedKey === configPass) {
             handlePass();
         }
-    }, [areKeysDisabled, handleCorrectAnswer, handlePass]);
+    }, [areKeysDisabled, config.correctAnswerButton, config.passButton, handleCorrectAnswer, handlePass]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);

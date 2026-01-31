@@ -100,6 +100,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
             ...mapActions,
             ...duelActions,
         },
+        config: gameConfig
     };
 
     return (
