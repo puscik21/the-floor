@@ -1,6 +1,9 @@
 export interface GameConfig {
     initTimeSeconds: number;
     passPenaltySeconds: number;
+    imageFileFormat: string;
+    correctAnswerButton: string;
+    passButton: string;
 }
 
 export interface GameContextValue {
@@ -8,6 +11,7 @@ export interface GameContextValue {
     map: MapState;
     duel: DuelInfo;
     actions: GameActions;
+    config: GameConfig;
 }
 
 export interface GeneralState {

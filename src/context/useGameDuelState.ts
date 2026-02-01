@@ -49,8 +49,8 @@ export const useGameDuelState = (
     }, [defender?.category])
 
     useEffect(() => {
-        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId))
-    }, [getQuestionCategory, questionId]);
+        setQuestionImageUrl(getImageFromCategory(getQuestionCategory(), questionId, gameConfig.imageFileFormat))
+    }, [gameConfig.imageFileFormat, getQuestionCategory, questionId]);
 
     const getWinnerOnTimeout = useCallback((challenger: Player, defender: Player) => {
         if (challengerTimer > defenderTimer) {
@@ -75,7 +75,7 @@ export const useGameDuelState = (
 
         const currentCategory = getQuestionCategory();
         const nextId = currentId + 1;
-        const nextImageUrl = getImageFromCategory(currentCategory, nextId);
+        const nextImageUrl = getImageFromCategory(currentCategory, nextId, gameConfig.imageFileFormat);
 
         const exists = await checkImageExists(nextImageUrl);
 
@@ -83,7 +83,7 @@ export const useGameDuelState = (
             setQuestionId(nextId);
         } else {
             // TODO: Toastify
-            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.jpg). Koniec pojedynku.`);
+            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.${gameConfig.imageFileFormat}). Koniec pojedynku.`);
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
                 finishDuel(winner, winner.name === challenger.name ? defender : challenger, challenger.category);
@@ -91,7 +91,7 @@ export const useGameDuelState = (
         }
 
         setIsCheckingNextQuestion(false);
-    }, [isCheckingNextQuestion, getQuestionCategory, challenger, defender, getWinnerOnTimeout, finishDuel]);
+    }, [isCheckingNextQuestion, getQuestionCategory, gameConfig.imageFileFormat, challenger, defender, getWinnerOnTimeout, finishDuel]);
 
     // TODO: Improve duel timer
     useEffect(() => {

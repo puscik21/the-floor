@@ -2,7 +2,7 @@ import {styled} from '@mui/material/styles';
 import {Button, Typography} from '@mui/material';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
-const StartGameButton = () => {
+const StartDuelButton = () => {
     const handleStartDuel = useGameContext().actions.handleStartDuel;
 
     return (
@@ -14,7 +14,7 @@ const StartGameButton = () => {
     );
 }
 
-export default StartGameButton;
+export default StartDuelButton;
 
 const StartButton = styled(Button)`
     width: 80%;

@@ -8,6 +8,9 @@ const GameContext = createContext<GameContextValue | undefined>(undefined);
 const defaultGameConfig: GameConfig = {
     initTimeSeconds: 60,
     passPenaltySeconds: 3,
+    imageFileFormat: "png",
+    correctAnswerButton: "space",
+    passButton: "F"
 };
 
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
@@ -97,6 +100,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
             ...mapActions,
             ...duelActions,
         },
+        config: gameConfig
     };
 
     return (

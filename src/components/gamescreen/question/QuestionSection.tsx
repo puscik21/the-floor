@@ -1,5 +1,5 @@
 import {styled} from '@mui/material/styles';
-import StartGameButton from './StartGameButton.tsx';
+import StartDuelButton from './StartDuelButton.tsx';
 import ImageSection from './ImageSection.tsx';
 import {useGameContext} from '../../../context/GameContext.tsx';
 
@@ -10,7 +10,7 @@ const QuestionSection = () => {
     if (gameState === 'ready') {
         return (
             <Container>
-                <StartGameButton/>
+                <StartDuelButton/>
             </Container>
         );
     } else if (gameState === 'duel') {
