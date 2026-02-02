@@ -1,7 +1,7 @@
 import {Box, Button, Typography} from '@mui/material';
 import {keyframes, styled} from '@mui/material/styles';
 import {useGameContext} from '../context/GameContext.tsx';
-import ConfettiOverlay from './confetti/ConfettiOverlay.tsx';
+import ConfettiOverlay from "../utils/confetti/ConfettiOverlay.tsx";
 
 const FinishedScreen = () => {
     const {
