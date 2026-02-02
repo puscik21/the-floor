@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameConfig, GameState, Player, Question} from '../types';
-import {getImageFromCategory} from '../components/gamescreen/question/questionUtils.ts';
-import {checkImageExists} from '../components/gamescreen/question/imageLoader.ts';
+import {getImageFromCategory} from '../components/duel/question/questionUtils.ts';
+import {checkImageExists} from '../components/duel/question/imageLoader.ts';
 
 interface GameDuelStateResult {
     duelInfo: DuelInfo;

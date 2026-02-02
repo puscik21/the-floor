@@ -2,8 +2,8 @@ import {Box, Typography} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import type {Player, PodiumPlayer, PodiumPosition} from '../../types.ts';
 import PodiumStep from './PodiumStep.tsx';
-import ConfettiOverlay from '../confetti/ConfettiOverlay.tsx';
 import {useGameContext} from '../../context/GameContext.tsx';
+import ConfettiOverlay from "../../utils/confetti/ConfettiOverlay.tsx";
 
 const mapPlayerToPodiumPlayer = (position: PodiumPosition, player: Player): PodiumPlayer => {
     return {name: player.name, score: 125, position: position}
