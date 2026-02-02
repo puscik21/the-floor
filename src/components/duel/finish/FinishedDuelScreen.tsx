@@ -3,7 +3,7 @@ import {keyframes, styled} from '@mui/material/styles';
 import {useGameContext} from "../../../context/GameContext.tsx";
 import ConfettiOverlay from "../../../utils/confetti/ConfettiOverlay.tsx";
 
-const FinishedScreen = () => {
+const FinishedDuelScreen = () => {
     const {
         general: {winner},
         actions: {handleReturnToMap},
@@ -54,7 +54,7 @@ const FinishedScreen = () => {
     );
 };
 
-export default FinishedScreen;
+export default FinishedDuelScreen;
 
 /* -------------------------
    Animations (keyframes)

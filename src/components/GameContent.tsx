@@ -5,7 +5,7 @@ import GameScreen from './duel/GameScreen.tsx';
 import FloorScreen from './floor/FloorScreen.tsx';
 import WelcomeScreen from './welcome/WelcomeScreen.tsx';
 import PodiumScreen from './podium/PodiumScreen.tsx';
-import FinishedScreen from "./duel/finish/FinishedScreen.tsx";
+import FinishedDuelScreen from "./duel/finish/FinishedDuelScreen.tsx";
 
 const GameContent: React.FC = () => {
     const gameState = useGameContext().general.gameState;
@@ -16,7 +16,7 @@ const GameContent: React.FC = () => {
             case 'duel':
                 return <GameScreen/>;
             case 'finished':
-                return <FinishedScreen/>;
+                return <FinishedDuelScreen/>;
             case 'floor':
                 return <FloorScreen/>
             case 'podium':
