@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, GlobalStyles} from '@mui/material';
 import {useGameContext} from '../context/GameContext.tsx';
-import GameScreen from './gamescreen/GameScreen.tsx';
+import GameScreen from './duel/GameScreen.tsx';
 import FinishedScreen from './FinishedScreen.tsx';
 import FloorScreen from './floor/FloorScreen.tsx';
 import WelcomeScreen from './welcome/WelcomeScreen.tsx';
