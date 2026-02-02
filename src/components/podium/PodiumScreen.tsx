@@ -6,7 +6,7 @@ import {useGameContext} from '../../context/GameContext.tsx';
 import ConfettiOverlay from "../../utils/confetti/ConfettiOverlay.tsx";
 
 const mapPlayerToPodiumPlayer = (position: PodiumPosition, player: Player): PodiumPlayer => {
-    return {name: player.name, score: 125, position: position}
+    return {name: player.name, duelsWon: player.duelsWon, timeBoostsUsed: player.timeBoostsUsed, position: position}
 }
 
 const PodiumScreen = () => {

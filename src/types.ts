@@ -21,9 +21,15 @@ export interface GeneralState {
 
 export type GameState = 'init' | 'floor' | 'ready' | 'duel' | 'finished' | 'podium';
 
-export interface Player {
+export interface PlayerBase {
     name: string;
     category: string;
+}
+
+export interface Player extends PlayerBase {
+    isPlaying: boolean;
+    duelsWon: number;
+    timeBoostsUsed: number;
 }
 
 export type GameGrid = GridCell[][];
@@ -75,7 +81,8 @@ export interface GameActions {
 
 export interface PodiumPlayer {
     name: string;
-    score: number; // TODO: change to number of won games
+    duelsWon: number;
+    timeBoostsUsed: number;
     position: PodiumPosition;
 }
 

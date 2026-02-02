@@ -82,7 +82,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     }, [prepareDuel]);
 
     useEffect(() => {
-        if (mapState.allPlayers.length == 1) {
+        if (mapState.allPlayers.filter(player => player.isPlaying).length == 1) {
             setGameState('podium')
         }
     }, [mapState.allPlayers, mapState.positionToPlayer]);

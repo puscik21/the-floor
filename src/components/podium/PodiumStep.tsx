@@ -7,11 +7,14 @@ interface PodiumStepProps {
     player: PodiumPlayer
 }
 
+// TODO: FIX UI
 const PodiumStep = ({player}: PodiumStepProps) => {
     return (
         <Container key={player.position} podiumPosition={player.position}>
-            <PositionText podiumPosition={player.position}>{player.position}</PositionText>
+            <PositionText>{player.position}</PositionText>
             <PlayerNameText>{player.name}</PlayerNameText>
+            <PlayerNameText>{`Wygrane pojedynki: ${player.duelsWon}`}</PlayerNameText>
+            <PlayerNameText>{`Złote kwadraty: ${player.timeBoostsUsed}`}</PlayerNameText>
         </Container>
     );
 }
@@ -57,7 +60,7 @@ const Container = styled(Box)<PodiumStepStyleProps>`
     }
 `;
 
-const PositionText = styled(Typography)<PodiumStepStyleProps>`
+const PositionText = styled(Typography)`
     font-size: 2.2rem;
     font-weight: 900;
     color: #000;

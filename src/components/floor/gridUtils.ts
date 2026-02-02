@@ -1,4 +1,4 @@
-import type {GameGrid, Player} from '../../types.ts';
+import type {GameGrid, PlayerBase} from '../../types.ts';
 
 type Dimensions = {
     rows: number;
@@ -6,16 +6,15 @@ type Dimensions = {
 }
 
 // TODO: with odd number of players move empty cells to the corner
-export function initializeGrid(players: Player[]): GameGrid {
+export function initializeGrid(players: PlayerBase[]): GameGrid {
     const numPlayers = players.length;
     if (numPlayers === 0) return [];
 
     const {rows, cols} = calculateGridDimensions(numPlayers);
     const totalCells = rows * cols;
 
-    const shufflePlayers = false; // Take fron config file
-    const shuffledPlayers = shufflePlayers ? [...players].sort(() => Math.random() - 0.5) : [...players]
-    const cellOwners: (Player | null)[] = shuffledPlayers;
+    const shufflePlayers = false; // TODO: Take fron config file
+    const cellOwners: (PlayerBase | null)[] = shufflePlayers ? [...players].sort(() => Math.random() - 0.5) : [...players];
     while (cellOwners.length < totalCells) {
         cellOwners.push(null); // Fill with empty cells
     }
