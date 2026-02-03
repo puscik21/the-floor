@@ -1,5 +1,6 @@
 import {toast} from "react-toastify";
 import {defaultToastOptions} from "./toastOptions.ts";
+import ErrorMessage from "./ErrorMessage.tsx";
 
 export const notifySuccess = (message: string) => toast.success(message, defaultToastOptions())
 
@@ -14,8 +15,8 @@ const prepareErrorMessage = (message: string, error?: unknown) => {
     }
 
     if (error instanceof Error) {
-        return `${message}: \n\n ${error.message}`
+        return <ErrorMessage title={message} errorDetails={error.message}/>
     } else {
-        return `${message}: \n\n Nieznany błąd`
+        return <ErrorMessage title={message} errorDetails="Nieznany błąd"/>
     }
 }

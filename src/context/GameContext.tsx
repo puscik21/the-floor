@@ -2,6 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useRef, useState} fro
 import type {GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
+import {notifyError} from "../utils/toast/notifier.tsx";
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
@@ -30,12 +31,12 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
             // Date.now() - to omit browser's cache (cache busting)
             const response = await fetch(`./config.json?t=${Date.now()}`);
             if (!response.ok) {
-                throw new Error(`Błąd: ${response.status}`);
+                notifyError(`Błąd podczas ładowania konfiguracji: ${response.status}`)
+                return defaultGameConfig;
             }
-
             return await response.json();
         } catch (error) {
-            console.error('Nie udało się załadować graczy:', error);
+            notifyError(`Nie udało się załadować konfiguracji`, error)
             return defaultGameConfig;
         }
     }
