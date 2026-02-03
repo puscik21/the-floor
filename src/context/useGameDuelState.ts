@@ -83,8 +83,7 @@ export const useGameDuelState = (
         if (exists) {
             setQuestionId(nextId);
         } else {
-            // TODO: improved warning logging
-            notifyWarning(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.${gameConfig.imageFileFormat}). Koniec pojedynku.`)
+            notifyWarning(`Koniec pytań w kategorii ${currentCategory}`, `Brak pliku ${nextId}.${gameConfig.imageFileFormat}. Koniec pojedynku.`)
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
                 finishDuel(winner, winner.name === challenger.name ? defender : challenger, challenger.category);

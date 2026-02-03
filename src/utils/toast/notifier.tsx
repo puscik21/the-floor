@@ -1,10 +1,12 @@
 import {toast} from "react-toastify";
 import {defaultToastOptions} from "./toastOptions.ts";
-import ErrorMessage from "./ErrorMessage.tsx";
+import ToastMessage from "./ToastMessage.tsx";
 
-export const notifySuccess = (message: string) => toast.success(message, defaultToastOptions())
+export const notifySuccess = (message: string, details?: string) =>
+    toast.success(prepareToastMessage(message, details), defaultToastOptions())
 
-export const notifyWarning = (message: string) => toast.warning(message, defaultToastOptions())
+export const notifyWarning = (message: string, details?: string) =>
+    toast.warning(prepareToastMessage(message, details), defaultToastOptions())
 
 export const notifyError = (message: string, error?: unknown) =>
     toast.error(prepareErrorMessage(message, error), defaultToastOptions())
@@ -15,8 +17,12 @@ const prepareErrorMessage = (message: string, error?: unknown) => {
     }
 
     if (error instanceof Error) {
-        return <ErrorMessage title={message} errorDetails={error.message}/>
+        return prepareToastMessage(message, error.message)
     } else {
-        return <ErrorMessage title={message} errorDetails="Nieznany błąd"/>
+        return prepareToastMessage(message, "Nieznany błąd")
     }
+}
+
+const prepareToastMessage = (message: string, details?: string) => {
+    return <ToastMessage title={message} details={details}/>
 }
