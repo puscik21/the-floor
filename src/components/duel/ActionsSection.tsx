@@ -1,4 +1,4 @@
-import {Button, type ButtonProps, Grid} from '@mui/material';
+import {Box, Button, type ButtonProps, Grid} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {useGameContext} from '../../context/GameContext.tsx';
 import {useCallback, useEffect} from 'react';
@@ -45,31 +45,66 @@ const ActionsSection = () => {
 
     return (
         <Container>
-            <Grid container spacing={2}>
-                <Grid xs={12}>
-                    <PrimaryButton
-                        // Po instalacji poprawnej wersji MUI (5.x),
-                        // TS2769 zniknie samoczynnie.
-                        variant="contained"
-                        fullWidth
-                        onClick={handleCorrectAnswer}
-                        disabled={areKeysDisabled()}
-                        size="large"
-                    >
-                        {isPassPenaltyActive ? `Czekaj... (${passTimer.toFixed(0)}s)` : 'Poprawna odpowiedź'}
-                    </PrimaryButton>
+            <Grid container >
+
+                <Grid container xs={3} >
+                    <Grid xs={12}>
+                        <PrimaryButton
+                            // Po instalacji poprawnej wersji MUI (5.x),
+                            // TS2769 zniknie samoczynnie.
+                            variant="contained"
+                            fullWidth
+                            onClick={handleCorrectAnswer}
+                            disabled={areKeysDisabled()}
+                            size="large"
+                        >
+                            {isPassPenaltyActive ? `Czekaj... (${passTimer.toFixed(0)}s)` : 'Poprawna odpowiedź'}
+                        </PrimaryButton>
+                    </Grid>
                 </Grid>
 
-                <Grid xs={12}>
-                    <SecondaryButton
-                        variant="outlined"
-                        fullWidth
-                        onClick={handlePass}
-                        disabled={areKeysDisabled()}
-                        size="large"
-                    >
-                        Pas
-                    </SecondaryButton>
+
+                <Grid container xs={6} spacing={2}>
+                    <Grid xs={12}>
+                        <PrimaryButton
+                            // Po instalacji poprawnej wersji MUI (5.x),
+                            // TS2769 zniknie samoczynnie.
+                            variant="contained"
+                            fullWidth
+                            onClick={handleCorrectAnswer}
+                            disabled={areKeysDisabled()}
+                            size="large"
+                        >
+                            {isPassPenaltyActive ? `Czekaj... (${passTimer.toFixed(0)}s)` : 'Poprawna odpowiedź'}
+                        </PrimaryButton>
+                    </Grid>
+                    <Grid xs={12}>
+                        <SecondaryButton
+                            variant="outlined"
+                            fullWidth
+                            onClick={handlePass}
+                            disabled={areKeysDisabled()}
+                            size="large"
+                        >
+                            Pas
+                        </SecondaryButton>
+                    </Grid>
+                </Grid>
+
+                <Grid container xs={3}>
+                    <Grid xs={12}>
+                        <PrimaryButton
+                            // Po instalacji poprawnej wersji MUI (5.x),
+                            // TS2769 zniknie samoczynnie.
+                            variant="contained"
+                            fullWidth
+                            onClick={handleCorrectAnswer}
+                            disabled={areKeysDisabled()}
+                            size="large"
+                        >
+                            {isPassPenaltyActive ? `Czekaj... (${passTimer.toFixed(0)}s)` : 'Poprawna odpowiedź'}
+                        </PrimaryButton>
+                    </Grid>
                 </Grid>
             </Grid>
         </Container>
@@ -78,12 +113,12 @@ const ActionsSection = () => {
 
 export default ActionsSection;
 
-const Container = styled('footer')`
+const Container = styled(Box)`
     padding-bottom: ${({theme}) => theme.spacing(1)};
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 `;

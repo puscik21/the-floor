@@ -31,7 +31,9 @@ export const useGameMapState = (
                 const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
                     ...playerBase,
                     isPlaying: true,
+                    winStreak: 0,
                     duelsWon: 0,
+                    timeBoostsAvailable: 0,
                     timeBoostsUsed: 0
                 }))
                 setAllPlayers(initializedPlayers)
@@ -41,6 +43,7 @@ export const useGameMapState = (
         }
     }, [gameState, gameConfig.shufflePlayers]);
 
+    // TODO: refactor this method
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>
             row.map((cell) => {
@@ -56,10 +59,14 @@ export const useGameMapState = (
             ...loserPlayer,
             isPlaying: false
         }
+        const winStreakForTimeBoost = 3; // TODO: better name, take it from config
+        const earnedTimeBoost = (winnerPlayer.winStreak + 1) == winStreakForTimeBoost;
         const updatedWinnerPlayer = {
             ...winnerPlayer,
             category: inheritedCategory,
-            duelsWon: winnerPlayer.duelsWon + 1
+            winStreak: earnedTimeBoost ? 0 : winnerPlayer.winStreak,
+            duelsWon: winnerPlayer.duelsWon + 1,
+            timeBoostsAvailable: earnedTimeBoost ? winnerPlayer.timeBoostsAvailable + 1 : winnerPlayer.timeBoostsAvailable
         }
         const stillPlayingPlayers = allPlayers.filter(player => player.isPlaying)
         const newAllPlayers: Player[] = allPlayers

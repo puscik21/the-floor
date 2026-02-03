@@ -29,7 +29,9 @@ export interface PlayerBase {
 
 export interface Player extends PlayerBase {
     isPlaying: boolean;
+    winStreak: number;
     duelsWon: number;
+    timeBoostsAvailable: number;
     timeBoostsUsed: number;
 }
 
