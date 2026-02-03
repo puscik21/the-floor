@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import type {DuelInfo, DuelPlayer, GameConfig, GameState, Player, Question} from '../types';
 import {getImageFromCategory} from '../components/duel/question/questionUtils.ts';
 import {checkImageExists} from '../components/duel/question/imageLoader.ts';
+import {notifyWarning} from "../utils/toast/notifier.tsx";
 
 interface GameDuelStateResult {
     duelInfo: DuelInfo;
@@ -82,8 +83,7 @@ export const useGameDuelState = (
         if (exists) {
             setQuestionId(nextId);
         } else {
-            // TODO: Toastify
-            console.warn(`Koniec pytań w kategorii ${currentCategory} (brak pliku ${nextId}.${gameConfig.imageFileFormat}). Koniec pojedynku.`);
+            notifyWarning(`Koniec pytań w kategorii ${currentCategory}`, `Brak pliku ${nextId}.${gameConfig.imageFileFormat}. Koniec pojedynku.`)
             if (challenger && defender) {
                 const winner = getWinnerOnTimeout(challenger, defender);
                 finishDuel(winner, winner.name === challenger.name ? defender : challenger, challenger.category);

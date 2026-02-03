@@ -15,7 +15,8 @@
     "@mui/material": "^5.16.4",
     "framer-motion": "^12.23.25",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

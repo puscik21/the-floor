@@ -66,7 +66,7 @@ const HeaderText = styled(Typography)`
 `;
 
 const PlayerName = styled(Typography)`
-    font-size: 20px;
+    font-size: 1.5rem;
     text-transform: uppercase;
     font-weight: 900;
     color: rgba(255, 255, 255, 0.95);

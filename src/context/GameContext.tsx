@@ -2,6 +2,8 @@ import {createContext, useCallback, useContext, useEffect, useRef, useState} fro
 import type {GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
+import {notifyError} from "../utils/toast/notifier.tsx";
+import {fetchJson} from "../utils/input/configFilesUtils.ts";
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
@@ -10,7 +12,8 @@ const defaultGameConfig: GameConfig = {
     passPenaltySeconds: 3,
     imageFileFormat: "png",
     correctAnswerButton: "space",
-    passButton: "F"
+    passButton: "F",
+    shufflePlayers: false
 };
 
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
@@ -19,26 +22,10 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig);
 
     useEffect(() => {
-        loadGameConfig().then(config => {
+        fetchJson<GameConfig>("./config.json", defaultGameConfig).then(config => {
             setGameConfig(config);
         })
     }, []);
-
-    // TODO: use generic method for loading files
-    const loadGameConfig = async (): Promise<GameConfig> => {
-        try {
-            // Date.now() - to omit browser's cache (cache busting)
-            const response = await fetch(`./config.json?t=${Date.now()}`);
-            if (!response.ok) {
-                throw new Error(`Błąd: ${response.status}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Nie udało się załadować graczy:', error);
-            return defaultGameConfig;
-        }
-    }
 
     const handleSetWinner = useCallback((player: Player | null) => setWinner(player), []);
     const handleStartGame = useCallback(() => setGameState('floor'), []);
@@ -51,14 +38,14 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         if (prepareDuelRef.current) {
             prepareDuelRef.current(challenger, defender);
         } else {
-            console.error('prepareDuel logic not yet initialized!');
+            notifyError("Nie udało sie załadować pojedynku!")
         }
     }, []);
 
     const {
         mapState,
         actions: mapActions,
-    } = useGameMapState(gameState, startDuelWrapper);
+    } = useGameMapState(gameConfig, gameState, startDuelWrapper);
 
     const {
         duelInfo,

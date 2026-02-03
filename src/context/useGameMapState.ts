@@ -1,6 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
+import type {GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
+import {notifyWarning} from "../utils/toast/notifier.tsx";
+import {fetchJson} from "../utils/input/configFilesUtils.ts";
 
 interface GameMapStateResult {
     mapState: MapState;
@@ -12,6 +14,7 @@ interface GameMapStateResult {
 }
 
 export const useGameMapState = (
+    gameConfig: GameConfig,
     gameState: GameState,
     startDuelCallback: (challenger: Player, defender: Player) => void,
 ): GameMapStateResult => {
@@ -23,8 +26,8 @@ export const useGameMapState = (
 
     useEffect(() => {
         if (gameState === 'init') {
-            loadPlayersData().then(playersConfig => {
-                setGrid(initializeGrid(playersConfig));
+            fetchJson<PlayerBase[]>("./players.json", []).then(playersConfig => {
+                setGrid(initializeGrid(playersConfig, gameConfig.shufflePlayers));
                 const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
                     ...playerBase,
                     isPlaying: true,
@@ -36,22 +39,7 @@ export const useGameMapState = (
                 setActiveMapPlayer(firstPlayer);
             })
         }
-    }, [gameState]);
-
-    const loadPlayersData = async (): Promise<PlayerBase[]> => {
-        try {
-            // Date.now() - to omit browser's cache (cache busting)
-            const response = await fetch(`./players.json?t=${Date.now()}`);
-            if (!response.ok) {
-                throw new Error(`Błąd: ${response.status}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Nie udało się załadować graczy:', error);
-            return [];
-        }
-    }
+    }, [gameState, gameConfig.shufflePlayers]);
 
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>
@@ -107,7 +95,7 @@ export const useGameMapState = (
         if (gameState !== 'floor' || !activeMapPlayer) return;
 
         if (!cell.ownerName || cell.ownerName === activeMapPlayer.name) {
-            console.log('Kliknij pole przeciwnika!');
+            notifyWarning("Kliknij pole przeciwnika!")
             return;
         }
 
@@ -125,7 +113,7 @@ export const useGameMapState = (
             .filter(player => player.name !== activeMapPlayer?.name)
 
         if (potentialNextPlayers.length === 0) {
-            console.log('Brak innych graczy do wylosowania');
+            notifyWarning("Brak innych graczy do wylosowania")
             return null;
         }
 

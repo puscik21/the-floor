@@ -80,11 +80,11 @@ const PlayerName = styled(Typography)`
     font-weight: 900;
     color: white;
     text-transform: uppercase;
-    font-size: 2vw;
+    font-size: 2.2rem;
 `;
 
 const CategoryName = styled(Typography)`
     font-weight: 700;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.5vw;
+    font-size: 1.8rem;
 `;
