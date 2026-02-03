@@ -68,7 +68,6 @@ const DuelActions = () => {
 export default DuelActions;
 
 const PrimaryButton = styled(Button)<ButtonProps>`
-    //background: linear-gradient(180deg, #17a2ff, #0a84c9); // Possibly use this
     color: white;
     height: 64px;
     font-weight: 800;
