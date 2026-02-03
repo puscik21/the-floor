@@ -12,7 +12,8 @@ const defaultGameConfig: GameConfig = {
     passPenaltySeconds: 3,
     imageFileFormat: "png",
     correctAnswerButton: "space",
-    passButton: "F"
+    passButton: "F",
+    shufflePlayers: false
 };
 
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
@@ -44,7 +45,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const {
         mapState,
         actions: mapActions,
-    } = useGameMapState(gameState, startDuelWrapper);
+    } = useGameMapState(gameConfig, gameState, startDuelWrapper);
 
     const {
         duelInfo,

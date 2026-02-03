@@ -3,5 +3,6 @@
   "passPenaltySeconds": 3,
   "imageFileFormat": "jpg",
   "correctAnswerButton": "space",
-  "passButton": "f"
+  "passButton": "f",
+  "shufflePlayers": false
 }

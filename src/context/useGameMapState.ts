@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
+import type {GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
 import {notifyWarning} from "../utils/toast/notifier.tsx";
 import {fetchJson} from "../utils/input/configFilesUtils.ts";
@@ -14,6 +14,7 @@ interface GameMapStateResult {
 }
 
 export const useGameMapState = (
+    gameConfig: GameConfig,
     gameState: GameState,
     startDuelCallback: (challenger: Player, defender: Player) => void,
 ): GameMapStateResult => {
@@ -26,7 +27,7 @@ export const useGameMapState = (
     useEffect(() => {
         if (gameState === 'init') {
             fetchJson<PlayerBase[]>("./players.json", []).then(playersConfig => {
-                setGrid(initializeGrid(playersConfig));
+                setGrid(initializeGrid(playersConfig, gameConfig.shufflePlayers));
                 const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
                     ...playerBase,
                     isPlaying: true,
@@ -38,7 +39,7 @@ export const useGameMapState = (
                 setActiveMapPlayer(firstPlayer);
             })
         }
-    }, [gameState]);
+    }, [gameState, gameConfig.shufflePlayers]);
 
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>

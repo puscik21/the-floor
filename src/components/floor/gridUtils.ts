@@ -5,15 +5,13 @@ type Dimensions = {
     cols: number
 }
 
-// TODO: with odd number of players move empty cells to the corner
-export function initializeGrid(players: PlayerBase[]): GameGrid {
+export function initializeGrid(players: PlayerBase[], shufflePlayers: boolean): GameGrid {
     const numPlayers = players.length;
     if (numPlayers === 0) return [];
 
     const {rows, cols} = calculateGridDimensions(numPlayers);
     const totalCells = rows * cols;
 
-    const shufflePlayers = false; // TODO: Take fron config file
     const cellOwners: (PlayerBase | null)[] = shufflePlayers ? [...players].sort(() => Math.random() - 0.5) : [...players];
     while (cellOwners.length < totalCells) {
         cellOwners.push(null); // Fill with empty cells

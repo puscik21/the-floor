@@ -4,6 +4,7 @@ export interface GameConfig {
     imageFileFormat: string;
     correctAnswerButton: string;
     passButton: string;
+    shufflePlayers: boolean;
 }
 
 export interface GameContextValue {
