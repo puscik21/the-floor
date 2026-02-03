@@ -3,6 +3,7 @@ import type {GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
 import {notifyError} from "../utils/toast/notifier.tsx";
+import {fetchJson} from "../utils/input/configFilesUtils.ts";
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
 
@@ -20,26 +21,10 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
     const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig);
 
     useEffect(() => {
-        loadGameConfig().then(config => {
+        fetchJson<GameConfig>("./config.json", defaultGameConfig).then(config => {
             setGameConfig(config);
         })
     }, []);
-
-    // TODO: use generic method for loading files (log file name too)
-    const loadGameConfig = async (): Promise<GameConfig> => {
-        try {
-            // Date.now() - to omit browser's cache (cache busting)
-            const response = await fetch(`./config.json?t=${Date.now()}`);
-            if (!response.ok) {
-                notifyError(`Błąd podczas ładowania konfiguracji: ${response.status}`)
-                return defaultGameConfig;
-            }
-            return await response.json();
-        } catch (error) {
-            notifyError(`Nie udało się załadować konfiguracji`, error)
-            return defaultGameConfig;
-        }
-    }
 
     const handleSetWinner = useCallback((player: Player | null) => setWinner(player), []);
     const handleStartGame = useCallback(() => setGameState('floor'), []);

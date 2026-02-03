@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
-import {notifyError, notifyWarning} from "../utils/toast/notifier.tsx";
+import {notifyWarning} from "../utils/toast/notifier.tsx";
+import {fetchJson} from "../utils/input/configFilesUtils.ts";
 
 interface GameMapStateResult {
     mapState: MapState;
@@ -24,7 +25,7 @@ export const useGameMapState = (
 
     useEffect(() => {
         if (gameState === 'init') {
-            loadPlayersData().then(playersConfig => {
+            fetchJson<PlayerBase[]>("./players.json", []).then(playersConfig => {
                 setGrid(initializeGrid(playersConfig));
                 const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
                     ...playerBase,
@@ -38,21 +39,6 @@ export const useGameMapState = (
             })
         }
     }, [gameState]);
-
-    const loadPlayersData = async (): Promise<PlayerBase[]> => {
-        try {
-            // Date.now() - to omit browser's cache (cache busting)
-            const response = await fetch(`./players.json?t=${Date.now()}`);
-            if (!response.ok) {
-                notifyError(`Błąd podczas ładowania graczy: ${response.status}`)
-                return [];
-            }
-            return await response.json();
-        } catch (error) {
-            notifyError("Nie udało się załadować graczy", error)
-            return [];
-        }
-    }
 
     const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
         const newGrid = grid.map((row) =>
