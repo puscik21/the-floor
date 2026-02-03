@@ -10,7 +10,7 @@ const WelcomeScreen = () => {
             <TitleLogo/>
             <MovingSubtitle/>
             <StartGameButton/>
-            <VersionTag>v1.0.6</VersionTag>
+            <VersionTag>v1.0.7</VersionTag>
         </WelcomeContainer>
     );
 };
