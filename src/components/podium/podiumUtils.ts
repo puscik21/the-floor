@@ -4,7 +4,7 @@ export const getStepStyles = (position: PodiumPosition) => {
     switch (position) {
         case 1:
             return {
-                height: '75%',
+                height: '65%',
                 width: '28%',
                 background: 'linear-gradient(180deg, #FFD700 0%, #FFA500 100%)',
                 color: '#000',
@@ -13,7 +13,7 @@ export const getStepStyles = (position: PodiumPosition) => {
             };
         case 2:
             return {
-                height: '63%',
+                height: '53%',
                 width: '24%',
                 background: 'linear-gradient(180deg, #C0C0C0 0%, #A9A9A9 100%)',
                 color: '#000',
@@ -22,7 +22,7 @@ export const getStepStyles = (position: PodiumPosition) => {
             };
         case 3:
             return {
-                height: '53%',
+                height: '43%',
                 width: '22%',
                 background: 'linear-gradient(180deg, #CD7F32 0%, #B87333 100%)',
                 color: '#000',
