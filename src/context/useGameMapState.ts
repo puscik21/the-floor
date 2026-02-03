@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
+import {notifyError, notifyWarning} from "../utils/toast/notifier.tsx";
 
 interface GameMapStateResult {
     mapState: MapState;
@@ -43,12 +44,12 @@ export const useGameMapState = (
             // Date.now() - to omit browser's cache (cache busting)
             const response = await fetch(`./players.json?t=${Date.now()}`);
             if (!response.ok) {
-                throw new Error(`Błąd: ${response.status}`);
+                notifyError(`Błąd podczas ładowania graczy: ${response.status}`)
+                return [];
             }
-
             return await response.json();
         } catch (error) {
-            console.error('Nie udało się załadować graczy:', error);
+            notifyError("Nie udało się załadować graczy", error)
             return [];
         }
     }
@@ -107,7 +108,7 @@ export const useGameMapState = (
         if (gameState !== 'floor' || !activeMapPlayer) return;
 
         if (!cell.ownerName || cell.ownerName === activeMapPlayer.name) {
-            console.log('Kliknij pole przeciwnika!');
+            notifyWarning("Kliknij pole przeciwnika!")
             return;
         }
 
@@ -125,7 +126,7 @@ export const useGameMapState = (
             .filter(player => player.name !== activeMapPlayer?.name)
 
         if (potentialNextPlayers.length === 0) {
-            console.log('Brak innych graczy do wylosowania');
+            notifyWarning("Brak innych graczy do wylosowania")
             return null;
         }
 

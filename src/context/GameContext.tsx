@@ -25,7 +25,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         })
     }, []);
 
-    // TODO: use generic method for loading files
+    // TODO: use generic method for loading files (log file name too)
     const loadGameConfig = async (): Promise<GameConfig> => {
         try {
             // Date.now() - to omit browser's cache (cache busting)
@@ -52,7 +52,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         if (prepareDuelRef.current) {
             prepareDuelRef.current(challenger, defender);
         } else {
-            console.error('prepareDuel logic not yet initialized!');
+            notifyError("Nie udało sie załadować pojedynku!")
         }
     }, []);
 

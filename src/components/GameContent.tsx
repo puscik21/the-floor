@@ -1,13 +1,13 @@
-import React from 'react';
-import {Container, GlobalStyles} from '@mui/material';
+import {Box, Container, GlobalStyles} from '@mui/material';
 import {useGameContext} from '../context/GameContext.tsx';
 import GameScreen from './duel/GameScreen.tsx';
 import FloorScreen from './floor/FloorScreen.tsx';
 import WelcomeScreen from './welcome/WelcomeScreen.tsx';
 import PodiumScreen from './podium/PodiumScreen.tsx';
 import FinishedDuelScreen from "./duel/finish/FinishedDuelScreen.tsx";
+import {styled} from "@mui/material/styles";
 
-const GameContent: React.FC = () => {
+const GameContent = () => {
     const gameState = useGameContext().general.gameState;
 
     const renderContent = () => {
@@ -43,13 +43,17 @@ const GameContent: React.FC = () => {
     };
 
     return (
-        <>
+        <ContentContainer>
             <GlobalStyles styles={globalStyles}/>
             <Container maxWidth={false} disableGutters sx={{textAlign: 'center'}}>
                 {renderContent()}
             </Container>
-        </>
+        </ContentContainer>
     );
 };
 
 export default GameContent;
+
+const ContentContainer = styled(Box)`
+    user-select: none; // User cannot select it by a mistake
+`
