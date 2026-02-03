@@ -6,7 +6,7 @@ import {useGameContext} from '../../context/GameContext.tsx';
 import ConfettiOverlay from "../../utils/confetti/ConfettiOverlay.tsx";
 
 const mapPlayerToPodiumPlayer = (position: PodiumPosition, player: Player): PodiumPlayer => {
-    return {name: player.name, score: 125, position: position}
+    return {name: player.name, duelsWon: player.duelsWon, timeBoostsUsed: player.timeBoostsUsed, position: position}
 }
 
 const PodiumScreen = () => {
@@ -70,9 +70,8 @@ const PodiumContainer = styled(Box)`
     display: flex;
     align-items: flex-end; /* Set items on the bottom - all steps starts from the same height */
     justify-content: center;
-    width: 100%;
-    max-width: 600px;
-    height: 50%;
+    width: 70%;
+    height: 60%;
     margin-top: 40px;
 `;
 

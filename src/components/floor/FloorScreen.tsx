@@ -81,7 +81,6 @@ const PassButton = styled(Button)`
     font-weight: 800;
     border-radius: 12px;
     margin-top: 34px;
-    box-shadow: 0 10px 30px rgba(23, 162, 255, 0.28);
     transition: transform 0.22s, box-shadow 0.22s;
 
     &:hover {

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {GameGrid, GameState, GridCell, MapState, Player} from '../types';
+import type {GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
 
 interface GameMapStateResult {
@@ -24,15 +24,21 @@ export const useGameMapState = (
     useEffect(() => {
         if (gameState === 'init') {
             loadPlayersData().then(playersConfig => {
-                setAllPlayers(playersConfig)
                 setGrid(initializeGrid(playersConfig));
-                const firstPlayer = playersConfig[Math.floor(Math.random() * playersConfig.length)];
+                const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
+                    ...playerBase,
+                    isPlaying: true,
+                    duelsWon: 0,
+                    timeBoostsUsed: 0
+                }))
+                setAllPlayers(initializedPlayers)
+                const firstPlayer = initializedPlayers[Math.floor(Math.random() * playersConfig.length)];
                 setActiveMapPlayer(firstPlayer);
             })
         }
     }, [gameState]);
 
-    const loadPlayersData = async (): Promise<Player[]> => {
+    const loadPlayersData = async (): Promise<PlayerBase[]> => {
         try {
             // Date.now() - to omit browser's cache (cache busting)
             const response = await fetch(`./players.json?t=${Date.now()}`);
@@ -58,28 +64,43 @@ export const useGameMapState = (
         );
         setGrid(newGrid);
 
-        const position = allPlayers.length;
-        const newAllPlayers = allPlayers
-            .filter(p => p.name !== loserPlayer.name)
-            .map(player =>
-                player.name == winnerPlayer.name
-                    ? {...player, category: inheritedCategory}
-                    : player,
-            );
+        const updatedLoserPlayer = {
+            ...loserPlayer,
+            isPlaying: false
+        }
+        const updatedWinnerPlayer = {
+            ...winnerPlayer,
+            category: inheritedCategory,
+            duelsWon: winnerPlayer.duelsWon + 1
+        }
+        const stillPlayingPlayers = allPlayers.filter(player => player.isPlaying)
+        const newAllPlayers: Player[] = allPlayers
+            .map(player => {
+                if (player.name === updatedLoserPlayer.name) {
+                    return updatedLoserPlayer
+                } else if (player.name == updatedWinnerPlayer.name)
+                    return updatedWinnerPlayer
+                else {
+                    return player
+                }
+            })
+        ;
         setAllPlayers(newAllPlayers);
-        setActiveMapPlayer(winnerPlayer);
-        setHasWonPreviousDuel(true);
+        setActiveMapPlayer(updatedWinnerPlayer);
+        setHasWonPreviousDuel(true); // TODO: rethink
 
         const newPlayerMap = new Map(positionToPlayer);
-        newPlayerMap.set(position, loserPlayer);
-        if (allPlayers.length === 2) {
-            newPlayerMap.set(1, winnerPlayer);
+        const position = stillPlayingPlayers.length;
+        newPlayerMap.set(position, updatedLoserPlayer);
+        if (stillPlayingPlayers.length === 2) {
+            newPlayerMap.set(1, updatedWinnerPlayer);
         }
+        console.log(newPlayerMap) // TODO: remove
         setPositionToPlayer(newPlayerMap);
     }, [grid, allPlayers, positionToPlayer]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
-        return allPlayers.find((p) => p.name === name)
+        return allPlayers.find(player => player.name === name)
     }, [allPlayers]);
 
     const handleCellClick = useCallback((cell: GridCell) => {
@@ -99,7 +120,10 @@ export const useGameMapState = (
     }, [gameState, activeMapPlayer, findPlayerByName, startDuelCallback]);
 
     const handlePassFloorClick = useCallback(() => {
-        const potentialNextPlayers: Player[] = allPlayers.filter(p => p.name !== activeMapPlayer?.name)
+        const potentialNextPlayers: Player[] = allPlayers
+            .filter(player => player.isPlaying)
+            .filter(player => player.name !== activeMapPlayer?.name)
+
         if (potentialNextPlayers.length === 0) {
             console.log('Brak innych graczy do wylosowania');
             return null;
