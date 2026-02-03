@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
+import type {DuelPlayer, GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
 import {notifyWarning} from "../utils/toast/notifier.tsx";
 import {fetchJson} from "../utils/input/configFilesUtils.ts";
@@ -10,6 +10,7 @@ interface GameMapStateResult {
         conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
         handlePassFloorClick: () => void;
+        decreaseTimeBoostsOfPlayer: (duelPlayer: DuelPlayer) => void;
     };
 }
 
@@ -129,6 +130,11 @@ export const useGameMapState = (
         setHasWonPreviousDuel(false)
     }, [activeMapPlayer?.name, allPlayers]);
 
+
+    const decreaseTimeBoostsOfPlayer = useCallback(() => {
+
+    }, []);
+
     const mapState: MapState = {
         grid,
         allPlayers,
@@ -143,6 +149,7 @@ export const useGameMapState = (
             conquerTerritory,
             handleCellClick,
             handlePassFloorClick,
+            decreaseTimeBoostsOfPlayer
         },
     };
 };

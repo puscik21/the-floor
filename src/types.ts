@@ -75,6 +75,7 @@ export type Question = {
 export interface GameActions {
     handleStartGame: () => void;
     handleStartDuel: () => void;
+    useTimeBoostForPlayer: (duelPlayer: DuelPlayer) => void;
     handleReturnToMap: () => void;
     handleCellClick: (cell: GridCell) => void;
     handleCorrectAnswer: () => void;

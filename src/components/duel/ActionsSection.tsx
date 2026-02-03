@@ -14,13 +14,13 @@ const ActionsSection = () => {
         <Box>
             <Grid container spacing={2} alignItems="flex-end">
                 <Grid item xs={3}>
-                    {showTimeBoosts && <PlayerTimeBoostSection boostsAvailable={leftPlayerBoosts}/>}
+                    {showTimeBoosts && <PlayerTimeBoostSection duelPlayer="challenger" boostsAvailable={leftPlayerBoosts}/>}
                 </Grid>
                 <Grid item xs={6}>
                     <DuelActions/>
                 </Grid>
                 <Grid item xs={3}>
-                    {showTimeBoosts && <PlayerTimeBoostSection boostsAvailable={rightPlayerBoosts}/>}
+                    {showTimeBoosts && <PlayerTimeBoostSection duelPlayer="defender" boostsAvailable={rightPlayerBoosts}/>}
                 </Grid>
             </Grid>
         </Box>

@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
-import type {GameConfig, GameContextValue, GameState, Player} from '../types';
+import type {DuelPlayer, GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
 import {notifyError} from "../utils/toast/notifier.tsx";
@@ -74,6 +74,11 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         }
     }, [mapState.allPlayers, mapState.positionToPlayer]);
 
+    const useTimeBoostForPlayer = useCallback((duelPlayer: DuelPlayer) => {
+        mapActions.decreaseTimeBoostsOfPlayer(duelPlayer);
+        duelActions.addTimeBoostsToPlayerTimer(duelPlayer);
+    }, [duelActions, mapActions]);
+
     const value: GameContextValue = {
         general: {
             gameState,
@@ -84,6 +89,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         actions: {
             handleStartGame,
             handleStartDuel,
+            useTimeBoostForPlayer,
             ...mapActions,
             ...duelActions,
         },

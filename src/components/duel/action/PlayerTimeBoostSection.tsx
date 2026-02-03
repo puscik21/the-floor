@@ -1,17 +1,38 @@
 import {styled} from "@mui/material/styles";
 import {Box, Button, Typography} from "@mui/material";
+import type {DuelPlayer} from "../../../types.ts";
+import {useGameContext} from "../../../context/GameContext.tsx";
+import {useState} from "react";
 
 interface PlayerTimeBoostSectionProps {
+    duelPlayer: DuelPlayer
     boostsAvailable: number;
 }
 
-const PlayerTimeBoostSection = ({boostsAvailable}: PlayerTimeBoostSectionProps) => {
+const PlayerTimeBoostSection = ({duelPlayer, boostsAvailable}: PlayerTimeBoostSectionProps) => {
+    const [timeBoostUsed, setTimeBoostUsed] = useState(false)
+    const useTimeBoostForPlayer = useGameContext().actions.useTimeBoostForPlayer; // TODO: rename
+
+
+    const handleAddTimeBoost = () => {
+        useTimeBoostForPlayer(duelPlayer)
+
+        // decrease Player timeBoosts available - // TODO: some new method in MapState, as its about player data
+
+        setTimeBoostUsed(true)
+    }
+
     return (
         <BoostWrapper>
             <BoostLabel>
                 Złote kwadraty: <CounterText>{boostsAvailable}</CounterText>
             </BoostLabel>
-            <TimeBoostButton variant="contained" fullWidth>
+            <TimeBoostButton
+                variant="contained"
+                fullWidth
+                onClick={handleAddTimeBoost}
+                disabled={timeBoostUsed || boostsAvailable === 0}
+            >
                 Złoty kwadrat
             </TimeBoostButton>
         </BoostWrapper>

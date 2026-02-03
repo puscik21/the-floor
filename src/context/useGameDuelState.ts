@@ -11,6 +11,7 @@ interface GameDuelStateResult {
         handlePass: () => void;
         handleReturnToMap: () => void;
         prepareDuelState: (challenger: Player, defender: Player) => void;
+        addTimeBoostsToPlayerTimer: (duelPlayer: DuelPlayer) => void;
     };
 }
 
@@ -128,6 +129,14 @@ export const useGameDuelState = (
         setGameState('floor');
     }, [setGameState]);
 
+    const addTimeBoostsToPlayerTimer = useCallback((duelPlayer: DuelPlayer) => {
+        if (duelPlayer === 'challenger') {
+            setChallengerTimer(gameConfig.initTimeSeconds + 5)
+        } else {
+            setDefenderTimer(gameConfig.initTimeSeconds + 5)
+        }
+    }, [gameConfig.initTimeSeconds]);
+
     const prepareDuelState = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {
         setChallenger(challengerPlayer);
         setDefender(defenderPlayer);
@@ -164,6 +173,7 @@ export const useGameDuelState = (
             handlePass,
             handleReturnToMap,
             prepareDuelState,
+            addTimeBoostsToPlayerTimer
         },
     };
 };
