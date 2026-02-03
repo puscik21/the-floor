@@ -13,8 +13,10 @@ const PodiumStep = ({player}: PodiumStepProps) => {
         <Container key={player.position} podiumPosition={player.position}>
             <PositionText>{player.position}</PositionText>
             <PlayerNameText>{player.name}</PlayerNameText>
-            <PlayerNameText>{`Wygrane pojedynki: ${player.duelsWon}`}</PlayerNameText>
-            <PlayerNameText>{`Złote kwadraty: ${player.timeBoostsUsed}`}</PlayerNameText>
+            <StatisticsContainer>
+                <StatisticsText>{`Wygrane pojedynki: ${player.duelsWon}`}</StatisticsText>
+                <StatisticsText>{`Złote kwadraty: ${player.timeBoostsUsed}`}</StatisticsText>
+            </StatisticsContainer>
         </Container>
     );
 }
@@ -36,6 +38,7 @@ const Container = styled(Box)<PodiumStepStyleProps>`
     border-radius: 6px 6px 0 0;
     font-weight: 800;
     text-transform: uppercase;
+    user-select: none; // User cannot select it by a mistake
 
     ${({podiumPosition}) => {
         const styles = getStepStyles(podiumPosition);
@@ -61,7 +64,7 @@ const Container = styled(Box)<PodiumStepStyleProps>`
 `;
 
 const PositionText = styled(Typography)`
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 900;
     color: #000;
     line-height: 1;
@@ -69,11 +72,27 @@ const PositionText = styled(Typography)`
 `;
 
 const PlayerNameText = styled(Typography)`
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     font-weight: 800;
     text-align: center;
-    margin-top: 12px;
+    margin-top: 0.8rem;
     padding: 0 4px;
     color: #222;
+    word-break: break-word;
+    margin-bottom: 1.2rem;
+`;
+
+const StatisticsContainer = styled(Box)`
+    position: absolute;
+    bottom: 1rem;
+    opacity: 0.4;
+    font-size: 1rem;
+`
+
+const StatisticsText = styled(Typography)`
+    font-size: 1.2rem;
+    text-align: center;
+    color: #222;
+    opacity: 0.6;
     word-break: break-word;
 `;
