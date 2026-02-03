@@ -11,11 +11,11 @@ interface PlayerTimeBoostSectionProps {
 
 const PlayerTimeBoostSection = ({duelPlayer, boostsAvailable}: PlayerTimeBoostSectionProps) => {
     const [timeBoostUsed, setTimeBoostUsed] = useState(false)
-    const useTimeBoostForPlayer = useGameContext().actions.useTimeBoostForPlayer; // TODO: rename
+    const activateTimeBoostForPlayer = useGameContext().actions.activateTimeBoostForPlayer; // TODO: rename
 
 
     const handleAddTimeBoost = () => {
-        useTimeBoostForPlayer(duelPlayer)
+        activateTimeBoostForPlayer(duelPlayer)
 
         // decrease Player timeBoosts available - // TODO: some new method in MapState, as its about player data
 
