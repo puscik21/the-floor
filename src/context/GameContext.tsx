@@ -10,6 +10,7 @@ const GameContext = createContext<GameContextValue | undefined>(undefined);
 const defaultGameConfig: GameConfig = {
     initTimeSeconds: 60,
     passPenaltySeconds: 3,
+    winStreakForTimeBoost: 2,
     imageFileFormat: "png",
     correctAnswerButton: "space",
     passButton: "F",

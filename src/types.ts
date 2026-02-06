@@ -1,6 +1,7 @@
 export interface GameConfig {
     initTimeSeconds: number;
     passPenaltySeconds: number;
+    winStreakForTimeBoost: number;
     imageFileFormat: string;
     correctAnswerButton: string;
     passButton: string;

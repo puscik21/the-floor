@@ -53,8 +53,7 @@ export const useGameMapState = (
 
             if (!winner || !loser) return prevPlayers;
 
-            const winStreakForTimeBoost = 2;
-            const earnedTimeBoost = (winner.winStreak + 1) === winStreakForTimeBoost;
+            const earnedTimeBoost = (winner.winStreak + 1) === gameConfig.winStreakForTimeBoost;
 
             const updatedWinner = {
                 ...winner,
