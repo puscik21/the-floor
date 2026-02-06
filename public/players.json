@@ -12,15 +12,27 @@
     "category": "Muzyka"
   },
   {
-    "name": "Nati2",
-    "category": "Muzyka"
+    "name": "Grześ",
+    "category": "Informatyka"
   },
   {
-    "name": "Nati3",
-    "category": "Muzyka"
+    "name": "Seba",
+    "category": "Sport"
   },
   {
-    "name": "Nati4",
-    "category": "Muzyka"
+    "name": "The Michał",
+    "category": "Matematyka"
+  },
+  {
+    "name": "Tomek",
+    "category": "Geografia"
+  },
+  {
+    "name": "Monika",
+    "category": "Literatura"
+  },
+  {
+    "name": "Madzia 2",
+    "category": "Biologia"
   }
 ]
