@@ -35,7 +35,7 @@ export const useGameMapState = (
                     isPlaying: true,
                     winStreak: 0,
                     duelsWon: 0,
-                    timeBoostsAvailable: 2, // TODO: fix
+                    timeBoostsAvailable: 0,
                     timeBoostsUsed: 0
                 }))
                 setAllPlayers(initializedPlayers)
@@ -85,7 +85,6 @@ export const useGameMapState = (
             if (stillPlayingPlayers.length === 2) {
                 newPlayerMap.set(1, updatedWinner);
             }
-            console.log(newPlayerMap) // TODO: remove
             setPositionToPlayer(newPlayerMap);
 
             return nextAllPlayers;
@@ -115,6 +114,15 @@ export const useGameMapState = (
     }, [gameState, activeMapPlayer, findPlayerByName, startDuelCallback]);
 
     const handlePassFloorClick = useCallback(() => {
+        setAllPlayers(prevPlayers => {
+            if (!activeMapPlayer) return prevPlayers
+
+            return prevPlayers.map(p => {
+                if (p.name === activeMapPlayer.name) return {...p, winStreak: 0};
+                return p;
+            });
+        })
+
         const potentialNextPlayers: Player[] = allPlayers
             .filter(player => player.isPlaying)
             .filter(player => player.name !== activeMapPlayer?.name)
@@ -131,11 +139,9 @@ export const useGameMapState = (
 
 
     const decreaseTimeBoostsOfPlayer = useCallback((playerName: string) => {
-        console.log(playerName)
         const newPlayers = allPlayers.map(p => p.name === playerName
             ? {...p, timeBoostsAvailable: p.timeBoostsAvailable - 1}
             : p)
-        console.log(newPlayers)
         setAllPlayers(newPlayers)
     }, [allPlayers]);
 
