@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import type {DuelPlayer, GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
+import type {GameConfig, GameGrid, GameState, GridCell, MapState, Player, PlayerBase} from '../types';
 import {initializeGrid} from '../components/floor/gridUtils.ts';
 import {notifyWarning} from "../utils/toast/notifier.tsx";
 import {fetchJson} from "../utils/input/configFilesUtils.ts";
@@ -10,7 +10,8 @@ interface GameMapStateResult {
         conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
         handlePassFloorClick: () => void;
-        decreaseTimeBoostsOfPlayer: (duelPlayer: DuelPlayer) => void;
+        decreaseTimeBoostsOfPlayer: (playerName: string) => void;
+        findPlayerByName: (name: string) => Player | undefined
     };
 }
 
@@ -34,7 +35,7 @@ export const useGameMapState = (
                     isPlaying: true,
                     winStreak: 0,
                     duelsWon: 0,
-                    timeBoostsAvailable: 0,
+                    timeBoostsAvailable: 2, // TODO: fix
                     timeBoostsUsed: 0
                 }))
                 setAllPlayers(initializedPlayers)
@@ -60,7 +61,7 @@ export const useGameMapState = (
             ...loserPlayer,
             isPlaying: false
         }
-        const winStreakForTimeBoost = 3; // TODO: better name, take it from config
+        const winStreakForTimeBoost = 2; // TODO: better name, take it from config
         const earnedTimeBoost = (winnerPlayer.winStreak + 1) == winStreakForTimeBoost;
         const updatedWinnerPlayer = {
             ...winnerPlayer,
@@ -69,6 +70,9 @@ export const useGameMapState = (
             duelsWon: winnerPlayer.duelsWon + 1,
             timeBoostsAvailable: earnedTimeBoost ? winnerPlayer.timeBoostsAvailable + 1 : winnerPlayer.timeBoostsAvailable
         }
+        console.log(winnerPlayer)
+        console.log("after")
+        console.log(updatedWinnerPlayer)
         const stillPlayingPlayers = allPlayers.filter(player => player.isPlaying)
         const newAllPlayers: Player[] = allPlayers
             .map(player => {
@@ -131,9 +135,14 @@ export const useGameMapState = (
     }, [activeMapPlayer?.name, allPlayers]);
 
 
-    const decreaseTimeBoostsOfPlayer = useCallback(() => {
-
-    }, []);
+    const decreaseTimeBoostsOfPlayer = useCallback((playerName: string) => {
+        console.log(playerName)
+        const newPlayers = allPlayers.map(p => p.name === playerName
+            ? {...p, timeBoostsAvailable: p.timeBoostsAvailable - 1}
+            : p)
+        console.log(newPlayers)
+        setAllPlayers(newPlayers)
+    }, [allPlayers]);
 
     const mapState: MapState = {
         grid,
@@ -149,7 +158,8 @@ export const useGameMapState = (
             conquerTerritory,
             handleCellClick,
             handlePassFloorClick,
-            decreaseTimeBoostsOfPlayer
+            decreaseTimeBoostsOfPlayer,
+            findPlayerByName
         },
     };
 };

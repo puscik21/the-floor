@@ -74,8 +74,8 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         }
     }, [mapState.allPlayers, mapState.positionToPlayer]);
 
-    const activateTimeBoostForPlayer = useCallback((duelPlayer: DuelPlayer) => {
-        mapActions.decreaseTimeBoostsOfPlayer(duelPlayer);
+    const activateTimeBoostForPlayer = useCallback((playerName: string, duelPlayer: DuelPlayer) => {
+        mapActions.decreaseTimeBoostsOfPlayer(playerName);
         duelActions.addTimeBoostsToPlayerTimer(duelPlayer);
     }, [duelActions, mapActions]);
 

@@ -75,12 +75,13 @@ export type Question = {
 export interface GameActions {
     handleStartGame: () => void;
     handleStartDuel: () => void;
-    activateTimeBoostForPlayer: (duelPlayer: DuelPlayer) => void;
+    activateTimeBoostForPlayer: (playerName: string, duelPlayer: DuelPlayer) => void;
     handleReturnToMap: () => void;
     handleCellClick: (cell: GridCell) => void;
     handleCorrectAnswer: () => void;
     handlePass: () => void;
     handlePassFloorClick: () => void;
+    findPlayerByName: (name: string) => Player | undefined
 }
 
 export interface PodiumPlayer {

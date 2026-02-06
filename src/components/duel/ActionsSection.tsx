@@ -5,22 +5,24 @@ import PlayerTimeBoostSection from "./action/PlayerTimeBoostSection.tsx";
 
 const ActionsSection = () => {
     const showTimeBoosts = useGameContext().general.gameState === 'ready';
-
-    // TODO: take it from the Context
-    const leftPlayerBoosts = 3;
-    const rightPlayerBoosts = 1;
+    const {challengerName, defenderName} = useGameContext().duel; // TODO: optimize
 
     return (
         <Box>
             <Grid container spacing={2} alignItems="flex-end">
                 <Grid item xs={3}>
-                    {showTimeBoosts && <PlayerTimeBoostSection duelPlayer="challenger" boostsAvailable={leftPlayerBoosts}/>}
+                    {showTimeBoosts && <PlayerTimeBoostSection
+                        playerName={challengerName}
+                        duelPlayer="challenger"/>
+                    }
                 </Grid>
                 <Grid item xs={6}>
                     <DuelActions/>
                 </Grid>
                 <Grid item xs={3}>
-                    {showTimeBoosts && <PlayerTimeBoostSection duelPlayer="defender" boostsAvailable={rightPlayerBoosts}/>}
+                    {showTimeBoosts && <PlayerTimeBoostSection
+                        playerName={defenderName} duelPlayer="defender"/>
+                    }
                 </Grid>
             </Grid>
         </Box>

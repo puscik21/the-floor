@@ -5,20 +5,19 @@ import {useGameContext} from "../../../context/GameContext.tsx";
 import {useState} from "react";
 
 interface PlayerTimeBoostSectionProps {
-    duelPlayer: DuelPlayer
-    boostsAvailable: number;
+    playerName: string
+    duelPlayer: DuelPlayer // TODO: probably can be simplified
 }
 
-const PlayerTimeBoostSection = ({duelPlayer, boostsAvailable}: PlayerTimeBoostSectionProps) => {
+const PlayerTimeBoostSection = ({playerName, duelPlayer}: PlayerTimeBoostSectionProps) => {
     const [timeBoostUsed, setTimeBoostUsed] = useState(false)
     const activateTimeBoostForPlayer = useGameContext().actions.activateTimeBoostForPlayer; // TODO: rename
+    const findPlayerByName = useGameContext().actions.findPlayerByName;
 
+    const boostsAvailable: number | undefined = findPlayerByName(playerName)?.timeBoostsAvailable;
 
     const handleAddTimeBoost = () => {
-        activateTimeBoostForPlayer(duelPlayer)
-
-        // decrease Player timeBoosts available - // TODO: some new method in MapState, as its about player data
-
+        activateTimeBoostForPlayer(playerName, duelPlayer)
         setTimeBoostUsed(true)
     }
 
