@@ -7,7 +7,7 @@ import {fetchJson} from "../utils/input/configFilesUtils.ts";
 interface GameMapStateResult {
     mapState: MapState;
     actions: {
-        conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
+        conquerTerritory: (winnerName: string, loserName: string, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
         handlePassFloorClick: () => void;
         decreaseTimeBoostsOfPlayer: (playerName: string) => void;
@@ -46,58 +46,53 @@ export const useGameMapState = (
     }, [gameState, gameConfig.shufflePlayers]);
 
     // TODO: refactor this method
-    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
-        const newGrid = grid.map((row) =>
-            row.map((cell) => {
-                if (cell.ownerName === loserPlayer.name) {
-                    return {...cell, ownerName: winnerPlayer.name};
-                }
-                return cell;
-            }),
-        );
-        setGrid(newGrid);
+    const conquerTerritory = useCallback((winnerName: string, loserName: string, inheritedCategory: string) => {
+        setAllPlayers(prevPlayers => {
+            const winner = prevPlayers.find(p => p.name === winnerName);
+            const loser = prevPlayers.find(p => p.name === loserName);
 
-        const updatedLoserPlayer = {
-            ...loserPlayer,
-            isPlaying: false
-        }
-        const winStreakForTimeBoost = 2; // TODO: better name, take it from config
-        const earnedTimeBoost = (winnerPlayer.winStreak + 1) == winStreakForTimeBoost;
-        const updatedWinnerPlayer = {
-            ...winnerPlayer,
-            category: inheritedCategory,
-            winStreak: earnedTimeBoost ? 0 : winnerPlayer.winStreak,
-            duelsWon: winnerPlayer.duelsWon + 1,
-            timeBoostsAvailable: earnedTimeBoost ? winnerPlayer.timeBoostsAvailable + 1 : winnerPlayer.timeBoostsAvailable
-        }
-        console.log(winnerPlayer)
-        console.log("after")
-        console.log(updatedWinnerPlayer)
-        const stillPlayingPlayers = allPlayers.filter(player => player.isPlaying)
-        const newAllPlayers: Player[] = allPlayers
-            .map(player => {
-                if (player.name === updatedLoserPlayer.name) {
-                    return updatedLoserPlayer
-                } else if (player.name == updatedWinnerPlayer.name)
-                    return updatedWinnerPlayer
-                else {
-                    return player
-                }
-            })
-        ;
-        setAllPlayers(newAllPlayers);
-        setActiveMapPlayer(updatedWinnerPlayer);
-        setHasWonPreviousDuel(true); // TODO: rethink
+            if (!winner || !loser) return prevPlayers;
 
-        const newPlayerMap = new Map(positionToPlayer);
-        const position = stillPlayingPlayers.length;
-        newPlayerMap.set(position, updatedLoserPlayer);
-        if (stillPlayingPlayers.length === 2) {
-            newPlayerMap.set(1, updatedWinnerPlayer);
-        }
-        console.log(newPlayerMap) // TODO: remove
-        setPositionToPlayer(newPlayerMap);
-    }, [grid, allPlayers, positionToPlayer]);
+            const winStreakForTimeBoost = 2;
+            const earnedTimeBoost = (winner.winStreak + 1) === winStreakForTimeBoost;
+
+            const updatedWinner = {
+                ...winner,
+                category: inheritedCategory,
+                winStreak: earnedTimeBoost ? 0 : winner.winStreak + 1,
+                duelsWon: winner.duelsWon + 1,
+                timeBoostsAvailable: earnedTimeBoost ? winner.timeBoostsAvailable + 1 : winner.timeBoostsAvailable
+            };
+
+            const updatedLoser = {...loser, isPlaying: false};
+
+            const nextAllPlayers = prevPlayers.map(p => {
+                if (p.name === winnerName) return updatedWinner;
+                if (p.name === loserName) return updatedLoser;
+                return p;
+            });
+
+            setGrid(currentGrid => currentGrid.map(row =>
+                row.map(cell => cell.ownerName === loserName ? {...cell, ownerName: winnerName} : cell)
+            ));
+
+            setActiveMapPlayer(updatedWinner);
+
+            const stillPlayingPlayers = prevPlayers.filter(player => player.isPlaying)
+            const newPlayerMap = new Map(positionToPlayer);
+            const position = stillPlayingPlayers.length;
+            newPlayerMap.set(position, updatedLoser);
+            if (stillPlayingPlayers.length === 2) {
+                newPlayerMap.set(1, updatedWinner);
+            }
+            console.log(newPlayerMap) // TODO: remove
+            setPositionToPlayer(newPlayerMap);
+
+            return nextAllPlayers;
+        });
+
+        setHasWonPreviousDuel(true);
+    }, [positionToPlayer]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
         return allPlayers.find(player => player.name === name)

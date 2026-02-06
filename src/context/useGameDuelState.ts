@@ -20,20 +20,22 @@ export const useGameDuelState = (
     gameState: GameState,
     setGameState: (state: GameState) => void,
     setWinner: (player: Player | null) => void,
-    conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void,
+    conquerTerritory: (winnerName: string, loserName: string, inheritedCategory: string) => void,
+    allPlayers: Player[]
 ): GameDuelStateResult => {
     const [challengerTimer, setChallengerTimer] = useState(gameConfig.initTimeSeconds);
     const [defenderTimer, setDefenderTimer] = useState(gameConfig.initTimeSeconds);
     const [passTimer, setPassTimer] = useState(gameConfig.passPenaltySeconds);
     const [activePlayer, setActivePlayer] = useState<DuelPlayer>('challenger');
     const [isPassPenaltyActive, setIsPassPenaltyActive] = useState(false);
-
-    const [challenger, setChallenger] = useState<Player | null>(null);
-    const [defender, setDefender] = useState<Player | null>(null);
-
     const [questionId, setQuestionId] = useState(1);
     const [questionImageUrl, setQuestionImageUrl] = useState('/util/placeholder.png');
     const [isCheckingNextQuestion, setIsCheckingNextQuestion] = useState(false);
+    const [challengerName, setChallengerName] = useState<string | null>(null);
+    const [defenderName, setDefenderName] = useState<string | null>(null);
+
+    const challenger = allPlayers.find(p => p.name === challengerName) || null;
+    const defender = allPlayers.find(p => p.name === defenderName) || null;
 
     useEffect(() => {
         if (gameState !== 'duel') return;
@@ -67,8 +69,8 @@ export const useGameDuelState = (
     const finishDuel = useCallback((winningPlayer: Player, losingPlayer: Player, inheritedCategory: string) => {
         setWinner(winningPlayer);
         setGameState('finished');
-        conquerTerritory(winningPlayer, losingPlayer, inheritedCategory);
-    }, [conquerTerritory, setGameState, setWinner])
+        conquerTerritory(winningPlayer.name, losingPlayer.name, inheritedCategory);
+    }, [conquerTerritory, setGameState, setWinner]);
 
     const tryAdvanceQuestionId = useCallback(async (currentId: number) => {
         if (isCheckingNextQuestion) return;
@@ -124,8 +126,8 @@ export const useGameDuelState = (
     const handlePass = useCallback(() => setIsPassPenaltyActive(true), []);
 
     const handleReturnToMap = useCallback(() => {
-        setChallenger(null);
-        setDefender(null);
+        setChallengerName(null); // TODO: DO I need this?
+        setDefenderName(null); // TODO: DO I need this?
         setGameState('floor');
     }, [setGameState]);
 
@@ -138,8 +140,8 @@ export const useGameDuelState = (
     }, [gameConfig.initTimeSeconds]);
 
     const prepareDuelState = useCallback((challengerPlayer: Player, defenderPlayer: Player) => {
-        setChallenger(challengerPlayer);
-        setDefender(defenderPlayer);
+        setChallengerName(challengerPlayer.name);
+        setDefenderName(defenderPlayer.name);
         setChallengerTimer(gameConfig.initTimeSeconds);
         setDefenderTimer(gameConfig.initTimeSeconds);
         setPassTimer(gameConfig.passPenaltySeconds);

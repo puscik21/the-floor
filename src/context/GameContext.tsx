@@ -56,6 +56,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setGameState,
         handleSetWinner,
         mapActions.conquerTerritory,
+        mapState.allPlayers
     );
 
     const prepareDuel = useCallback((challenger: Player, defender: Player) => {
