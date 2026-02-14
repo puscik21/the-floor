@@ -20,7 +20,7 @@ const defaultGameConfig: GameConfig = {
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<GameState>('init');
     const [winner, setWinner] = useState<Player | null>(null);
-    const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig);
+    const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig); // TODO: fix - always first duel goes with default config ._.
 
     useEffect(() => {
         fetchJson<GameConfig>("./config.json", defaultGameConfig).then(config => {
