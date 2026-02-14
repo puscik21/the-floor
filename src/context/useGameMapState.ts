@@ -7,9 +7,11 @@ import {fetchJson} from "../utils/input/configFilesUtils.ts";
 interface GameMapStateResult {
     mapState: MapState;
     actions: {
-        conquerTerritory: (winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => void;
+        conquerTerritory: (winnerName: string, loserName: string, inheritedCategory: string) => void;
         handleCellClick: (cell: GridCell) => void;
         handlePassFloorClick: () => void;
+        decreaseTimeBoostsOfPlayer: (playerName: string) => void;
+        findPlayerByName: (name: string) => Player | undefined
     };
 }
 
@@ -31,7 +33,9 @@ export const useGameMapState = (
                 const initializedPlayers: Player[] = playersConfig.map(playerBase => ({
                     ...playerBase,
                     isPlaying: true,
+                    winStreak: 0,
                     duelsWon: 0,
+                    timeBoostsAvailable: 0,
                     timeBoostsUsed: 0
                 }))
                 setAllPlayers(initializedPlayers)
@@ -41,51 +45,52 @@ export const useGameMapState = (
         }
     }, [gameState, gameConfig.shufflePlayers]);
 
-    const conquerTerritory = useCallback((winnerPlayer: Player, loserPlayer: Player, inheritedCategory: string) => {
-        const newGrid = grid.map((row) =>
-            row.map((cell) => {
-                if (cell.ownerName === loserPlayer.name) {
-                    return {...cell, ownerName: winnerPlayer.name};
-                }
-                return cell;
-            }),
-        );
-        setGrid(newGrid);
+    // TODO: refactor this method
+    const conquerTerritory = useCallback((winnerName: string, loserName: string, inheritedCategory: string) => {
+        setAllPlayers(prevPlayers => {
+            const winner = prevPlayers.find(p => p.name === winnerName);
+            const loser = prevPlayers.find(p => p.name === loserName);
 
-        const updatedLoserPlayer = {
-            ...loserPlayer,
-            isPlaying: false
-        }
-        const updatedWinnerPlayer = {
-            ...winnerPlayer,
-            category: inheritedCategory,
-            duelsWon: winnerPlayer.duelsWon + 1
-        }
-        const stillPlayingPlayers = allPlayers.filter(player => player.isPlaying)
-        const newAllPlayers: Player[] = allPlayers
-            .map(player => {
-                if (player.name === updatedLoserPlayer.name) {
-                    return updatedLoserPlayer
-                } else if (player.name == updatedWinnerPlayer.name)
-                    return updatedWinnerPlayer
-                else {
-                    return player
-                }
-            })
-        ;
-        setAllPlayers(newAllPlayers);
-        setActiveMapPlayer(updatedWinnerPlayer);
-        setHasWonPreviousDuel(true); // TODO: rethink
+            if (!winner || !loser) return prevPlayers;
 
-        const newPlayerMap = new Map(positionToPlayer);
-        const position = stillPlayingPlayers.length;
-        newPlayerMap.set(position, updatedLoserPlayer);
-        if (stillPlayingPlayers.length === 2) {
-            newPlayerMap.set(1, updatedWinnerPlayer);
-        }
-        console.log(newPlayerMap) // TODO: remove
-        setPositionToPlayer(newPlayerMap);
-    }, [grid, allPlayers, positionToPlayer]);
+            const earnedTimeBoost = (winner.winStreak + 1) === gameConfig.winStreakForTimeBoost;
+
+            const updatedWinner = {
+                ...winner,
+                category: inheritedCategory,
+                winStreak: earnedTimeBoost ? 0 : winner.winStreak + 1,
+                duelsWon: winner.duelsWon + 1,
+                timeBoostsAvailable: earnedTimeBoost ? winner.timeBoostsAvailable + 1 : winner.timeBoostsAvailable
+            };
+
+            const updatedLoser = {...loser, isPlaying: false};
+
+            const nextAllPlayers = prevPlayers.map(p => {
+                if (p.name === winnerName) return updatedWinner;
+                if (p.name === loserName) return updatedLoser;
+                return p;
+            });
+
+            setGrid(currentGrid => currentGrid.map(row =>
+                row.map(cell => cell.ownerName === loserName ? {...cell, ownerName: winnerName} : cell)
+            ));
+
+            setActiveMapPlayer(updatedWinner);
+
+            const stillPlayingPlayers = prevPlayers.filter(player => player.isPlaying)
+            const newPlayerMap = new Map(positionToPlayer);
+            const position = stillPlayingPlayers.length;
+            newPlayerMap.set(position, updatedLoser);
+            if (stillPlayingPlayers.length === 2) {
+                newPlayerMap.set(1, updatedWinner);
+            }
+            setPositionToPlayer(newPlayerMap);
+
+            return nextAllPlayers;
+        });
+
+        setHasWonPreviousDuel(true);
+    }, [positionToPlayer]);
 
     const findPlayerByName = useCallback((name: string): Player | undefined => {
         return allPlayers.find(player => player.name === name)
@@ -108,6 +113,15 @@ export const useGameMapState = (
     }, [gameState, activeMapPlayer, findPlayerByName, startDuelCallback]);
 
     const handlePassFloorClick = useCallback(() => {
+        setAllPlayers(prevPlayers => {
+            if (!activeMapPlayer) return prevPlayers
+
+            return prevPlayers.map(p => {
+                if (p.name === activeMapPlayer.name) return {...p, winStreak: 0};
+                return p;
+            });
+        })
+
         const potentialNextPlayers: Player[] = allPlayers
             .filter(player => player.isPlaying)
             .filter(player => player.name !== activeMapPlayer?.name)
@@ -121,6 +135,14 @@ export const useGameMapState = (
         setActiveMapPlayer(potentialNextPlayers[randomIndex])
         setHasWonPreviousDuel(false)
     }, [activeMapPlayer?.name, allPlayers]);
+
+
+    const decreaseTimeBoostsOfPlayer = useCallback((playerName: string) => {
+        const newPlayers = allPlayers.map(p => p.name === playerName
+            ? {...p, timeBoostsAvailable: p.timeBoostsAvailable - 1}
+            : p)
+        setAllPlayers(newPlayers)
+    }, [allPlayers]);
 
     const mapState: MapState = {
         grid,
@@ -136,6 +158,8 @@ export const useGameMapState = (
             conquerTerritory,
             handleCellClick,
             handlePassFloorClick,
+            decreaseTimeBoostsOfPlayer,
+            findPlayerByName
         },
     };
 };

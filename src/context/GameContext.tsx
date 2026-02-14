@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
-import type {GameConfig, GameContextValue, GameState, Player} from '../types';
+import type {DuelPlayer, GameConfig, GameContextValue, GameState, Player} from '../types';
 import {useGameDuelState} from './useGameDuelState.ts';
 import {useGameMapState} from './useGameMapState.ts';
 import {notifyError} from "../utils/toast/notifier.tsx";
@@ -10,6 +10,7 @@ const GameContext = createContext<GameContextValue | undefined>(undefined);
 const defaultGameConfig: GameConfig = {
     initTimeSeconds: 60,
     passPenaltySeconds: 3,
+    winStreakForTimeBoost: 2,
     imageFileFormat: "png",
     correctAnswerButton: "space",
     passButton: "F",
@@ -19,7 +20,7 @@ const defaultGameConfig: GameConfig = {
 export const GameContextProvider = ({children}: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<GameState>('init');
     const [winner, setWinner] = useState<Player | null>(null);
-    const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig);
+    const [gameConfig, setGameConfig] = useState<GameConfig>(defaultGameConfig); // TODO: fix - always first duel goes with default config ._.
 
     useEffect(() => {
         fetchJson<GameConfig>("./config.json", defaultGameConfig).then(config => {
@@ -56,6 +57,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         setGameState,
         handleSetWinner,
         mapActions.conquerTerritory,
+        mapState.allPlayers
     );
 
     const prepareDuel = useCallback((challenger: Player, defender: Player) => {
@@ -74,6 +76,11 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         }
     }, [mapState.allPlayers, mapState.positionToPlayer]);
 
+    const activateTimeBoostForPlayer = useCallback((playerName: string, duelPlayer: DuelPlayer) => {
+        mapActions.decreaseTimeBoostsOfPlayer(playerName);
+        duelActions.addTimeBoostsToPlayerTimer(duelPlayer);
+    }, [duelActions, mapActions]);
+
     const value: GameContextValue = {
         general: {
             gameState,
@@ -84,6 +91,7 @@ export const GameContextProvider = ({children}: { children: React.ReactNode }) =
         actions: {
             handleStartGame,
             handleStartDuel,
+            activateTimeBoostForPlayer,
             ...mapActions,
             ...duelActions,
         },

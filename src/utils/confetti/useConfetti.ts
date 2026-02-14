@@ -34,10 +34,10 @@ function createConfettiAnimation(canvas: HTMLCanvasElement, duration: number, in
         for (let i = 0; i < count; i++) {
             particles.push({
                 x: random(w * 0.35, w * 0.65),
-                y: random(h * 0.25, h * 0.45),
+                y: random(h * 0.1, h * 0.30),
                 vx: random(-4, 4),
                 vy: random(-10, -4),
-                size: random(6, 12),
+                size: random(15, 30),
                 rot: random(0, Math.PI * 2),
                 vr: random(-0.12, 0.12),
                 color: colors[(Math.random() * colors.length) | 0],

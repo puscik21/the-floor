@@ -1,6 +1,7 @@
 export interface GameConfig {
     initTimeSeconds: number;
     passPenaltySeconds: number;
+    winStreakForTimeBoost: number;
     imageFileFormat: string;
     correctAnswerButton: string;
     passButton: string;
@@ -29,7 +30,9 @@ export interface PlayerBase {
 
 export interface Player extends PlayerBase {
     isPlaying: boolean;
+    winStreak: number;
     duelsWon: number;
+    timeBoostsAvailable: number;
     timeBoostsUsed: number;
 }
 
@@ -73,11 +76,13 @@ export type Question = {
 export interface GameActions {
     handleStartGame: () => void;
     handleStartDuel: () => void;
+    activateTimeBoostForPlayer: (playerName: string, duelPlayer: DuelPlayer) => void;
     handleReturnToMap: () => void;
     handleCellClick: (cell: GridCell) => void;
     handleCorrectAnswer: () => void;
     handlePass: () => void;
     handlePassFloorClick: () => void;
+    findPlayerByName: (name: string) => Player | undefined
 }
 
 export interface PodiumPlayer {

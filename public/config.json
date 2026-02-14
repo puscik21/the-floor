@@ -1,6 +1,7 @@
 {
   "initTimeSeconds": 60,
   "passPenaltySeconds": 3,
+  "winStreakForTimeBoost": 2,
   "imageFileFormat": "jpg",
   "correctAnswerButton": "space",
   "passButton": "f",
